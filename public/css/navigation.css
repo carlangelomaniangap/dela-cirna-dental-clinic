@@ -1,0 +1,16 @@
+/* Remove border around dropdown button */
+.dropdown-toggle {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove underline and blue color on hover for navigation links */
+.nav-link {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.nav-link:hover {
+    color: inherit !important;
+    text-decoration: none !important;
+}
