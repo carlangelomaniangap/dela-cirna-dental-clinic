@@ -15,7 +15,7 @@
                                 <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                             </a>
                         @elseif(Auth::user()->usertype == 'dentistrystudent')
-                            <a href="{{ route('dentistrystudent.communityforum') }}">
+                            <a href="{{ route('dentistrystudent.dashboard') }}">
                                 <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                             </a>
                         @endif
@@ -68,6 +68,9 @@
                                 {{ __('Community Forum') }}
                             </x-nav-link>
                         @elseif(Auth::user()->usertype == 'dentistrystudent')
+                            <x-nav-link :href="route('dentistrystudent.dashboard')" :active="request()->routeIs('dentistrystudent.dashboard')">
+                                {{ __('Dashboard') }}
+                            </x-nav-link>
                             <x-nav-link :href="route('dentistrystudent.communityforum')" :active="request()->routeIs('dentistrystudent.communityforum')">
                                 {{ __('Community Forum') }}
                             </x-nav-link>
@@ -165,6 +168,9 @@
                         {{ __('Community Forum') }}
                     </x-responsive-nav-link>
                 @elseif(Auth::user()->usertype == 'dentistrystudent')
+                    <x-responsive-nav-link :href="route('dentistrystudent.dashboard')" :active="request()->routeIs('dentistrystudent.dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('dentistrystudent.communityforum')" :active="request()->routeIs('dentistrystudent.communityforum')">
                         {{ __('Community Forum') }}
                     </x-responsive-nav-link>
