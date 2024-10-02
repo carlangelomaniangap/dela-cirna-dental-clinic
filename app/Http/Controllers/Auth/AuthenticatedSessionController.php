@@ -14,6 +14,8 @@ class AuthenticatedSessionController extends Controller
 {
     protected function authenticated(Request $request, $user)
     {
+        $request->session()->put('showUserWelcome', true);
+
         if ($user->usertype === 'admin') {
             return redirect()->route('admin.dashboard');
         } elseif ($user->usertype === 'patient') {

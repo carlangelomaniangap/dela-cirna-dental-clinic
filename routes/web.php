@@ -23,6 +23,7 @@ use App\Http\Controllers\patient\PatientCommunityForumController;
 use App\Http\Controllers\patient\PatientCommentController;
 
 // dentistrystudent
+use App\Http\Controllers\dentistrystudent\DentistryStudentDashboardController;
 use App\Http\Controllers\dentistrystudent\DentistryStudentCommunityForumController;
 use App\Http\Controllers\dentistrystudent\DentistryStudentCommentController;
 
@@ -43,6 +44,7 @@ use App\Http\Controllers\WelcomeController;
 Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     // dashboard
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::resource('/admin/inventory', AdminDashboardController::class);
     // paitent list
     Route::get('/admin/patientlist',[AdminPatientListController::class,'index'])->name('admin.patientlist');
     Route::get('/admin/patientlist/add', [AdminPatientListController::class, 'createPatient'])->name('admin.patient.create');
@@ -155,6 +157,8 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
 });
 
 Route::group(['middleware' => ['auth', 'checkUserType:dentistrystudent']], function () {
+    // dashboard
+    Route::get('/dentistrystudent', [DentistryStudentDashboardController::class, 'index'])->name('dentistrystudent.dashboard');
     // community forum
     Route::get('/dentistrystudent/communityforum',[DentistryStudentCommunityForumController::class,'index'])->name('dentistrystudent.communityforum');
     Route::get('/dentistrystudent/communityforum/post', [DentistryStudentCommunityForumController::class, 'createCommunityforum'])->name('dentistrystudent.communityforum.create');
