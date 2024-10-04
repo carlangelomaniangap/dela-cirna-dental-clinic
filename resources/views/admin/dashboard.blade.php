@@ -16,7 +16,7 @@
         </div>
     </div> -->
 
-    <div class="container mx-auto p-6">
+    <div class="p-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
             <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
                 <h2 class="text-xl font-semibold text-gray-700">Total Users</h2>
@@ -57,7 +57,7 @@
         
     </div>
 
-    <div class="container mx-auto px-6">
+    <div class="px-6">
         <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
 
             <div class="flex items-center justify-between mb-4">
@@ -66,17 +66,17 @@
             </div>
 
             <table class="min-w-full mt-4 bg-white shadow-lg rounded-lg overflow-hidden">
-                <thead class="bg-gray-200">
+                <thead class="bg-gray-200 text-gray-600 uppercase font-semibold text-sm text-left">
                     <tr>
-                        <th class="px-6 py-3 text-left text-gray-600 uppercase font-semibold text-sm border-b">Item Name</th>
-                        <th class="px-6 py-3 text-left text-gray-600 uppercase font-semibold text-sm border-b">Quantity</th>
-                        <th class="px-6 py-3 text-left text-gray-600 uppercase font-semibold text-sm border-b">Actions</th>
+                        <th class="px-6 py-3">Item Name</th>
+                        <th class="px-6 py-3">Quantity</th>
+                        <th class="px-6 py-3">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if($inventories->isEmpty())
-                        <tr class="hover:bg-gray-100 transition duration-300">
-                            <td class="border-b px-6 py-4 text-gray-800">No items found.</td>
+                        <tr>
+                            <td class="px-6 py-4 text-gray-600">No items found.</td>
                         </tr>
                     @else
                         @foreach ($inventories as $inventory)
@@ -107,7 +107,9 @@
         <div class="absolute inset-0 bg-black opacity-50"></div>
 
         <div class="bg-white p-4 rounded-lg shadow-md z-10">
-            <h2 class="text-lg font-bold" id="modalTitle">Add Item</h2>
+            <div class="bg-[#4b9cd3;] rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
+                <h4 class="text-lg font-bold" id="modalTitle">Add Item</h4>
+            </div>
             <form id="inventoryForm" action="{{ route('inventory.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="_method" id="methodInput" value="POST">
