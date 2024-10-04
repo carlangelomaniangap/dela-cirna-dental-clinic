@@ -28,4 +28,12 @@ class PatientPaymentInfoController extends Controller
 
         return view('patient.paymentinfo.paymentinfo', compact('paymentinfo'));
     }
+
+    public function paymentHistory($paymentId){
+        
+        $paymentInfo = PaymentInfo::with('payments')->findOrFail($paymentId);
+        $paymenthistories = $paymentInfo->payments;
+
+        return view('patient.paymentinfo.paymenthistories', compact('paymenthistories', 'paymentInfo'));
+    }
 }

@@ -17,5 +17,10 @@ class PaymentInfo extends Model
     public function user(){
         return $this->belongsTo(User::class, 'users_id');
     }
+
+    // Define the relationship with the Payment model
+    public function payments(){
+        return $this->hasMany(Payment::class, 'payment_id'); // Make sure the foreign key is correct
+    }
 }
 

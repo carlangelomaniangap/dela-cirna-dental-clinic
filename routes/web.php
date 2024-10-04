@@ -78,15 +78,14 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     
     // payment info
     Route::get('/admin/paymentinfo',[AdminPaymentInfoController::class,'index'])->name('admin.paymentinfo');
-    Route::get('/admin/payment/add', [AdminPaymentInfoController::class, 'createPayment'])->name('admin.payment.create');
-    Route::post('/admin/payment/store', [AdminPaymentInfoController::class, 'storePayment'])->name('admin.payment.store');
-    Route::post('/admin/payment/patient/{patientlistId}', [AdminPaymentInfoController::class, 'addPayment'])->name('admin.addPayment');
-    Route::get('/admin/payment/update/{id}', [AdminPaymentInfoController::class, 'updatePayment'])->name('admin.updatePayment');
-    Route::put('/admin/payment/updated/{id}', [AdminPaymentInfoController::class, 'updatedPayment'])->name('admin.updatedPayment');
-    Route::delete('/admin/payment/delete/{id}', [AdminPaymentInfoController::class, 'deletePayment'])->name('admin.deletePayment');
-    
-    Route::get('/admin/payment/search', [AdminPaymentInfoController::class, 'search'])->name('admin.paymentinfo.search');
-
+    Route::get('/admin/paymentinfo/add', [AdminPaymentInfoController::class, 'createPayment'])->name('admin.payment.create');
+    Route::post('/admin/paymentinfo/store', [AdminPaymentInfoController::class, 'storePayment'])->name('admin.payment.store');
+    Route::get('/admin/paymentinfo/update/{paymentId}', [AdminPaymentInfoController::class, 'updatePayment'])->name('admin.updatePayment');
+    Route::put('/admin/paymentinfo/updated/{paymentId}', [AdminPaymentInfoController::class, 'updatedPayment'])->name('admin.updatedPayment');
+    Route::delete('/admin/paymentinfo/delete/{paymentId}', [AdminPaymentInfoController::class, 'deletePayment'])->name('admin.deletePayment');
+    Route::get('/admin/paymentinfo/search', [AdminPaymentInfoController::class, 'search'])->name('admin.paymentinfo.search');
+    Route::post('/admin/paymentinfo/addpayment/{paymentId}', [AdminPaymentInfoController::class, 'addPayment'])->name('admin.addPayment');
+    Route::get('/admin/paymentinfo/{paymentId}/history', [AdminPaymentInfoController::class, 'paymentHistory'])->name('admin.paymentHistory');
     // calendar
     Route::get('/admin/calendar',[AdminCalendarController::class,'index'])->name('admin.calendar');
     Route::post('/calendar/approve/{id}', [AdminCalendarController::class, 'approve'])->name('admin.approveCalendar');
@@ -126,14 +125,8 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
     Route::get('/patient/messages/search', [PatientMessagesController::class, 'search'])->name('patient.messages.search');
     // payment info
     Route::get('/patient/paymentinfo',[PatientPaymentInfoController::class,'index'])->name('patient.paymentinfo');
-    Route::get('/patient/payment/add', [PatientPaymentInfoController::class, 'createPayment'])->name('patient.payment.create');
-    Route::post('/patient/payment/store', [PatientPaymentInfoController::class, 'storePayment'])->name('patient.payment.store');
-    Route::post('/patient/payment/patient/{patientlistId}', [PatientPaymentInfoController::class, 'patient.addPayment'])->name('addPayment');
-    Route::get('/patient/payment/update/{id}', [PatientPaymentInfoController::class, 'updatePayment'])->name('patient.updatePayment');
-    Route::put('/patient/payment/updated/{id}', [PatientPaymentInfoController::class, 'updatedPayment'])->name('patient.updatedPayment');
-    Route::delete('/patient/payment/delete/{id}', [PatientPaymentInfoController::class, 'deletePayment'])->name('patient.deletePayment');
-    
     Route::get('/patient/payment/search', [PatientPaymentInfoController::class, 'search'])->name('patient.paymentinfo.search');
+    Route::get('/patient/paymentinfo/{paymentId}/history', [PatientPaymentInfoController::class, 'paymentHistory'])->name('patient.paymentHistory');
     // calendar
     Route::get('/patient/calendar',[PatientCalendarController::class,'index'])->name('patient.calendar');
     Route::get('/patient/calendar/appointment/update/{id}', [PatientCalendarController::class, 'updateCalendar'])->name('patient.updateCalendar');

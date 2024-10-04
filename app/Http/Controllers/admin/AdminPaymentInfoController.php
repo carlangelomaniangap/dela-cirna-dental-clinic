@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use App\Models\User;
 use App\Models\PaymentInfo;
 use Illuminate\Http\Request;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class AdminPaymentInfoController extends Controller
 {
     public function index(){   
-
+        
         $paymentinfo = PaymentInfo::all();
         $paymentinfo = PaymentInfo::paginate(10);
         $users = User::all();
@@ -48,26 +49,26 @@ class AdminPaymentInfoController extends Controller
         return redirect()->route('admin.paymentinfo')->with('success', 'Payment added successfully!');
     }
 
-    public function deletePayment($id){
+    public function deletePayment($paymentId){
 
-        $payment = PaymentInfo::findOrFail($id);
+        $payment = PaymentInfo::findOrFail($paymentId);
         $payment->delete();
 
         return back()->with('success', 'Payment deleted successfully!');
     }
 
    
-    public function updatePayment($id){
+    public function updatePayment($paymentId){
 
-        $payment = PaymentInfo::findOrFail($id);
+        $payment = PaymentInfo::findOrFail($paymentId);
         $users = User::all();
 
         return view('admin.paymentinfo.updatePayment', compact('payment', 'users'));
     }
 
-    public function updatedPayment(Request $request, $id){
+    public function updatedPayment(Request $request, $paymentId){
 
-        $patient = PaymentInfo::findOrFail($id);
+        $patient = PaymentInfo::findOrFail($paymentId);
         
         $request->validate([
             'users_id' => 'required|exists:users,id',
@@ -102,4 +103,48 @@ class AdminPaymentInfoController extends Controller
 
         return view('admin.paymentinfo.paymentinfo', compact('paymentinfo'));
     }
+    
+    public function addPayment(Request $request, $paymentId){
+        
+        $request->validate([
+            'payment' => 'required|integer', // Validate the payment amount
+        ]);
+
+        // Find the payment record by ID
+        $payment = PaymentInfo::findOrFail($paymentId);
+        
+        // Get the current balance from the payment record
+        $currentBalance = $payment->balance;
+
+        // Check if the payment amount exceeds the current balance
+        if ($request->input('payment') > $currentBalance) {
+            return back()->withErrors(['payment' => 'Payment amount exceeds current balance.']);
+        }
+
+        // Calculate the new balance
+        $newBalance = $currentBalance - $request->input('payment');
+
+        // Update the payment record
+        $payment->update([
+            'balance' => $newBalance, // Store the new balance
+        ]);
+
+        // Create a payment history record
+        Payment::create([
+            'payment_id' => $payment->id,
+            'payment' => $request->input('payment'),
+        ]);
+
+        // Redirect with a success message
+        return redirect()->route('admin.paymentinfo')->with('success', 'Payment added successfully! New balance: ' . $newBalance);
+    }
+
+    public function paymentHistory($paymentId){
+        
+        $paymentInfo = PaymentInfo::with('payments')->findOrFail($paymentId);
+        $paymenthistories = $paymentInfo->payments;
+
+        return view('admin.paymentinfo.paymenthistories', compact('paymenthistories', 'paymentInfo'));
+    }
+
 }
