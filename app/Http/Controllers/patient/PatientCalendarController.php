@@ -27,7 +27,7 @@ class PatientCalendarController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'appointmentdate' => 'required|date',
-            'appointmenttime' => 'required|date_format:H:i',
+            'appointmenttime' => 'required',
             'name' => 'required|string|max:255',
             'gender' => 'required|string|max:255',
             'birthday' => 'required|date',

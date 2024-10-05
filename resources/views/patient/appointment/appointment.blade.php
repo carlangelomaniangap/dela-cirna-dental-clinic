@@ -49,7 +49,17 @@
 
                     <div>
                         <label for="appointmenttime" class="font-semibold time">Appointment Time</label>
-                        <input type="time" class="rounded-lg focus:ring-2 shadow-sm w-full" id="appointmenttime" name="appointmenttime" required>
+                        <select id="appointmenttime" name="appointmenttime" class="rounded-lg focus:ring-2 shadow-sm w-full" required>
+                            <option value="" disabled selected>Select your Time</option>
+                            <option value="08:00:00">8:00 AM - 9:00 AM</option>
+                            <option value="09:00:00">9:00 AM - 10:00 AM</option>
+                            <option value="10:00:00">10:00 AM - 11:00 AM</option>
+                            <option value="11:00:00">11:00 AM - 12:00 PM</option>
+                            <option value="16:00:00">4:00 PM - 5:00 PM</option>
+                            <option value="17:00:00">5:00 PM - 6:00 PM</option>
+                            <option value="18:00:00">6:00 PM - 7:00 PM</option>
+                            <option value="19:00:00">7:00 PM - 8:00 PM</option>
+                        </select>
                     </div>
                 </div>
 
