@@ -43,6 +43,16 @@ class PatientCalendarController extends Controller
             'relation' => 'nullable|string',
         ]);
 
+        // Check for existing appointment
+        $existingAppointment = Calendar::where([
+            'appointmentdate' => $request->input('appointmentdate'),
+            'appointmenttime'=> $request->input('appointmenttime')
+        ])->first();
+
+        if ($existingAppointment) {
+            return redirect()->back()->withErrors(['appointmenttime' => 'This time is already booked. Could you please select a different time?']);
+        }
+
         Calendar::create([
             'user_id' => $request->input('user_id'),
             'appointmentdate' => $request->input('appointmentdate'),
