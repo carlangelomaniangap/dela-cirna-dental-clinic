@@ -34,38 +34,45 @@
         </div>
     @endif
             
-    <div class="relative overflow-x-auto">
-        <table class="min-w-full bg-white text-left rtl:text-right">
-            <thead class="text-gray-800">
-                <tr class="border-b-2">
-                    <th scope="col" class="px-6 py-4">Name</th>
-                    <th scope="col" class="px-6 py-4">Age</th>
-                    <th scope="col" class="px-6 py-4">Gender</th>
-                    <th scope="col" class="px-6 py-4">Phone No.</th>
-                    <th scope="col" class="px-6 py-4">Email</th>
+    <div class="p-6">
+        <table class="min-w-full mt-4 bg-white shadow-lg rounded-lg overflow-hidden">
+            <thead class="bg-white text-gray-600 uppercase font-semibold text-sm text-left border-b-2">
+                <tr>
+                    <th class="px-6 py-4">Name</th>
+                    <th class="px-6 py-4">Age</th>
+                    <th class="px-6 py-4">Gender</th>
+                    <th class="px-6 py-4">Phone No.</th>
+                    <th class="px-6 py-4">Email</th>
+                    <th class="px-6 py-4">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($patientlist as $patient)
-                    <tr class="bg-white border-b hover:bg-gray-100">
-                        <td class="px-6 py-4">{{ $patient->name }}</td>
-                        <td class="px-6 py-4">{{ $patient->age }}</td>
-                        <td class="px-6 py-4">{{ $patient->gender }}</td>
-                        <td class="px-6 py-4">{{ $patient->phone }}</td>
-                        <td class="px-6 py-4">{{ $patient->email }}</td>
-                        <td class="px-6 py-4">
-                            <a href="{{ route('admin.showRecord', $patient->id) }}" class="px-4 py-2 rounded text-blue-800 hover:bg-blue-200 transition duration-300"><i class="fa-solid fa-folder-closed"></i> Records</a>
-                            <a href="{{ route('admin.updatePatient', $patient->id) }}" class="px-4 py-2 rounded text-gray-800 hover:bg-gray-200 transition duration-300"><i class="fa-solid fa-pen"></i> Edit</a>
-                            
-                            <a href="{{ route('admin.deletePatient', $patient->id) }}" class="px-4 py-2 rounded text-red-800 hover:bg-red-200 transition duration-300" onclick="event.preventDefault(); if(confirm('Are you sure you want to delete this patient?')) { document.getElementById('delete-patient-form').submit(); }"><i class="fa-regular fa-trash-can"></i> Delete</a>
-                            <!-- hidden form for csrf -->
-                            <form id="delete-patient-form" method="post" action="{{ route('admin.deletePatient', $patient->id) }}" style="display: none;">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        </td>
+                @if($patientlist->isEmpty())
+                    <tr>
+                        <td class="px-6 py-4 text-gray-600">No patients found.</td>
                     </tr>
-                @endforeach
+                @else
+                    @foreach ($patientlist as $patient)
+                        <tr class="bg-white border-b hover:bg-gray-100">
+                            <td class="px-6 py-4">{{ $patient->name }}</td>
+                            <td class="px-6 py-4">{{ $patient->age }}</td>
+                            <td class="px-6 py-4">{{ $patient->gender }}</td>
+                            <td class="px-6 py-4">{{ $patient->phone }}</td>
+                            <td class="px-6 py-4">{{ $patient->email }}</td>
+                            <td class="px-6 py-4">
+                                <a href="{{ route('admin.showRecord', $patient->id) }}" class="px-4 py-2 rounded text-blue-800 hover:bg-blue-200 transition duration-300"><i class="fa-solid fa-folder-closed"></i> Records</a>
+                                <a href="{{ route('admin.updatePatient', $patient->id) }}" class="px-4 py-2 rounded text-gray-800 hover:bg-gray-200 transition duration-300"><i class="fa-solid fa-pen"></i> Edit</a>
+                                
+                                <a href="{{ route('admin.deletePatient', $patient->id) }}" class="px-4 py-2 rounded text-red-800 hover:bg-red-200 transition duration-300" onclick="event.preventDefault(); if(confirm('Are you sure you want to delete this patient?')) { document.getElementById('delete-patient-form').submit(); }"><i class="fa-regular fa-trash-can"></i> Delete</a>
+                                <!-- hidden form for csrf -->
+                                <form id="delete-patient-form" method="post" action="{{ route('admin.deletePatient', $patient->id) }}" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
             

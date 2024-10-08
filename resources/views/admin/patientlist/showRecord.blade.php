@@ -27,7 +27,7 @@
                         </tr>
                         <tr>
                             <th>Birthday:</th>
-                            <td>{{ $patientlist->birthday }}</td>
+                            <td>{{ date('F j, Y', strtotime($patientlist->birthday)) }}</td>
                         </tr>
                         <tr>    
                             <th>Age:</th>
@@ -78,11 +78,17 @@
             <div class="max-h-50 overflow-y-auto overflow-x-auto">
                 <table class="min-w-full">
                     <tbody class="flex items-center justify-center text-justify m-5">
-                        @foreach ($notes as $note)
+                        @if($notes->isEmpty())
                             <tr>
-                                <td class="overflow-hidden">{{ $note->note }}</td>
+                                <td class="text-gray-800">No notes found.</td>
                             </tr>
-                        @endforeach
+                        @else    
+                            @foreach ($notes as $note)
+                                <tr>
+                                    <td class="overflow-hidden">{{ $note->note }}</td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -104,7 +110,7 @@
                         </div>
                         <div class="flex justify-end space-x-2">
                             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Save Notes</button>
-                            <button type="submit" id="closeModalBtn" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
+                            <button type="button" id="closeModalBtn" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
                         </div>
                     </form>
                 </div>
@@ -146,7 +152,7 @@
                         </div>
                         <div class="text-right">
                             <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Upload File</button>
-                            <button type="submit" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
+                            <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
                         </div>
                     </form>
                 </div>
@@ -157,26 +163,32 @@
                 <h1>Total Files: {{ $count }}</h1>
             </div>
             
-            <div class="max-h-96 overflow-y-auto overflow-x-auto border-t-2 border-b">
+            <div class="max-h-96 overflow-y-auto overflow-x-auto border-t-2">
                 
                 <table class="min-w-full bg-white text-left rtl:text-right">
                     <tbody>
-                        @foreach ($records as $record)
-                            <tr class="relative group bg-white border-b hover:bg-gray-100">
-                                <td class="py-4 px-4 whitespace-nowrap overflow-hidden cursor-pointer">{{ $record->file }}</td>
-                                <td class="py-4 whitespace-nowrap overflow-hidden">
-                                    <div class="bg-white px-4 py-2 rounded-lg shadow-md absolute left-1/2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex space-x-2">
-                                        <a href="{{ route('admin.downloadRecord', [$patientlist->id, $record->id]) }}" class="px-2 text-blue-800"><i class="fa-solid fa-download text-lg"></i></a>
-                                        <a href="{{ route('admin.updateRecord', [$patientlist->id, $record->id]) }}" class="px-2 text-gray-800"><i class="fa-solid fa-pen text-lg"></i></a>
-                                        <form method="post" action="{{ route('admin.deleteRecord', [$patientlist->id, $record->id]) }}" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="px-2 text-red-800" onclick="return confirm('Are you sure you want to delete this patient?')"><i class="fa-regular fa-trash-can text-lg"></i></button>
-                                        </form>
-                                    </div>
-                                </td>
+                        @if($records->isEmpty())
+                            <tr>
+                                <td class="py-4 text-gray-800">No records found.</td>
                             </tr>
-                        @endforeach
+                        @else
+                            @foreach ($records as $record)
+                                <tr class="relative group bg-white border-b hover:bg-gray-100">
+                                    <td class="py-4 px-4 whitespace-nowrap overflow-hidden cursor-pointer">{{ $record->file }}</td>
+                                    <td class="py-4 whitespace-nowrap overflow-hidden">
+                                        <div class="bg-white px-4 py-2 rounded-lg shadow-md absolute left-1/2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex space-x-2">
+                                            <a href="{{ route('admin.downloadRecord', [$patientlist->id, $record->id]) }}" class="px-2 text-blue-800"><i class="fa-solid fa-download text-lg"></i></a>
+                                            <a href="{{ route('admin.updateRecord', [$patientlist->id, $record->id]) }}" class="px-2 text-gray-800"><i class="fa-solid fa-pen text-lg"></i></a>
+                                            <form method="post" action="{{ route('admin.deleteRecord', [$patientlist->id, $record->id]) }}" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="px-2 text-red-800" onclick="return confirm('Are you sure you want to delete this patient?')"><i class="fa-regular fa-trash-can text-lg"></i></button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -185,22 +197,28 @@
         <!-- Patient upcoming appointment -->
         <div class="row-start-2 col-span-2 bg-white shadow-md p-5 rounded-xl h-[250px]">
             <h1 class="text-xl font-bold border-b-2">Upcoming Appointment</h1>
-            <table>
+            <table class="text-left">
                 <thead>
                     <tr>
-                        <th scope="col" class="px-4 py-2">Appointment Date</th>
-                        <th scope="col" class="px-4 py-2">Appointment Time</th>
-                        <th scope="col" class="px-4 py-2">Name</th>
+                        <th class="px-4 py-2">Appointment Date</th>
+                        <th class="px-4 py-2">Appointment Time</th>
+                        <th class="px-4 py-2">Name</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($calendars as $calendar)
+                    @if($calendars->isEmpty())
                         <tr>
-                            <td class="px-4">{{$calendar->appointmentdate}}</td>
-                            <td class="px-4">{{$calendar->appointmenttime}}</td>
-                            <td class="px-4">{{$calendar->name}}</td>
+                            <td class="px-4 py-2 text-gray-800">No appointment found.</td>
                         </tr>
-                    @endforeach
+                    @else
+                        @foreach ($calendars as $calendar)
+                            <tr>
+                                <td class="px-4">{{ date('F j, Y', strtotime($calendar->appointmentdate)) }}</td>
+                                <td class="px-4">{{$calendar->appointmenttime }}</td>
+                                <td class="px-4">{{$calendar->name}}</td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>
