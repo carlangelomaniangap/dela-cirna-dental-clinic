@@ -1,6 +1,7 @@
 <?php 
 namespace Database\Seeders;
 
+use App\Models\DentalClinic;
 use App\Models\User;
 use App\Models\Patientlist;
 use App\Models\PaymentInfo;
@@ -15,7 +16,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Seed users
+
+        $dentalclinic = DentalClinic::create([
+            'dentalclinicname' => 'Dela Cirna Dental Clinic',
+        ]);
+
         User::create([
+            'dentalclinic_id' => $dentalclinic->id,
             'usertype' => 'admin',
             'name' => 'Admin',
             'email' => 'admin@example.com',
@@ -23,6 +30,7 @@ class DatabaseSeeder extends Seeder
         ]);
         
         User::create([
+            'dentalclinic_id' => $dentalclinic->id,
             'usertype' => 'patient',
             'name' => 'Patient',
             'email' => 'patient@example.com',
@@ -30,6 +38,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
+            'dentalclinic_id' => $dentalclinic->id,
             'usertype' => 'dentistrystudent',
             'name' => 'Dentistry Student',
             'email' => 'dentistrystudent@example.com',

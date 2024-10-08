@@ -12,7 +12,7 @@ use App\Http\Controllers\admin\AdminPaymentInfoController;
 use App\Http\Controllers\admin\AdminCalendarController;
 use App\Http\Controllers\admin\AdminCommunityForumController;
 use App\Http\Controllers\admin\AdminCommentController;
-
+use App\Http\Controllers\DentalClinicController;
 // patient
 use App\Http\Controllers\patient\PatientDashboardController;
 use App\Http\Controllers\patient\PatientAppointmentController;
@@ -40,6 +40,12 @@ use App\Http\Controllers\WelcomeController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+// Create Multiple Clinic
+Route::get('/dentalclinics', [DentalClinicController::class, 'create'])->name('dentalclinics.create');
+Route::post('/dentalclinics/store', [DentalClinicController::class, 'store'])->name('dentalclinics.store');
+
 
 Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     // dashboard

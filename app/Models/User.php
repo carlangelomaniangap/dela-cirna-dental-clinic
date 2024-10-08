@@ -18,11 +18,16 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'dentalclinic_id',
+        'usertype',
         'name',
         'email',
-        'usertype',
         'password',
     ];
+
+    public function dentalclinic(){
+        return $this->belongsTo(DentalClinic::class, 'dentalclinic_id');
+    }
 
     public function patientlist(){
         return $this->hasMany(Patientlist::class, 'users_id');
