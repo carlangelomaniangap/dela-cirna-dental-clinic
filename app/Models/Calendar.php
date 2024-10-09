@@ -9,6 +9,7 @@ class Calendar extends Model
     protected $table = 'calendars';
 
     protected $fillable = [
+        'dentalclinic_id',
         'user_id',
         'appointmentdate',
         'appointmenttime',
@@ -28,6 +29,10 @@ class Calendar extends Model
         'relation',
         'approved',
     ];
+
+    public function dentalclinic(){
+        return $this->belongsTo(DentalClinic::class, 'dentalclinic_id');
+    }
 
     public function user(){
         return $this->belongsTo(User::class);

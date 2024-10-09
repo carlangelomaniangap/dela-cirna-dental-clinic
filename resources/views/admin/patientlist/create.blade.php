@@ -14,6 +14,8 @@
     </div>
 
     <form method="post" action="{{ route('admin.patient.store') }}" class="w-1/2 mx-auto bg-white rounded-lg shadow-md p-10">
+        <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
+        
         @csrf
 
         <div class="mb-4">
@@ -21,9 +23,7 @@
             <select class="w-full rounded-lg focus:ring-2 shadow-sm" id="users_id" name="users_id" required>
                 <option value="" disabled selected>Select</option>
                 @foreach($users as $user)
-                    @if($user->usertype !== 'admin' && $user->usertype !== 'dentistrystudent')
                         <option value="{{ $user->id }}">{{ $user->name }}</option>
-                    @endif
                 @endforeach
             </select>
         </div>

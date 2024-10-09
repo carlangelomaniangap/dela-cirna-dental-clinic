@@ -24,7 +24,10 @@
     @endif
 
     <form method="post" action="{{ route('admin.payment.store') }}" class="w-1/2 mx-auto bg-white rounded-lg shadow-md p-10">
+        <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">    
+
         @csrf
+
         <div class="mb-4">
             <label for="users_id" class="font-semibold">Patient Account</label>
             <select class="w-full rounded-lg focus:ring-2 shadow-sm" id="users_id" name="users_id" required>

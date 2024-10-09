@@ -111,6 +111,8 @@
                 <h4 class="text-lg font-bold" id="modalTitle">Add Item</h4>
             </div>
             <form id="inventoryForm" action="{{ route('inventory.store') }}" method="POST">
+                <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
+                
                 @csrf
                 <input type="hidden" name="_method" id="methodInput" value="POST">
                 <div>

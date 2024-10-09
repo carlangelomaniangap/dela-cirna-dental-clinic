@@ -8,12 +8,12 @@ class Patientlist extends Model
 {
     protected $table = 'patientlists';
 
-    protected $fillable = ['users_id', 'name', 'gender', 'birthday', 'age', 'phone', 'address', 'email'];
+    protected $fillable = ['dentalclinic_id', 'users_id', 'name', 'gender', 'birthday', 'age', 'phone', 'address', 'email'];
     
     
-    // public function patient(){
-    //     return $this->belongsTo(User::class);
-    // }
+    public function dentalclinic(){
+        return $this->belongsTo(DentalClinic::class, 'dentalclinic_id');
+    }
 
     public function user(){
         return $this->belongsTo(User::class, 'users_id');

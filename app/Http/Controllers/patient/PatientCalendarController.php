@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\patient;
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\Calendar;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PatientCalendarController extends Controller
 {
@@ -22,14 +24,22 @@ class PatientCalendarController extends Controller
 
     public function index(){
 
-        $calendars = Calendar::all();
+        // Get the dentalclinic_id from the authenticated user
+        $dentalclinicId = Auth::user()->dentalclinic_id;
+
+        // Retrieve calendars related to the specific dental clinic
+        $calendars = Calendar::where('dentalclinic_id', $dentalclinicId)->paginate(10);
 
         return view('patient.calendar.calendar', compact('calendars'));
     }
 
     public function createCalendar($userId){
 
-        $users = User::findOrFail($userId);
+        // Get the dentalclinic_id from the authenticated user
+        $dentalclinicId = Auth::user()->dentalclinic_id;
+
+        // Retrieve the user and ensure they belong to the same dental clinic
+        $users = User::where('id', $userId)->where('dentalclinic_id', $dentalclinicId)->firstOrFail();
 
         return view('patient.appointment.appointment', compact('users'));
     }
@@ -37,6 +47,7 @@ class PatientCalendarController extends Controller
     public function storeCalendar(Request $request){
 
         $request->validate([
+            'dentalclinic_id' => 'required', 'exists:dentalclinics,id',
             'user_id' => 'required|exists:users,id',
             'appointmentdate' => 'required|date',
             'appointmenttime' => 'required',
@@ -67,6 +78,7 @@ class PatientCalendarController extends Controller
         }
 
         Calendar::create([
+            'dentalclinic_id' => $request->dentalclinic_id,
             'user_id' => $request->input('user_id'),
             'appointmentdate' => $request->input('appointmentdate'),
             'appointmenttime' => $request->input('appointmenttime'),

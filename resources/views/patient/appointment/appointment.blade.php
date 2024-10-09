@@ -30,9 +30,12 @@
     
     <div class="p-6">
         <form method="post" action="{{ route('patient.calendar.store') }}" class="grid grid-cols-2 gap-6 bg-white rounded-lg shadow-md p-10">
-            @csrf
+            <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
+        
             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-
+            
+            @csrf
+            
             <div class="grid grid-cols-1 gap-4">
                 <div>
                     <h3 class="text-3xl font-bold">Patient Appointment</h3>

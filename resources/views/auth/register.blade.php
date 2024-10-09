@@ -2,6 +2,18 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
+        <div class="mt-4">
+            <label for="dentalclinic_id" class="block text-sm font-medium text-gray-700">
+                Dental Clinic
+            </label>
+            <select name="dentalclinic_id" id="dentalclinic_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <option value="" disabled selected>Select a Dental Clinic</option>
+                @foreach($dentalclinics as $dentalclinic)
+                    <option value="{{ $dentalclinic->id }}">{{ $dentalclinic->dentalclinicname }}</option>
+                @endforeach
+            </select>
+        </div>
+
         <!-- User Type -->
         <div class="mt-4">
             <x-input-label for="usertype" :value="__('User Type')" />

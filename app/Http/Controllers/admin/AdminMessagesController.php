@@ -7,13 +7,19 @@ use Illuminate\Http\Request;
 
 use App\Models\Message;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AdminMessagesController extends Controller
 {
     
     public function index(){
         
-        $users = User::where('id', '!=', auth()->id())->get();
+        // Get the dentalclinic_id from the authenticated user
+        $dentalclinicId = Auth::user()->dentalclinic_id;
+
+        // Retrieve users (patients) from the same dental clinic, excluding the logged-in user
+        $users = User::where('dentalclinic_id', $dentalclinicId)->where('id', '!=', auth()->id())->where('usertype', 'patient')->get();
+        
         $messages = Message::all();
 
         return view('admin.messages.messages', compact('users', 'messages'));
@@ -27,7 +33,7 @@ class AdminMessagesController extends Controller
         ]);
 
         // Create the message
-        $message = Message::create([
+        Message::create([
             'sender_id' => auth()->id(), // Assuming sender is the authenticated user
             'recipient_id' => $request->input('recipient_id'),
             'message' => $request->input('message'),

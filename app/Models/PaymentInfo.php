@@ -8,7 +8,11 @@ class PaymentInfo extends Model
 {
     protected $table = 'paymentinfos';
 
-    protected $fillable = ['users_id', 'patientname','description', 'amount', 'balance', 'date'];
+    protected $fillable = ['dentalclinic_id', 'users_id', 'patientname','description', 'amount', 'balance', 'date'];
+
+    public function dentalclinic(){
+        return $this->belongsTo(DentalClinic::class, 'dentalclinic_id');
+    }
 
     public function patient(){
         return $this->belongsTo(User::class);

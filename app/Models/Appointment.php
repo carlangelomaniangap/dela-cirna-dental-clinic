@@ -9,6 +9,7 @@ class Appointment extends Model
     protected $table = 'appointments';
 
     protected $fillable = [
+        'dentalclinic_id',
         'user_id',
         'appointmentdate',
         'appointmenttime',
@@ -28,6 +29,10 @@ class Appointment extends Model
         'relation',
         'approved',
     ];
+
+    public function dentalclinic(){
+        return $this->belongsTo(DentalClinic::class, 'dentalclinic_id');
+    }
 
     public function user(){
         return $this->belongsTo(User::class);

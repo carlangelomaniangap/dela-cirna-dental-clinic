@@ -21,6 +21,7 @@
     </style>
 </head>
 <body class="min-h-screen">
+    
     <div class="bg-[#4b9cd3] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold">
         <h4><i class="fa-solid fa-calendar-days"></i> Calendar</h4>
     </div>
@@ -96,7 +97,6 @@
                                                 @else
                                                     <span class="text-green-500 text-xs">Approved</span>
                                                 @endif
-                                                <a href="{{ route('admin.updateCalendar', $calendar->id) }}" class="py-1 px-2 rounded bg-white hover:bg-gray-300 text-gray-800 text-xs" title="Update"><i class="fa-solid fa-pen"></i></a>
                                                 <a href="{{ route('admin.viewDetails', $calendar->id) }}" class="py-1 px-2 rounded bg-white hover:bg-gray-300 text-gray-800 text-xs" title="View"><i class="fa-solid fa-eye"></i></a>
                                                 <form method="post" action="{{ route('admin.deleteCalendar', $calendar->id) }}">
                                                     @csrf
