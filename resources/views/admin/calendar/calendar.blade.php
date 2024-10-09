@@ -89,13 +89,13 @@
                                             <strong>{{ date('g:i A', strtotime($calendar->appointmenttime)) }}</strong><br>
                                             {{ $calendar->name }}
                                             <div class="appointment-buttons mt-2 flex justify-between">
-                                                @if (!$calendar->approved)
+                                                @if ($calendar->approved === 'Pending Approval')
                                                     <form method="post" action="{{ route('admin.approveCalendar', $calendar->id) }}">
                                                         @csrf
                                                         <button type="submit" class="py-1 px-2 rounded bg-green-500 text-white text-xs" title="Approve">Approve</button>
                                                     </form>
                                                 @else
-                                                    <span class="text-green-500 text-xs">Approved</span>
+                                                    <span class="text-green-500 text-xs">{{ $calendar->approved }}</span>
                                                 @endif
                                                 <a href="{{ route('admin.viewDetails', $calendar->id) }}" class="py-1 px-2 rounded bg-white hover:bg-gray-300 text-gray-800 text-xs" title="View"><i class="fa-solid fa-eye"></i></a>
                                                 <form method="post" action="{{ route('admin.deleteCalendar', $calendar->id) }}">

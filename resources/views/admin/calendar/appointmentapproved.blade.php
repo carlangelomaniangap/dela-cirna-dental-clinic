@@ -6,7 +6,8 @@
 <body>
 
     <h1>Your Appointment has been Approved</h1>
-    <p>Your appointment scheduled for {{ $appointmentDate }} at {{ $appointmentTime }} has been approved.</p>
+    <p>Dear Patient,</p>
+    <p>Your appointment at {{ $dentalclinicname }} has been approved on {{ $appointmentDate }} at {{ $appointmentTime }}.</p>
 
 </body>
 </html>

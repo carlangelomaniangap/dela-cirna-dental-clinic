@@ -84,7 +84,7 @@
                                             <strong>{{ date('g:i A', strtotime($calendar->appointmenttime)) }}</strong><br>
                                             {{ $calendar->name }}<br>
                                             <span class="{{ $calendar->approved ? 'text-green-500' : 'text-yellow-500' }}">
-                                                {{ $calendar->approved ? 'Approved' : 'Pending Approval' }}
+                                                {{ $calendar->approved === 'Approved' ? 'Approved' : 'Pending Approval' }}
                                             </span>
                                         </div>
                                         @php $hasAppointment = true; @endphp

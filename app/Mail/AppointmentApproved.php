@@ -14,13 +14,15 @@ class AppointmentApproved extends Mailable
     public $appointment;
     public $appointmentTime;
     public $appointmentDate;
+    public $dentalclinic;
     
-    public function __construct($appointment){
+    public function __construct($appointment, $dentalclinic){
 
         $this->appointment = $appointment;
 
         $this->appointmentDate = Carbon::parse($appointment->appointmentdate)->format('F j, Y'); // Example format
         $this->appointmentTime = Carbon::parse($appointment->appointmenttime)->format('g:i A'); // Example format
+        $this->dentalclinic = $dentalclinic;
     }
 
     public function build(){
@@ -30,6 +32,7 @@ class AppointmentApproved extends Mailable
                     ->with([
                         'appointmentDate' => $this->appointmentDate,
                         'appointmentTime' => $this->appointmentTime,
+                        'dentalclinicname' => $this->dentalclinic->dentalclinicname,
                     ]);
     }
 }

@@ -30,6 +30,11 @@ class Calendar extends Model
         'approved',
     ];
 
+    // Accessor for appointment status
+    public function getStatusAttribute(){
+        return $this->approved;
+    }
+
     public function dentalclinic(){
         return $this->belongsTo(DentalClinic::class, 'dentalclinic_id');
     }
