@@ -69,6 +69,7 @@ class PatientCalendarController extends Controller
 
         // Check for existing appointment
         $existingAppointment = Calendar::where([
+            'dentalclinic_id' => $request->input('dentalclinic_id'),
             'appointmentdate' => $request->input('appointmentdate'),
             'appointmenttime'=> $request->input('appointmenttime')
         ])->first();
