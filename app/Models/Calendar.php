@@ -12,6 +12,7 @@ class Calendar extends Model
         'user_id',
         'appointmentdate',
         'appointmenttime',
+        'concern',
         'name',
         'gender',
         'birthday',

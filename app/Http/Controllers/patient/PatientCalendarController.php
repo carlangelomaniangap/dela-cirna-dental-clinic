@@ -8,6 +8,18 @@ use Illuminate\Http\Request;
 
 class PatientCalendarController extends Controller
 {
+    public function getBookedTimes(Request $request)
+{
+    $date = $request->query('date');
+
+    // Fetch appointments for the given date
+    $bookedTimes = Appointment::whereDate('appointmentdate', $date)
+        ->pluck('appointmenttime')
+        ->toArray();
+
+    return response()->json($bookedTimes);
+}
+
     public function index(){
 
         $calendars = Calendar::all();
@@ -28,6 +40,7 @@ class PatientCalendarController extends Controller
             'user_id' => 'required|exists:users,id',
             'appointmentdate' => 'required|date',
             'appointmenttime' => 'required',
+            'concern' => 'required|string|max:255',
             'name' => 'required|string|max:255',
             'gender' => 'required|string|max:255',
             'birthday' => 'required|date',
@@ -57,6 +70,7 @@ class PatientCalendarController extends Controller
             'user_id' => $request->input('user_id'),
             'appointmentdate' => $request->input('appointmentdate'),
             'appointmenttime' => $request->input('appointmenttime'),
+            'concern' => $request->input('concern'),
             'name' => $request->input('name'),
             'gender' => $request->input('gender'),
             'birthday' => $request->input('birthday'),
@@ -98,8 +112,8 @@ class PatientCalendarController extends Controller
             'user_id' => 'required|exists:user,id',
             'appointmentdate' => 'required|date',
             'appointmenttime' => 'required|date_format:H:i',
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
+            'concern' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'birthday' => 'required|date',
             'gender' => 'required|string',
             'address' => 'required|string|max:255',
@@ -117,6 +131,7 @@ class PatientCalendarController extends Controller
             'user_id' => $request->input('user_id'),
             'appointmentdate' => $request->input('appointmentdate'),
             'appointmenttime' => $request->input('appointmenttime'),
+            'concern' => $request->input('concern'),
             'name' => $request->input('name'),
             'gender' => $request->input('gender'),
             'birthday' => $request->input('birthday'),

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->date('appointmentdate');
             $table->time('appointmenttime');
+            $table->string('concern');
             $table->string('name');
             $table->string('gender');
             $table->date('birthday');

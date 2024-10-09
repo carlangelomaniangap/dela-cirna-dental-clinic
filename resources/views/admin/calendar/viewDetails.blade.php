@@ -24,6 +24,10 @@
                         <td class="px-6 py-3">{{ $calendar->appointmentdate }}</td>
                     </tr>
                     <tr>
+                        <th scope="col" class="px-6 py-3">Concern</th>
+                        <td class="px-6 py-3">{{ $calendar->concern }}</td>
+                    </tr>
+                    <tr>
                         <th scope="col" class="px-6 py-3">Name</th>
                         <td class="px-6 py-3">{{ $calendar->name }}</td>
                     </tr>
