@@ -10,10 +10,14 @@
         </div>
     @endif
 
-    <form action="{{ route('dentalclinics.store') }}" method="POST">
+    <form action="{{ route('dentalclinics.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <h2 class="text-2xl font-semibold mb-6 text-center">Create Dental Clinic</h2>
-
+        
+        <div class="mb-4">
+            <label for="logo">Clinic Logo</label>
+            <input type="file" name="logo" accept="image/*" required>
+        </div>
         <div class="mb-4">
             <label for="dentalclinicname" class="block text-sm font-medium text-gray-700">Clinic Name:</label>
             <input type="text" id="dentalclinicname" name="dentalclinicname" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 p-2">

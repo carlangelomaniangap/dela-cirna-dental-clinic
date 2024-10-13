@@ -11,7 +11,7 @@ class DentalClinic extends Model
 
     protected $table = 'dentalclinics';
 
-    protected $fillable = ['dentalclinicname'];
+    protected $fillable = ['logo', 'dentalclinicname'];
 
     // Define the relationship to users
     public function users()

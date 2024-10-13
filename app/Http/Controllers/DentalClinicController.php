@@ -19,14 +19,18 @@ class DentalClinicController extends Controller
     {
         // Validate the input
         $request->validate([
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'dentalclinicname' => 'required|string|max:255',
             'admin_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'admin_password' => 'required|string|min:8',
         ]);
 
+        $request->file('logo')->move(public_path('logos'), $request->file('logo')->getClientOriginalName());
+
         // Create the clinic
         $dentalclinic = DentalClinic::create([
+            'logo' => 'logos/' . $request->file('logo')->getClientOriginalName(),
             'dentalclinicname' => $request->dentalclinicname,
         ]);
 
