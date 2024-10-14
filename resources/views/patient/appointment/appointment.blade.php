@@ -65,8 +65,8 @@
                 </div>
 
                 <div>
-                    <label for="concern" class="font-semibold">Concern<span class="text-gray-500">(e.g. Teeth Cleaning, Tooth Extraction, Braces and etc.)</span></label>
-                    <input type="text" class="rounded-lg focus:ring-2 shadow-sm w-full" id="concern" name="concern" value="{{ old('concern') }}" required>
+                    <label for="concern" class="font-semibold">Concern</label>
+                    <input type="text" class="rounded-lg focus:ring-2 shadow-sm w-full" id="concern" name="concern" value="{{ old('concern') }}" placeholder="e.g., Cleaning, Pasta, Braces" required>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -76,10 +76,10 @@
                     </div>
                     <div>
                         <label for="gender" class="font-semibold">Gender</label>
-                        <select id="gender" name="gender" class="rounded-lg focus:ring-2 shadow-sm w-full" required>
+                        <select id="gender" name="gender" class="rounded-lg focus:ring-2 shadow-sm w-full bg-gray-100" disabled>
                             <option value="" disabled selected>Select your Gender</option>
-                            <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
-                            <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                            <option value="Male" {{ old('gender') == 'Male' || auth()->user()->gender == 'Male' ? 'selected' : '' }}>Male</option>
+                            <option value="Female" {{ old('gender') == 'Female' || auth()->user()->gender == 'Female' ? 'selected' : '' }}>Female</option>
                         </select>
                     </div>
                 </div>
@@ -87,18 +87,18 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="birthday" class="font-semibold">Birthday</label>
-                        <input type="date" class="rounded-lg focus:ring-2 shadow-sm w-full" id="birthday" name="birthday" value="{{ old('birthday') }}" required>
+                        <input type="date" class="rounded-lg focus:ring-2 shadow-sm w-full bg-gray-100" id="birthday" name="birthday" value="{{ auth()->user()->birthday }}" readonly required>
                     </div>
                     
                     <div>
                         <label for="age" class="font-semibold">Age</label>
-                        <input type="text" class="rounded-lg focus:ring-2 shadow-sm w-full" id="age" name="age" value="{{ old('age') }}" readonly required>
+                        <input type="text" class="rounded-lg focus:ring-2 shadow-sm w-full bg-gray-100" id="age" name="age" value="{{ auth()->user()->age }}" readonly required>
                     </div>
                 </div>
 
                 <div>
                     <label for="address" class="font-semibold">Address</label>
-                    <textarea class="rounded-lg focus:ring-2 shadow-sm w-full" id="address" name="address" placeholder="Type here..." required>{{ old('address') }}</textarea>
+                    <input class="rounded-lg focus:ring-2 shadow-sm w-full bg-gray-100" id="address" name="address" placeholder="Type here..." value="{{ auth()->user()->address }}" readonly required />
                 </div>
                     
                 
@@ -107,8 +107,8 @@
             <div class="grid grid-cols-1 gap-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label for="phone" class="font-semibold">Phone No. <span class="text-gray-500">(09XXXXXXXXX)</span></label>
-                        <input type="tel" class="rounded-lg focus:ring-2 shadow-sm w-full" id="phone" name="phone" value="{{ old('phone') }}" required>
+                        <label for="phone" class="font-semibold">Phone No.</label>
+                        <input type="tel" class="rounded-lg focus:ring-2 shadow-sm w-full bg-gray-100" id="phone" name="phone" value="{{ auth()->user()->phone }}" readonly required>
                     </div>
                     
                     <div>
@@ -118,7 +118,7 @@
                 </div>
                 <div>
                     <label for="medicalhistory" class="font-semibold">Medical History <span class="text-gray-500">(Optional)</span></label>
-                    <textarea class="rounded-lg focus:ring-2 shadow-sm w-full" id="medicalhistory" name="medicalhistory" placeholder="Type here...">{{ old('medicalhistory') }}</textarea>
+                    <textarea class="rounded-lg focus:ring-2 shadow-sm w-full" id="medicalhistory" name="medicalhistory" placeholder="Type here..." value="{{ auth()->user()->medicalhistory }}"></textarea>
                 </div>
 
                 <div>
@@ -148,8 +148,8 @@
                 </div>
                 
                 <div>
-                    <label for="emergencycontactphone" class="font-semibold">Phone No. <span class="text-gray-500">(09XXXXXXXXX)</span></label>
-                    <input type="tel" class="rounded-lg focus:ring-2 shadow-sm w-full" id="emergencycontactphone" name="emergencycontactphone" value="{{ old('emergencycontactphone') }}" required>
+                    <label for="emergencycontactphone" class="font-semibold">Phone No.</label>
+                    <input type="tel" class="rounded-lg focus:ring-2 shadow-sm w-full" id="emergencycontactphone" name="emergencycontactphone" value="{{ old('emergencycontactphone') }}" placeholder="e.g., 09123456789" required>
                 </div>
                     
                 <div>
@@ -178,7 +178,7 @@
                     </div>
                 </div>
                 <div class="text-right mt-4">
-                    <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white"><i class="fa-regular fa-calendar-check"></i> Appoint</button>  
+                    <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white"><i class="fa-regular fa-calendar-check"></i> Set Appointment</button>  
                 </div>
             </div>
         </form>

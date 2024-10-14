@@ -21,9 +21,14 @@ class DentalClinicController extends Controller
         $request->validate([
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'dentalclinicname' => 'required|string|max:255',
-            'admin_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'admin_password' => 'required|string|min:8',
+            'password' => 'required|confirmed|string|min:8',
+            'gender' => 'required|string',
+            'birthday' => 'required|date',
+            'age' => 'required|integer',
+            'address' => 'required|string',
+            'phone' => 'required|string|regex:/^0[0-9]{10}$/',
         ]);
 
         $request->file('logo')->move(public_path('logos'), $request->file('logo')->getClientOriginalName());
@@ -38,9 +43,14 @@ class DentalClinicController extends Controller
         $admin = User::create([
             'dentalclinic_id' => $dentalclinic->id, // Associate with the newly created clinic
             'usertype' => 'admin',
-            'name' => $request->admin_name,
+            'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->admin_password),
+            'password' => Hash::make($request->password),
+            'gender' => $request->gender,
+            'birthday' => $request->birthday,
+            'age' => $request->age,
+            'address' => $request->address,
+            'phone' => $request->phone,
         ]);
 
         Auth::login($admin);

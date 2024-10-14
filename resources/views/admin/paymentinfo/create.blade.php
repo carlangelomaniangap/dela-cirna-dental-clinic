@@ -34,20 +34,20 @@
                 <option value="" disabled selected>Select</option>
                 @foreach($users as $user)
                     @if($user->usertype !== 'admin' && $user->usertype !== 'dentistrystudent')
-                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        <option value="{{ $user->id }}" data-name="{{ $user->name }}">{{ $user->name }}</option>
                     @endif
                 @endforeach
             </select>
         </div>
 
         <div class="mb-4">
-            <label for="patientname" class="font-semibold">Patient Name</label>
-            <input type="text" class="w-full rounded-lg focus:ring-2 shadow-sm" id="patientname" name="patientname" required>
+            <label for="name" class="font-semibold">Name</label>
+            <input type="text" class="w-full rounded-lg focus:ring-2 shadow-sm" id="name" name="name" required>
         </div>
         
         <div class="mb-4">
-            <label for="description" class="font-semibold">Description</label>
-            <input type="text" class="w-full rounded-lg focus:ring-2 shadow-sm" id="description" name="description" required value="{{ old('description') }}">
+            <label for="concern" class="font-semibold">Concern</label>
+            <input type="text" class="w-full rounded-lg focus:ring-2 shadow-sm" id="concern" name="concern" required value="{{ old('concern') }}">
         </div>
 
         <div class="mb-4 form-inline">
@@ -73,6 +73,13 @@
 
 </body>
 </html>
+
+<script>
+    document.getElementById('users_id').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        document.getElementById('name').value = selectedOption.getAttribute('data-name');
+    });
+</script>
 
 @section('title')
     Add Payment Info

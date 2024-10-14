@@ -17,8 +17,8 @@
         <table class="min-w-full mt-4 bg-white shadow-lg rounded-lg overflow-hidden">
             <thead class="bg-white text-gray-600 uppercase font-semibold text-sm text-left border-b-2">
                 <tr>
-                    <th class="px-6 py-4">Patient Name</th>
-                    <th class="px-6 py-4">Description</th>
+                    <th class="px-6 py-4">Name</th>
+                    <th class="px-6 py-4">Concern</th>
                     <th class="px-6 py-4">Amount</th>
                     <th class="px-6 py-4">Balance</th>
                     <th class="px-6 py-4">Date</th>
@@ -33,8 +33,8 @@
                 @else
                     @foreach ($paymentinfo as $payment)
                         <tr class="bg-white border-b hover:bg-gray-100">
-                            <td class="px-6 py-4">{{ $payment->patientname }}</td>
-                            <td class="px-6 py-4">{{ $payment->description }}</td>
+                            <td class="px-6 py-4">{{ $payment->name }}</td>
+                            <td class="px-6 py-4">{{ $payment->concern }}</td>
                             <td class="px-6 py-4">{{ $payment->amount > 0 ? number_format($payment->amount, 0, ',', ',') : '' }}</td>
                             <td class="px-6 py-4">{{ $payment->balance == 0 ? 'Paid' : number_format($payment->balance, 0, ',', ',') }}</td>
                             <td class="px-6 py-4">{{ date('F j, Y', strtotime($payment->date)) }}</td>

@@ -3,15 +3,14 @@
         @csrf
 
         <div class="mt-4">
-            <label for="dentalclinic_id" class="block text-sm font-medium text-gray-700">
-                Dental Clinic
-            </label>
+            <x-input-label for="dentalclinic_id" :value="__('Dental Clinic')" />
             <select name="dentalclinic_id" id="dentalclinic_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                 <option value="" disabled selected>Select a Dental Clinic</option>
                 @foreach($dentalclinics as $dentalclinic)
                     <option value="{{ $dentalclinic->id }}">{{ $dentalclinic->dentalclinicname }}</option>
                 @endforeach
             </select>
+            <x-input-error :messages="$errors->get('dentalclinic_id')" class="mt-2" />
         </div>
 
         <!-- User Type -->
@@ -60,6 +59,40 @@
                             name="password_confirmation" required autocomplete="new-password" />
 
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="gender" :value="__('Gender')" />
+            <select id="gender" name="gender" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+                <option value="" disabled selected>Select your Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+            <x-input-error :messages="$errors->get('gender')" class="mt-2" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="birthday" :value="__('Birthday')" />
+            <input type="date" id="birthday" name="birthday" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"" required>
+            <x-input-error :messages="$errors->get('birthday')" class="mt-2" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="age" :value="__('Age')" />
+            <input type="number" id="age" name="age" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"" required>
+            <x-input-error :messages="$errors->get('age')" class="mt-2" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="address" :value="__('Address')" />
+            <input type="text" id="address" name="address" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"" required>
+            <x-input-error :messages="$errors->get('address')" class="mt-2" />
+        </div>
+
+        <div  class="mt-4">
+            <x-input-label for="phone" :value="__('Phone No.')" />
+            <input type="tel" id="phone" name="phone" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"" required>
+            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
         </div>
 
         <div class="mt-4">

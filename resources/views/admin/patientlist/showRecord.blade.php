@@ -26,6 +26,10 @@
                             <td>{{ $patientlist->name }}</td>
                         </tr>
                         <tr>
+                            <th>Gender:</th>
+                            <td>{{ $patientlist->gender }}</td>
+                        </tr>
+                        <tr>
                             <th>Birthday:</th>
                             <td>{{ date('F j, Y', strtotime($patientlist->birthday)) }}</td>
                         </tr>
@@ -34,16 +38,12 @@
                             <td>{{ $patientlist->age }}</td>
                         </tr>
                         <tr>
-                            <th>Gender:</th>
-                            <td>{{ $patientlist->gender }}</td>
+                            <th>Address:</th>
+                            <td>{{ $patientlist->address }}</td>
                         </tr>
                         <tr>
                             <th>Phone No:</th>
                             <td>{{ $patientlist->phone }}</td>
-                        </tr>
-                        <tr>
-                            <th>Address:</th>
-                            <td>{{ $patientlist->address }}</td>
                         </tr>
                         <tr>
                             <th>Email:</th>

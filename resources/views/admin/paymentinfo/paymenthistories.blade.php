@@ -10,7 +10,7 @@
 <body class="min-h-screen">
     
     <div class="bg-[#4b9cd3;] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold">
-        <h4><i class="fa-solid fa-money-bills"></i> Payment Info / {{ $paymentInfo->patientname }}</h4>
+        <h4><i class="fa-solid fa-money-bills"></i> Payment Info / {{ $paymentInfo->name }}</h4>
     </div>
     <div class="p-6">    
         <table class="min-w-full mt-4 bg-white shadow-lg rounded-lg overflow-hidden">

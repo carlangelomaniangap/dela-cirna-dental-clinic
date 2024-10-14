@@ -40,13 +40,13 @@
         </div>
 
         <div class="mb-4">
-            <label for="patientname" class="font-semibold">Patient Name</label>
-            <input type="text" class="w-full rounded-lg focus:ring-2 shadow-sm" id="patientname" name="patientname" value="{{ old('patientname', $payment->patientname) }}" required>
+            <label for="name" class="font-semibold">Name</label>
+            <input type="text" class="w-full rounded-lg focus:ring-2 shadow-sm" id="name" name="name" value="{{ old('name', $payment->name) }}" required>
         </div>
 
         <div class="mb-4">
-            <label for="description" class="font-semibold">Description</label>
-            <input type="text" class="w-full rounded-lg focus:ring-2 shadow-sm" id="description" name="description" value="{{ old('description', $payment->description) }}" required>
+            <label for="concern" class="font-semibold">Concern</label>
+            <input type="text" class="w-full rounded-lg focus:ring-2 shadow-sm" id="concern" name="concern" value="{{ old('concern', $payment->concern) }}" required>
         </div>
 
         <div class="mb-4 form-inline">

@@ -23,6 +23,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'gender',
+        'birthday',
+        'age',
+        'phone',
+        'address',
     ];
 
     public function dentalclinic(){

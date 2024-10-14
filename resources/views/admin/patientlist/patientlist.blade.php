@@ -39,8 +39,8 @@
             <thead class="bg-white text-gray-600 uppercase font-semibold text-sm text-left border-b-2">
                 <tr>
                     <th class="px-6 py-4">Name</th>
-                    <th class="px-6 py-4">Age</th>
                     <th class="px-6 py-4">Gender</th>
+                    <th class="px-6 py-4">Age</th>
                     <th class="px-6 py-4">Phone No.</th>
                     <th class="px-6 py-4">Email</th>
                     <th class="px-6 py-4">Actions</th>
@@ -55,8 +55,8 @@
                     @foreach ($patientlist as $patient)
                         <tr class="bg-white border-b hover:bg-gray-100">
                             <td class="px-6 py-4">{{ $patient->name }}</td>
-                            <td class="px-6 py-4">{{ $patient->age }}</td>
                             <td class="px-6 py-4">{{ $patient->gender }}</td>
+                            <td class="px-6 py-4">{{ $patient->age }}</td>
                             <td class="px-6 py-4">{{ $patient->phone }}</td>
                             <td class="px-6 py-4">{{ $patient->email }}</td>
                             <td class="px-6 py-4">

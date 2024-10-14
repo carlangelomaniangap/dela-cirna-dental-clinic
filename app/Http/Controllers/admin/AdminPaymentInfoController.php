@@ -40,8 +40,8 @@ class AdminPaymentInfoController extends Controller
         $request->validate([ 
             'dentalclinic_id' => 'required', 'exists:dentalclinics,id',
             'users_id' => 'required|exists:users,id',
-            'patientname' => 'required|string',
-            'description' => 'required|string',
+            'name' => 'required|string',
+            'concern' => 'required|string',
             'amount' => 'required|integer',
             'balance' => 'required|integer',
             'date' => 'required|date',
@@ -50,8 +50,8 @@ class AdminPaymentInfoController extends Controller
         PaymentInfo::create([
             'dentalclinic_id' => $request->dentalclinic_id,
             'users_id' => $request->input('users_id'),
-            'patientname' => $request->input('patientname'),
-            'description' => $request->input('description'),
+            'name' => $request->input('name'),
+            'concern' => $request->input('concern'),
             'amount' => $request->input('amount'),
             'balance' => $request->input('balance'),
             'date' => $request->input('date'),
@@ -83,8 +83,8 @@ class AdminPaymentInfoController extends Controller
         
         $request->validate([
             'users_id' => 'required|exists:users,id',
-            'patientname' => 'required|string',
-            'description' => 'required|string',
+            'name' => 'required|string',
+            'concern' => 'required|string',
             'amount' => 'required|integer',
             'balance' => 'required|integer',
             'date' => 'required|date',
@@ -92,8 +92,8 @@ class AdminPaymentInfoController extends Controller
 
         $patient->update([
             'users_id' => $request->input('users_id'),
-            'patientname' => $request->input('patientname'),
-            'description' => $request->input('description'),
+            'name' => $request->input('name'),
+            'concern' => $request->input('concern'),
             'amount' => $request->input('amount'),
             'balance' => $request->input('balance'),
             'date' => $request->input('date'),
@@ -105,8 +105,8 @@ class AdminPaymentInfoController extends Controller
     public function search(Request $request){
         
         $query = $request->input('query');
-        $paymentinfo = PaymentInfo::Where('patientname', 'like', "%$query%")
-                                  ->orWhere('description', 'like', "%$query%")
+        $paymentinfo = PaymentInfo::Where('name', 'like', "%$query%")
+                                  ->orWhere('concern', 'like', "%$query%")
                                   ->orWhere('amount', 'like', "%$query%")
                                   ->orWhere('balance', 'like', "%$query%")
                                   ->orWhere('date', 'like', "%$query%")
