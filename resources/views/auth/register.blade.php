@@ -73,25 +73,25 @@
 
         <div class="mt-4">
             <x-input-label for="birthday" :value="__('Birthday')" />
-            <input type="date" id="birthday" name="birthday" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"" required>
+            <input type="date" id="birthday" name="birthday" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
             <x-input-error :messages="$errors->get('birthday')" class="mt-2" />
         </div>
 
         <div class="mt-4">
             <x-input-label for="age" :value="__('Age')" />
-            <input type="number" id="age" name="age" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"" required>
+            <input type="number" id="age" name="age" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
             <x-input-error :messages="$errors->get('age')" class="mt-2" />
         </div>
 
         <div class="mt-4">
             <x-input-label for="address" :value="__('Address')" />
-            <input type="text" id="address" name="address" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"" required>
+            <input type="text" id="address" name="address" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
             <x-input-error :messages="$errors->get('address')" class="mt-2" />
         </div>
 
         <div  class="mt-4">
             <x-input-label for="phone" :value="__('Phone No.')" />
-            <input type="tel" id="phone" name="phone" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"" required>
+            <input type="tel" id="phone" name="phone" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
             <x-input-error :messages="$errors->get('phone')" class="mt-2" />
         </div>
 
