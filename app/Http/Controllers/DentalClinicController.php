@@ -30,7 +30,7 @@ class DentalClinicController extends Controller
 
         // Create the clinic
         $dentalclinic = DentalClinic::create([
-            'logo' => 'logos/' . $request->file('logo')->getClientOriginalName(),
+            'logo' => $request->file('logo')->getClientOriginalName(),
             'dentalclinicname' => $request->dentalclinicname,
         ]);
 
