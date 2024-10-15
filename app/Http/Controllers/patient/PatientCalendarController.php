@@ -15,7 +15,7 @@ class PatientCalendarController extends Controller
     $date = $request->query('date');
 
     // Fetch appointments for the given date
-    $bookedTimes = Appointment::whereDate('appointmentdate', $date)
+    $bookedTimes = Calendar::whereDate('appointmentdate', $date)
         ->pluck('appointmenttime')
         ->toArray();
 

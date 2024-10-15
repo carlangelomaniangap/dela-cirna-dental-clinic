@@ -36,10 +36,18 @@
                         <i class="fa-solid fa-xmark text-lg"></i>
                         <span class="sr-only">Close modal</span>
                     </button>
-                    <div class="w-12 h-12 rounded-full bg-green-100 p-2 flex items-center justify-center mx-auto mb-3.5">
-                        <i class="fa-solid fa-check text-green-500 text-2xl"></i>
-                        <span class="sr-only">Success</span>
-                    </div>
+
+                    @if(session('success'))
+                        <div class="w-12 h-12 rounded-full bg-green-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                            <i class="fa-solid fa-check text-green-500 text-2xl"></i>
+                            <span class="sr-only">Success</span>
+                        </div>
+                    @else
+                        <div class="w-12 h-12 rounded-full bg-red-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                            <i class="fa-solid fa-xmark text-red-500 text-2xl"></i>
+                            <span class="sr-only">Error</span>
+                        </div>
+                    @endif
 
                     @if(session('success'))
                         <p class="mb-4 text-lg font-semibold text-gray-900">{{ session('success') }}</p>
@@ -51,9 +59,16 @@
                         @endforeach
                     @endif
 
-                    <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300" onclick="this.closest('.fixed').style.display='none'">
-                        Continue
-                    </button>
+                    @if(session('success'))
+                        <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300" onclick="this.closest('.fixed').style.display='none'">
+                            Continue
+                        </button>
+                    @else
+                        <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300" onclick="this.closest('.fixed').style.display='none'">
+                            Continue
+                        </button>
+                    @endif
+                    
                 </div>
             </div>
         </div>

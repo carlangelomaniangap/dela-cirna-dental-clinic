@@ -7,24 +7,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
 </head>
-<body>
-<div style="background-color: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="header py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold ">
+<body class="min-h-screen">
+
+    <div class="bg-[#4b9cd3;] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold ">
         <h4><i class="fa-regular fa-calendar-check"></i> Appointment</h4>
     </div>
     
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-            
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+    @if(session('success') || $errors->any())
+        <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="relative p-4 w-full max-w-md">
+                <div class="relative p-5 text-center bg-white rounded-lg shadow">
+                    <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center" onclick="this.closest('.fixed').style.display='none'">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+
+                    @if(session('success'))
+                        <div class="w-12 h-12 rounded-full bg-green-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                            <i class="fa-solid fa-check text-green-500 text-2xl"></i>
+                            <span class="sr-only">Success</span>
+                        </div>
+                    @else
+                        <div class="w-12 h-12 rounded-full bg-red-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                            <i class="fa-solid fa-xmark text-red-500 text-2xl"></i>
+                            <span class="sr-only">Error</span>
+                        </div>
+                    @endif
+
+                    @if(session('success'))
+                        <p class="mb-4 text-lg font-semibold text-gray-900">{{ session('success') }}</p>
+                    @endif
+
+                    @if ($errors->any())
+                        @foreach ($errors->all() as $error)
+                            <p class="mb-4 text-lg font-semibold text-red-600">{{ $error }}</p>
+                        @endforeach
+                    @endif
+
+                    @if(session('success'))
+                        <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300" onclick="this.closest('.fixed').style.display='none'">
+                            Continue
+                        </button>
+                    @else
+                        <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300" onclick="this.closest('.fixed').style.display='none'">
+                            Continue
+                        </button>
+                    @endif
+                    
+                </div>
+            </div>
         </div>
     @endif
     
@@ -76,11 +107,12 @@
                     </div>
                     <div>
                         <label for="gender" class="font-semibold">Gender</label>
-                        <select id="gender" name="gender" class="rounded-lg focus:ring-2 shadow-sm w-full bg-gray-100" disabled>
+                        <select id="gender" name="gender" class="rounded-lg focus:ring-2 shadow-sm w-full bg-gray-100" disabled required>
                             <option value="" disabled selected>Select your Gender</option>
                             <option value="Male" {{ old('gender') == 'Male' || auth()->user()->gender == 'Male' ? 'selected' : '' }}>Male</option>
                             <option value="Female" {{ old('gender') == 'Female' || auth()->user()->gender == 'Female' ? 'selected' : '' }}>Female</option>
                         </select>
+                        <input type="hidden" name="gender" value="{{ old('gender') ?: auth()->user()->gender }}">
                     </div>
                 </div>
 
@@ -185,98 +217,99 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.querySelector('form');
-        const birthdayInput = document.getElementById('birthday');
-        const ageInput = document.getElementById('age');
-        const appointmentDateInput = document.getElementById('appointmentdate');
-        const appointmentTimeSelect = document.getElementById('appointmenttime');
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const birthdayInput = document.getElementById('birthday');
+            const ageInput = document.getElementById('age');
+            const appointmentDateInput = document.getElementById('appointmentdate');
+            const appointmentTimeSelect = document.getElementById('appointmenttime');
 
-        // Set minimum date for appointment
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        appointmentDateInput.min = tomorrow.toISOString().split('T')[0];
-
-        // Prevent form reset on invalid input
-        form.addEventListener('invalid', function(event) {
-            event.preventDefault();
-        }, true);
-
-        // Calculate age based on birthday
-        function calculateAge(birthDate) {
+            // Set minimum date for appointment
             const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            appointmentDateInput.min = tomorrow.toISOString().split('T')[0];
 
-            return age;
-        }
+            // Prevent form reset on invalid input
+            form.addEventListener('invalid', function(event) {
+                event.preventDefault();
+            }, true);
 
-        birthdayInput.addEventListener('change', function() {
-            const birthDate = new Date(this.value);
-            ageInput.value = calculateAge(birthDate);
-        });
-
-        // Trigger age calculation on page load if birthday is already set
-        if (birthdayInput.value) {
-            birthdayInput.dispatchEvent(new Event('change'));
-        }
-
-        // Update available time slots based on selected date
-        function updateTimeSlots() {
-            const selectedDate = new Date(appointmentDateInput.value);
-            const currentDate = new Date();
-            const currentTime = currentDate.getHours() * 60 + currentDate.getMinutes();
-
-            const timeOptions = appointmentTimeSelect.options;
-            
-            for (let i = 1; i < timeOptions.length; i++) {
-                const [hours, minutes] = timeOptions[i].value.split(':');
-                const optionTime = parseInt(hours) * 60 + parseInt(minutes);
-
-                if (selectedDate.toDateString() === currentDate.toDateString() && optionTime <= currentTime) {
-                    timeOptions[i].disabled = true;
-                } else {
-                    timeOptions[i].disabled = false;
+            // Calculate age based on birthday
+            function calculateAge(birthDate) {
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
                 }
+
+                return age;
             }
 
-            // Reset selection if the currently selected option is now disabled
-            if (appointmentTimeSelect.selectedOptions[0].disabled) {
-                appointmentTimeSelect.value = '';
-            }
-        }
-
-        appointmentDateInput.addEventListener('change', updateTimeSlots);
-
-        // Initial update of time slots
-        updateTimeSlots();
-
-        // Custom form validation
-        form.addEventListener('submit', function(event) {
-            let isValid = true;
-            const requiredInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-            
-            requiredInputs.forEach(function(input) {
-                if (!input.value.trim()) {
-                    isValid = false;
-                    input.classList.add('border-red-500');
-                } else {
-                    input.classList.remove('border-red-500');
-                }
+            birthdayInput.addEventListener('change', function() {
+                const birthDate = new Date(this.value);
+                ageInput.value = calculateAge(birthDate);
             });
 
-            if (!isValid) {
-                event.preventDefault();
-                alert('Please fill out all required fields.');
+            // Trigger age calculation on page load if birthday is already set
+            if (birthdayInput.value) {
+                birthdayInput.dispatchEvent(new Event('change'));
             }
+
+            // Update available time slots based on selected date
+            function updateTimeSlots() {
+                const selectedDate = new Date(appointmentDateInput.value);
+                const currentDate = new Date();
+                const currentTime = currentDate.getHours() * 60 + currentDate.getMinutes();
+
+                const timeOptions = appointmentTimeSelect.options;
+                
+                for (let i = 1; i < timeOptions.length; i++) {
+                    const [hours, minutes] = timeOptions[i].value.split(':');
+                    const optionTime = parseInt(hours) * 60 + parseInt(minutes);
+
+                    if (selectedDate.toDateString() === currentDate.toDateString() && optionTime <= currentTime) {
+                        timeOptions[i].disabled = true;
+                    } else {
+                        timeOptions[i].disabled = false;
+                    }
+                }
+
+                // Reset selection if the currently selected option is now disabled
+                if (appointmentTimeSelect.selectedOptions[0].disabled) {
+                    appointmentTimeSelect.value = '';
+                }
+            }
+
+            appointmentDateInput.addEventListener('change', updateTimeSlots);
+
+            // Initial update of time slots
+            updateTimeSlots();
+
+            // Custom form validation
+            form.addEventListener('submit', function(event) {
+                let isValid = true;
+                const requiredInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+                
+                requiredInputs.forEach(function(input) {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        input.classList.add('border-red-500');
+                    } else {
+                        input.classList.remove('border-red-500');
+                    }
+                });
+
+                if (!isValid) {
+                    event.preventDefault();
+                    alert('Please fill out all required fields.');
+                }
+            });
         });
-    });
     </script>
+
 </body>
 </html>
 

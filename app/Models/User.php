@@ -38,10 +38,6 @@ class User extends Authenticatable
         return $this->hasMany(Patientlist::class, 'users_id');
     }
 
-    public function appointments(){
-        return $this->hasMany(Appointment::class);
-    }
-
     public function calendars(){
         return $this->hasMany(Calendar::class);
     }
