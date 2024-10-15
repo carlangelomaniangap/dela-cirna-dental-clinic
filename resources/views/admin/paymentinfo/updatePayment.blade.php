@@ -12,20 +12,11 @@
     <div class="bg-[#4b9cd3;] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-10">
         <h4><i class="fa-solid fa-money-bill"></i> Update Payment</h4>
     </div>
-    
-    @if ($errors->any())
-        <div class="alert alert-danger w-1/2 mx-auto bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <form method="post" action="{{ route('admin.updatedPayment', $payment->id) }}" class="w-1/2 mx-auto bg-white rounded-lg shadow-md p-10">
         @csrf
         @method('PUT')
+        
         <div class="mb-4">
             <label for="users_id" class="font-semibold">Patient Account</label>
             <select class="w-full rounded-lg focus:ring-2 shadow-sm" id="users_id" name="users_id" required>
@@ -69,6 +60,7 @@
             <a href="{{ route('admin.paymentinfo') }}" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800"><i class="fa-regular fa-rectangle-xmark"></i> Cancel</a>
         </div>
     </form>
+
 </body>
 </html>
 

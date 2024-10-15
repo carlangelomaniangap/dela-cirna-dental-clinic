@@ -72,21 +72,22 @@
             <a href="{{ route('admin.patientlist') }}" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800"><i class="fa-regular fa-rectangle-xmark"></i> Cancel</a>
         </div>
     </form>
+
+    <script>
+        document.getElementById('users_id').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            document.getElementById('name').value = selectedOption.getAttribute('data-name');
+            document.getElementById('gender').value = selectedOption.getAttribute('data-gender');
+            document.getElementById('birthday').value = selectedOption.getAttribute('data-birthday');
+            document.getElementById('age').value = selectedOption.getAttribute('data-age');
+            document.getElementById('address').value = selectedOption.getAttribute('data-address');
+            document.getElementById('phone').value = selectedOption.getAttribute('data-phone');
+            document.getElementById('email').value = selectedOption.getAttribute('data-email');
+        });
+    </script>
+
 </body>
 </html>
-
-<script>
-    document.getElementById('users_id').addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        document.getElementById('name').value = selectedOption.getAttribute('data-name');
-        document.getElementById('gender').value = selectedOption.getAttribute('data-gender');
-        document.getElementById('birthday').value = selectedOption.getAttribute('data-birthday');
-        document.getElementById('age').value = selectedOption.getAttribute('data-age');
-        document.getElementById('address').value = selectedOption.getAttribute('data-address');
-        document.getElementById('phone').value = selectedOption.getAttribute('data-phone');
-        document.getElementById('email').value = selectedOption.getAttribute('data-email');
-    });
-</script>
 
 @section('title')
     New Patient

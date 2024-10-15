@@ -12,17 +12,7 @@
     <div class="bg-[#4b9cd3;] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-10">
         <h4><i class="fa-solid fa-hand-holding-dollar"></i> Add Payment</h4>
     </div>
-        
-    @if ($errors->any())
-        <div class="w-1/2 mx-auto bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
+    
     <form method="post" action="{{ route('admin.payment.store') }}" class="w-1/2 mx-auto bg-white rounded-lg shadow-md p-10">
         <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">    
 
@@ -71,15 +61,15 @@
         </div>
     </form>
 
+    <script>
+        document.getElementById('users_id').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            document.getElementById('name').value = selectedOption.getAttribute('data-name');
+        });
+    </script>
+
 </body>
 </html>
-
-<script>
-    document.getElementById('users_id').addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        document.getElementById('name').value = selectedOption.getAttribute('data-name');
-    });
-</script>
 
 @section('title')
     Add Payment Info

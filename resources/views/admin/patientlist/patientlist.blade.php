@@ -27,13 +27,38 @@
             </div>
         </form>
     </div>
+    
+    @if(session('success') || $errors->any())
+        <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="relative p-4 w-full max-w-md">
+                <div class="relative p-5 text-center bg-white rounded-lg shadow">
+                    <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center" onclick="this.closest('.fixed').style.display='none'">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                    <div class="w-12 h-12 rounded-full bg-green-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                        <i class="fa-solid fa-check text-green-500 text-2xl"></i>
+                        <span class="sr-only">Success</span>
+                    </div>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+                    @if(session('success'))
+                        <p class="mb-4 text-lg font-semibold text-gray-900">{{ session('success') }}</p>
+                    @endif
+
+                    @if ($errors->any())
+                        @foreach ($errors->all() as $error)
+                            <p class="mb-4 text-lg font-semibold text-red-600">{{ $error }}</p>
+                        @endforeach
+                    @endif
+
+                    <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300" onclick="this.closest('.fixed').style.display='none'">
+                        Continue
+                    </button>
+                </div>
+            </div>
         </div>
     @endif
-            
+
     <div class="p-6">
         <table class="min-w-full mt-4 bg-white shadow-lg rounded-lg overflow-hidden">
             <thead class="bg-white text-gray-600 uppercase font-semibold text-sm text-left border-b-2">
@@ -75,42 +100,11 @@
                 @endif
             </tbody>
         </table>
-            
-        <!-- pagination here -->
-        @if ($patientlist->lastPage() > 1)
-            <ul class="pagination mt-8 mb-8 flex items-center justify-center">
-                <!-- Previous Page Link -->
-                @if ($patientlist->onFirstPage())
-                <li class="page-item disabled mx-1" aria-disabled="true">
-                    <span class="page-link text-blue-500 px-4 py-2 rounded-lg bg-white border border-gray-300" aria-hidden="true">&laquo;</span>
-                </li>
-                @else
-                    <li class="page-item">
-                        <a class="page-link text-blue-500 hover:text-white hover:bg-blue-500 px-4 py-2 rounded-lg bg-white border border-gray-300" href" href="{{ $patientlist->previousPageUrl() }}" rel="prev" aria-label="@lang('pagination.previous')">&laquo;</a>
-                    </li>
-                @endif
 
-                <!-- Pagination Elements -->
-                @for ($i = 1; $i <= $patientlist->lastPage(); $i++)
-                    @if ($i == $patientlist->currentPage())
-                        <li class="page-item active mx-1" aria-current="page"><span class="page-link text-white px-4 py-2 rounded-lg bg-blue-500">{{ $i }}</span></li>
-                    @else
-                        <li class="page-item mx-1"><a class="page-link text-blue-500 hover:text-white hover:bg-blue-500 px-4 py-2 rounded-lg bg-white border border-gray-300" href="{{ $patientlist->url($i) }}">{{ $i }}</a></li>
-                    @endif
-                @endfor
+        <div class="mt-4">
+            {{ $patientlist->links() }}
+        </div>
 
-                <!-- Next Page Link -->
-                @if ($patientlist->hasMorePages())
-                    <li class="page-item mx-1">
-                        <a class="page-link text-blue-500 hover:text-white hover:bg-blue-500 px-4 py-2 rounded-lg bg-white border border-gray-300" href="{{ $patientlist->nextPageUrl() }}" rel="next" aria-label="@lang('pagination.next')">&raquo;</a>
-                    </li>
-                @else
-                    <li class="page-item disabled" aria-disabled="true">
-                        <span class="page-link text-blue-500 px-4 py-2 rounded-lg bg-white border border-gray-300" aria-hidden="true">&raquo;</span>
-                    </li>
-                @endif
-            </ul>
-        @endif
     </div>
 
 </body>

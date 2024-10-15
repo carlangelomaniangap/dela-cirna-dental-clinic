@@ -13,16 +13,6 @@
         <h4><i class="fa-solid fa-user-pen"></i> Update Patient</h4>
     </div>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <form method="post" action="{{ route('admin.updatedPatient', $patient->id) }}"  class="w-1/2 mx-auto bg-white rounded-lg shadow-md p-10">
         @csrf
         @method('PUT')
@@ -83,6 +73,7 @@
             <a href="{{ route('admin.patientlist') }}" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800"><i class="fa-regular fa-rectangle-xmark"></i> Cancel</a>
         </div>
     </form>
+    
 </body>
 </html>
 
