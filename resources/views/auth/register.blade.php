@@ -7,7 +7,7 @@
             <select name="dentalclinic_id" id="dentalclinic_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                 <option value="" disabled selected>Select a Dental Clinic</option>
                 @foreach($dentalclinics as $dentalclinic)
-                    <option value="{{ $dentalclinic->id }}">{{ $dentalclinic->dentalclinicname }}</option>
+                    <option value="{{ $dentalclinic->id }}" {{ old('dentalclinic_id') == $dentalclinic->id ? 'selected' : '' }}>{{ $dentalclinic->dentalclinicname }}</option>
                 @endforeach
             </select>
             <x-input-error :messages="$errors->get('dentalclinic_id')" class="mt-2" />
@@ -18,8 +18,8 @@
             <x-input-label for="usertype" :value="__('User Type')" />
             <select id="usertype" name="usertype" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                 <option value="" disabled selected>Select your User Type</option>
-                <option value="patient">{{ __('Patient') }}</option>
-                <option value="dentistrystudent">{{ __('Dentistry Student') }}</option>
+                <option value="patient" {{ old('usertype') == 'patient' ? 'selected' : '' }}>{{ __('Patient') }}</option>
+                <option value="dentistrystudent" {{ old('usertype') == 'dentistrystudent' ? 'selected' : '' }}>{{ __('Dentistry Student') }}</option>
             </select>
             <x-input-error :messages="$errors->get('usertype')" class="mt-2" />
         </div>
@@ -65,33 +65,33 @@
             <x-input-label for="gender" :value="__('Gender')" />
             <select id="gender" name="gender" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
                 <option value="" disabled selected>Select your Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
             </select>
             <x-input-error :messages="$errors->get('gender')" class="mt-2" />
         </div>
 
         <div class="mt-4">
             <x-input-label for="birthday" :value="__('Birthday')" />
-            <input type="date" id="birthday" name="birthday" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+            <input type="date" id="birthday" name="birthday" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" value="{{ old('birthday') }}" required>
             <x-input-error :messages="$errors->get('birthday')" class="mt-2" />
         </div>
 
         <div class="mt-4">
             <x-input-label for="age" :value="__('Age')" />
-            <input type="number" id="age" name="age" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+            <input type="number" id="age" name="age" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" value="{{ old('age') }}" required>
             <x-input-error :messages="$errors->get('age')" class="mt-2" />
         </div>
 
         <div class="mt-4">
             <x-input-label for="address" :value="__('Address')" />
-            <input type="text" id="address" name="address" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+            <input type="text" id="address" name="address" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" value="{{ old('address') }}" required>
             <x-input-error :messages="$errors->get('address')" class="mt-2" />
         </div>
 
         <div  class="mt-4">
             <x-input-label for="phone" :value="__('Phone No.')" />
-            <input type="tel" id="phone" name="phone" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+            <input type="tel" id="phone" name="phone" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" value="{{ old('phone') }}" required>
             <x-input-error :messages="$errors->get('phone')" class="mt-2" />
         </div>
 
@@ -107,6 +107,36 @@
             </a>
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const birthdayInput = document.getElementById('birthday');
+            const ageInput = document.getElementById('age');
+
+            // Calculate age based on birthday
+            function calculateAge(birthDate) {
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                return age;
+            }
+
+            birthdayInput.addEventListener('change', function() {
+                const birthDate = new Date(this.value);
+                ageInput.value = calculateAge(birthDate);
+            });
+
+            // Trigger age calculation on page load if birthday is already set
+            if (birthdayInput.value) {
+                birthdayInput.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
 
 @section('title')
     Register
