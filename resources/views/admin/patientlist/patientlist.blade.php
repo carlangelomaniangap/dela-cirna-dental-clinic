@@ -99,7 +99,7 @@
                             <td class="px-6 py-4">{{ $patient->age }}</td>
                             <td class="px-6 py-4">{{ $patient->phone }}</td>
                             <td class="px-6 py-4">{{ $patient->email }}</td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <a href="{{ route('admin.showRecord', $patient->id) }}" class="px-4 py-2 rounded text-blue-800 hover:bg-blue-200 transition duration-300"><i class="fa-solid fa-folder-closed"></i> Records</a>
                                 <a href="{{ route('admin.updatePatient', $patient->id) }}" class="px-4 py-2 rounded text-gray-800 hover:bg-gray-200 transition duration-300"><i class="fa-solid fa-pen"></i> Edit</a>
                                 

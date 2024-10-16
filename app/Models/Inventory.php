@@ -13,5 +13,10 @@ class Inventory extends Model
     public function dentalclinic(){
         return $this->belongsTo(DentalClinic::class, 'dentalclinic_id');
     }
+
+    public function histories()
+    {
+        return $this->hasMany(InventoryHistory::class);
+    }
 }
 

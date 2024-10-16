@@ -1,20 +1,17 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Admin Dashboard') }}
-        </h2>
-    </x-slot>
 
-    <!-- <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <p class="text-lg">Welcome, {{ Auth::user()->name }}!</p>
-                    <p class="text-sm text-gray-500">You are logged in as an admin.</p>
-                </div>
-            </div>
-        </div>
-    </div> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+</head>
+<body class="min-h-screen">
+
+    <div class="bg-[#4b9cd3;] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold">
+        <h4>{{ __('Admin Dashboard') }}</h4>
+    </div>
 
     <div class="p-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
@@ -53,9 +50,54 @@
                 </div>
             </div>
         </div>
-
         
     </div>
+
+    @if(session('success') || $errors->any())
+        <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="relative p-4 w-full max-w-md">
+                <div class="relative p-5 text-center bg-white rounded-lg shadow">
+                    <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center" onclick="this.closest('.fixed').style.display='none'">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+
+                    @if(session('success'))
+                        <div class="w-12 h-12 rounded-full bg-green-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                            <i class="fa-solid fa-check text-green-500 text-2xl"></i>
+                            <span class="sr-only">Success</span>
+                        </div>
+                    @else
+                        <div class="w-12 h-12 rounded-full bg-red-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                            <i class="fa-solid fa-xmark text-red-500 text-2xl"></i>
+                            <span class="sr-only">Error</span>
+                        </div>
+                    @endif
+
+                    @if(session('success'))
+                        <p class="mb-4 text-lg font-semibold text-gray-900">{{ session('success') }}</p>
+                    @endif
+
+                    @if ($errors->any())
+                        @foreach ($errors->all() as $error)
+                            <p class="mb-4 text-lg font-semibold text-red-600">{{ $error }}</p>
+                        @endforeach
+                    @endif
+
+                    @if(session('success'))
+                        <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300" onclick="this.closest('.fixed').style.display='none'">
+                            Continue
+                        </button>
+                    @else
+                        <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300" onclick="this.closest('.fixed').style.display='none'">
+                            Continue
+                        </button>
+                    @endif
+                    
+                </div>
+            </div>
+        </div>
+    @endif
 
     <div class="px-6">
         <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
@@ -83,11 +125,13 @@
                             <tr class="hover:bg-gray-100 transition duration-300">
                                 <td class="border-b px-6 py-4 text-gray-800">{{ $inventory->item_name }}</td>
                                 <td class="border-b px-6 py-4 text-gray-800">{{ $inventory->quantity }}</td>
-                                <td class="border-b px-6 py-4">
+                                <td class="border-b px-6 py-4 whitespace-nowrap">
+                                    <a href="{{ route('inventory.show', $inventory->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">History</a>
                                     <button class="editItemButton bg-yellow-500 text-white px-4 py-2 rounded transition duration-200 hover:bg-yellow-600" data-id="{{ $inventory->id }}" data-item_name="{{ $inventory->item_name }}" data-quantity="{{ $inventory->quantity }}">
                                         Edit
                                     </button>
-                                    <form action="{{ route('inventory.destroy', $inventory) }}" method="POST" class="inline" onsubmit="return confirmDelete();">
+                                    
+                                    <form id="delete-inventory-form-{{ $inventory->id }}" action="{{ route('inventory.destroy', $inventory->id) }}" class="inline" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded transition duration-200 hover:bg-red-600">Delete</button>
@@ -106,29 +150,37 @@
         
         <div class="absolute inset-0 bg-black opacity-50"></div>
 
-        <div class="bg-white p-4 rounded-lg shadow-md z-10">
-            <div class="bg-[#4b9cd3;] rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
-                <h4 class="text-lg font-bold" id="modalTitle">Add Item</h4>
+            <div class="bg-white p-4 rounded-lg shadow-md z-10">
+                <div class="bg-[#4b9cd3;] rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
+                    <h4 class="text-lg font-bold" id="modalTitle">Add Item</h4>
+                </div>
+                <form id="inventoryForm" action="{{ route('inventory.store') }}" method="POST">
+                    <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
+                    
+                    @csrf
+                    <input type="hidden" name="_method" id="methodInput" value="POST">
+                    <div>
+                        <label for="item_name" class="block">Item Name</label>
+                        <input type="text" name="item_name" id="item_name" class="w-full rounded-lg focus:ring-2 shadow-sm" required>
+                    </div>
+                    <div id="quantityContainer" class="mt-2">
+                        <label for="quantity" class="block">Quantity</label>
+                        <input type="number" name="quantity" id="quantity" class="w-full rounded-lg focus:ring-2 shadow-sm">
+                    </div>
+                    <div id="actionContainer" class="mt-2 hidden">
+                        <label for="action" class="block">Action</label>
+                        <select name="action" id="action" class="w-full rounded-lg focus:ring-2 shadow-sm">
+                            <option value="" disabled selected>Select here</option>
+                            <option value="add">Add</option>
+                            <option value="subtract">Subtract</option>
+                        </select>
+                    </div>
+                    <div class="mt-4 text-right">
+                        <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Save</button>
+                        <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
+                    </div>
+                </form>
             </div>
-            <form id="inventoryForm" action="{{ route('inventory.store') }}" method="POST">
-                <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
-                
-                @csrf
-                <input type="hidden" name="_method" id="methodInput" value="POST">
-                <div>
-                    <label for="item_name" class="block">Item Name</label>
-                    <input type="text" name="item_name" id="item_name" class="w-full rounded-lg focus:ring-2 shadow-sm" required>
-                </div>
-                <div class="mt-2">
-                    <label for="quantity" class="block">Quantity</label>
-                    <input type="number" name="quantity" id="quantity" class="w-full rounded-lg focus:ring-2 shadow-sm" required>
-                </div>
-                <div class="mt-4 text-right">
-                    <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Save</button>
-                    <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
-                </div>
-            </form>
-        </div>
     </div>
 
     <script>
@@ -145,6 +197,8 @@
             methodInput.value = 'POST';
             inventoryForm.action = "{{ route('inventory.store') }}";
             inventoryForm.reset();
+
+            document.getElementById('actionContainer').classList.add('hidden');
         });
 
         editInventoryButton.forEach(button => {
@@ -158,17 +212,15 @@
                 methodInput.value = 'PUT';
                 inventoryForm.action = `{{ url('admin/inventory') }}/${id}`;
                 document.getElementById('item_name').value = item_name;
-                document.getElementById('quantity').value = quantity;
+                document.getElementById('quantity').value = '';
+
+                document.getElementById('actionContainer').classList.remove('hidden');
             });
         });
 
         closeModalButton.addEventListener('click', () => {
             inventoryModal.classList.add('hidden');
         });
-
-        function confirmDelete() {
-            return confirm("Are you sure you want to delete this item? This action cannot be undone.");
-        }
     </script>
     
     @if ($showUserWelcome)
@@ -194,6 +246,11 @@
             });
         </script>
     @endif
+    
+</body>
+</html>
+
+    
 
 @section('title')
     Dashboard

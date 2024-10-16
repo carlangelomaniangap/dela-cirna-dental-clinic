@@ -100,7 +100,7 @@
                             <td class="px-6 py-4">{{ $payment->amount > 0 ? number_format($payment->amount, 0, ',', ',') : '' }}</td>
                             <td class="px-6 py-4">{{ $payment->balance == 0 ? 'Paid' : number_format($payment->balance, 0, ',', ',') }}</td>
                             <td class="px-6 py-4">{{ date('F j, Y', strtotime($payment->date)) }}</td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <!-- Button to Open Modal -->
                                 <a data-payment-id="{{ $payment->id }}" class="px-4 py-2 text-white bg-blue-600 rounded cursor-pointer">Add Payment</a>
                                 <a href="{{ route('admin.paymentHistory', $payment->id) }}" class="px-4 py-2 text-white bg-blue-600 rounded cursor-pointer">History</a>

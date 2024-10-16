@@ -108,7 +108,7 @@
                                 <p class="text-sm text-gray-500">{{ $communityforum->created_at->setTimezone('Asia/Manila')->format('F j, Y') }} at {{ $communityforum->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</p>
                             </div>
                         </div>
-                        <div class="mt-2.5 text-sm leading-6">
+                        <div class="mt-2.5 text-sm leading-6 break-words">
                             <div class="editing-content" id="edit-form-{{ $communityforum->id }}" style="display: none;">
                                 <form method="post" action="{{ route('patient.updatedCommunityforum', $communityforum->id) }}" enctype="multipart/form-data">
                                     @csrf
@@ -171,7 +171,7 @@
                                             <p class="text-sm text-gray-500">{{ $communityforum->created_at->setTimezone('Asia/Manila')->format('F j, Y') }} at {{ $communityforum->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</p>
                                         </div>
                                     </div>
-                                    <div class="mt-2.5 text-sm leading-6">
+                                    <div class="mt-2.5 text-sm leading-6 break-words">
                                         <div class="editing-content" id="edit-comment-form-{{ $comment->id }}" style="display: none;">
                                             <form method="post" action="{{ route('patient.updatedComment', $comment->id) }}">
                                                 @csrf
