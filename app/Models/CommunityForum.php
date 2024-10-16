@@ -9,7 +9,7 @@ class communityforum extends Model
 {
     protected $table = 'communityforums';
 
-    protected $fillable = ['topic', 'user_id'];
+    protected $fillable = ['topic', 'image_path', 'user_id'];
 
     public function comments(){
         return $this->hasMany(Comment::class);

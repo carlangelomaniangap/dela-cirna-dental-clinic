@@ -1,4 +1,5 @@
 <x-app-layout>
+@section('title', 'Community Forum')
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,6 +7,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
 
@@ -24,16 +47,44 @@
                 {{ session('error') }}
             </div>
         @endif
-
-        <div class="bg-white rounded-lg p-5 shadow-md mb-5">
-            <h4 class="text-blue-800 font-bold text-2xl mb-3">Post a New Topic</h4>
-            <form action="{{ route('dentistrystudent.communityforum.store') }}" method="POST" id="postTopicForm">
-                @csrf
-                <div class="flex items-center mb-3">
-                    <textarea type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500" id="topic" name="topic" placeholder="Type here..." required></textarea>
-                    <div class="flex-shrink-0">
-                        <button type="submit" class="px-4 py-5 rounded bg-blue-500 hover:bg-blue-700 text-white">Post Topic</button>
+        
+        <div id="postModal" class="modal">
+            <div class="modal-content">
+                <h4 class="text-blue-800 font-bold text-2xl mb-3">Post a New Topic</h4>
+                <form action="{{ route('dentistrystudent.communityforum.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-3">
+                        <textarea type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500" id="topic" name="topic" placeholder="What's on your mind?" required></textarea>
                     </div>
+                    <div class="mb-3">
+                        <label for="image" class="block text-sm font-medium text-gray-700">Add an image (optional)</label>
+                        <input type="file" id="image" name="image" accept="image/*" class="mt-1 block w-full text-sm text-gray-500
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-full file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-blue-50 file:text-blue-700
+                            hover:file:bg-blue-100
+                        ">
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" onclick="closeModal()" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 mr-2">Cancel</button>
+                        <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Post Topic</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="actions px-6 py-4 flex justify-between items-center">
+            <button onclick="openModal()" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">
+                <i class="fa-solid fa-plus"></i> Add Post
+            </button>
+
+            <form action="{{ route('dentistrystudent.communityforum') }}" method="GET" class="w-64">
+                <div class="relative">
+                    <input type="text" name="search" placeholder="Search by name or topic..." class="w-full h-10 px-3 pr-10 rounded-full text-sm focus:ring-2 border border-gray-300 focus:outline-none focus:border-blue-500">
+                    <button type="submit" class="absolute inset-y-0 right-0 px-3 flex items-center bg-blue-500 rounded-r-full text-white hover:bg-blue-600">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
                 </div>
             </form>
         </div>
@@ -49,11 +100,21 @@
                     </div>
                     <div class="mt-2.5 text-sm leading-6">
                         <div class="editing-content" id="edit-form-{{ $communityforum->id }}" style="display: none;">
-                            <form method="post" action="{{ route('dentistrystudent.updatedCommunityforum', $communityforum->id) }}">
+                            <form method="post" action="{{ route('dentistrystudent.updatedCommunityforum', $communityforum->id) }}" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
                                     <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500" id="topic" name="topic" placeholder="What's on your mind?" value="{{ old('topic', $communityforum->topic) }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="image" class="block text-sm font-medium text-gray-700">Update image (optional)</label>
+                                    <input type="file" id="image" name="image" accept="image/*" class="mt-1 block w-full text-sm text-gray-500
+                                        file:mr-4 file:py-2 file:px-4
+                                        file:rounded-full file:border-0
+                                        file:text-sm file:font-semibold
+                                        file:bg-blue-50 file:text-blue-700
+                                        hover:file:bg-blue-100
+                                    ">
                                 </div>
                                 <div class="flex mb-3">
                                     <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Update</button>
@@ -63,6 +124,11 @@
                         </div>
                         <div class="non-editing-content" id="non-edit-form-{{ $communityforum->id }}" style="display: block;">
                             <p>{{ $communityforum->topic }}</p>
+                            @if($communityforum->image_path)
+                            <div class="mt-3">
+                                <img src="{{ asset($communityforum->image_path) }}" alt="Forum post image" class="max-w-full h-auto max-h-96 rounded-lg shadow-md">
+                            </div>
+                            @endif
                         </div>
                     </div>
                     
@@ -155,7 +221,7 @@
         }
 
         function editComment(commentId) {
-            document.getElementById('edit-comment-form-' + commentId).style.display = 'block';
+            document.getElementById('edit-comment-form-' + commentId).style.display  = 'block';
             document.getElementById('non-edit-comment-form-' + commentId).style.display = 'none';
         }
 
@@ -163,13 +229,25 @@
             document.getElementById('edit-comment-form-' + commentId).style.display = 'none';
             document.getElementById('non-edit-comment-form-' + commentId).style.display = 'block';
         }
+
+        function openModal() {
+            document.getElementById('postModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('postModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            var modal = document.getElementById('postModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
     
 </body>
 </html>
-
-@section('title')
-    Community Forum
-@endsection
 
 </x-app-layout>

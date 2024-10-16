@@ -46,26 +46,44 @@ class AdminCommunityForumController extends Controller
         }, $text);
     }
 
-    public function store(Request $request){
-
+    public function store(Request $request)
+    {
         $request->validate([
             'topic' => 'required|string|max:255',
+            'image_path' => 'image|mimes:jpeg,png,jpg,gif|max:30000', // 30MB Max
         ]);
 
-        $filteredTopic = $this->filterBadWords($request->topic);
+        $topic = $this->filterBadWords($request->topic);
 
-        CommunityForum::create([
-            'topic' => $filteredTopic,
+        $post = new CommunityForum([
+            'topic' => $topic,
             'user_id' => Auth::id(),
         ]);
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('forum_images'), $imageName);
+            $post->image_path = 'forum_images/' . $imageName;
+        }
+
+        $post->save();
 
         return redirect()->back()->with('success', 'Topic posted successfully!');
     }
 
-    public function index(){
+    public function index(Request $request)
+    {
+        $query = CommunityForum::query();
 
-        $communityforums = CommunityForum::all();
-        $communityforums = CommunityForum::paginate(10);
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('topic', 'like', "%{$searchTerm}%")
+                ->orWhereHas('user', function ($q) use ($searchTerm) {
+                    $q->where('name', 'like', "%{$searchTerm}%");
+                });
+        }
+
+        $communityforums = $query->with(['user', 'comments.user'])->latest()->paginate(10);
 
         return view('admin.communityforum.communityforum', compact('communityforums'));
     }
@@ -91,18 +109,31 @@ class AdminCommunityForumController extends Controller
         return redirect()->route('admin.communityforum');
     }
 
-    // Update the community forum post
-    public function updateCommunityforum(Request $request, $id){
-
+    public function updateCommunityforum(Request $request, $id)
+    {
         $request->validate([
             'topic' => 'required|string|max:255',
+            'image_path' => 'image|mimes:jpeg,png,jpg,gif|max:30000', // 30MB Max
         ]);
 
         $communityforum = CommunityForum::findOrFail($id);
         $communityforum->topic = $this->filterBadWords($request->input('topic'));
-        $communityforum->save();
 
-        session()->forget('edit_id');
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($communityforum->image_path) {
+                $oldImagePath = public_path($communityforum->image_path);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('forum_images'), $imageName);
+            $communityforum->image_path = 'forum_images/' . $imageName;
+        }
+
+        $communityforum->save();
 
         return redirect()->route('admin.communityforum')->with('success', 'Topic updated successfully!');
     }
