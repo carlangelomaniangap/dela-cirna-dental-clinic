@@ -18,12 +18,47 @@
         .calendar-nav-button:hover {
             background-color: #3a7ca5;
         }
+        .appointment-day {
+            background-color: rgba(75, 156, 211, 0.2);
+        }
+        .pending-appointment {
+            background-color: rgba(255, 99, 71, 0.2);
+        }
+        .approved-appointment {
+            background-color: rgba(135, 206, 250, 0.2);
+        }
+        .legend {
+            display: flex;
+            justify-content: flex-end;
+            margin: 10px 20px;
+            font-size: 14px;
+        }
+        .legend-item {
+            margin-left: 15px;
+        }
+        .legend-color {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body class="min-h-screen">
     
     <div class="bg-[#4b9cd3] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold">
         <h4><i class="fa-solid fa-calendar-days"></i> Calendar</h4>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: rgba(255, 99, 71, 0.5);"></div>
+                Pending Approval
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: rgba(135, 206, 250, 0.5);"></div>
+                Approved
+            </div>
+        </div>
     </div>
 
     @if(session('success'))
@@ -44,7 +79,6 @@
             <button onclick="changeMonth('next')" class="calendar-nav-button">Next &gt;</button>
         </div>
 
-        <!-- Days of the week headers starting from Saturday -->
         <div class="bg-white border border-gray-300 font-bold text-center py-2.5">Saturday</div>
         <div class="bg-white border border-gray-300 font-bold text-center py-2.5">Sunday</div>
         <div class="bg-white border border-gray-300 font-bold text-center py-2.5">Monday</div>
@@ -53,7 +87,6 @@
         <div class="bg-white border border-gray-300 font-bold text-center py-2.5">Thursday</div>
         <div class="bg-white border border-gray-300 font-bold text-center py-2.5">Friday</div>
 
-        <!-- Generating days for the current month starting from Saturday -->
         @php
             $firstDayOfMonth = (clone $currentMonth)->modify('first day of this month');
             $lastDayOfMonth = (clone $currentMonth)->modify('last day of this month');
@@ -64,10 +97,17 @@
         @for ($day = clone $startDay; $day <= $endDay; $day->modify('+1 day'))
             @php
                 $isCurrentMonth = $day->format('m') == $currentMonth->format('m');
-                $hasAppointments = $calendars->contains('appointmentdate', $day->format('Y-m-d'));
+                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending Approval');
+                $hasApprovedAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Approved');
+                $dayClass = '';
+                if ($hasPendingAppointment) {
+                    $dayClass = 'pending-appointment';
+                } elseif ($hasApprovedAppointment) {
+                    $dayClass = 'approved-appointment';
+                }
             @endphp
 
-            <div class="day bg-white min-h-[100px] flex flex-col items-center justify-center p-2.5 border border-gray-300 relative cursor-pointer {{ !$isCurrentMonth ? 'text-gray-400' : '' }} {{ $hasAppointments ? 'bg-blue-100' : '' }}" onclick="toggleAppointments(this)">
+            <div class="day bg-white min-h-[100px] flex flex-col items-center justify-center p-2.5 border border-gray-300 relative cursor-pointer {{ !$isCurrentMonth ? 'text-gray-400' : '' }} {{ $dayClass }}" onclick="toggleAppointments(this)">
                 <div>{{ $day->format('j') }}</div>
                 <div class="hourly-appointments hidden absolute top-full left-0 w-full bg-white shadow-lg z-50 p-2.5 max-h-[200px] overflow-y-auto">
                     @foreach (range(8, 19) as $hour)
@@ -109,7 +149,7 @@
                                     @endif
                                 @endforeach
                                 @if (!$hasAppointment)
-                                    <div>No appointment</div>
+                                    <div class="text-gray-400 text-xs">No Appointments</div>
                                 @endif
                             </div>
                         @endif
@@ -121,7 +161,6 @@
 
     <script>
         function toggleAppointments(dayElement) {
-            // Close all other open appointments
             document.querySelectorAll('.day.active').forEach(day => {
                 if (day !== dayElement) {
                     day.classList.remove('active');
@@ -129,7 +168,6 @@
                 }
             });
 
-            // Toggle active class to show/hide hourly appointments
             dayElement.classList.toggle('active');
             const hourlyAppointments = dayElement.querySelector('.hourly-appointments');
             hourlyAppointments.classList.toggle('hidden');
@@ -137,21 +175,18 @@
 
         function changeMonth(direction) {
             const urlParams = new URLSearchParams(window.location.search);
-            const currentMonth = new Date(urlParams.get('month') || new Date());
-            
+            let currentMonth = new Date(urlParams.get('month') || new Date());
             if (direction === 'prev') {
                 currentMonth.setMonth(currentMonth.getMonth() - 1);
-            } else {
+            } else if (direction === 'next') {
                 currentMonth.setMonth(currentMonth.getMonth() + 1);
             }
-            
-            urlParams.set('month', currentMonth.toISOString().split('T')[0].substring(0, 7));
+            urlParams.set('month', currentMonth.toISOString().split('T')[0]);
             window.location.search = urlParams.toString();
         }
     </script>
 </body>
 </html>
-
 @section('title')
     Calendar
 @endsection

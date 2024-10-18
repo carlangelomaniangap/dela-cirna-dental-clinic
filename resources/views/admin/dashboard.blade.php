@@ -13,17 +13,16 @@
         <h4>{{ __('Admin Dashboard') }}</h4>
     </div>
 
-    <div class="p-6">
+        <div class="p-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
             <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-                <h2 class="text-xl font-semibold text-gray-700">Total Users</h2>
+                <h2 class="text-xl font-semibold text-gray-700">Total Users in Your Clinic</h2>
                 <p class="text-3xl font-bold text-blue-600 mt-2">{{ $userCount }}</p>
                 <div class="mt-4">
-                    <p class="text-gray-500">Keep track of registered users in the system.</p>
+                    <p class="text-gray-500">Keep track of registered users in your clinic.</p>
                 </div>
             </div>
 
-            <!-- Registration Breakdown -->
             <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
                 <h2 class="text-xl font-semibold text-gray-700 mb-4">Recent Registrations</h2>
                 <ul class="list-disc list-inside">
@@ -35,20 +34,21 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-xl font-semibold text-gray-700">Total Patients</h2>
-                <p class="text-3xl font-bold text-green-600 mt-2">{{ $patientCount }}</p>
+                <h2 class="text-xl font-semibold text-gray-700">Total Approved Appointments</h2>
+                <p class="text-3xl font-bold text-green-600 mt-2">{{ $approvedAppointments }}</p>
                 <div class="mt-4">
-                    <p class="text-gray-500">Keep track of registered patients in the system.</p>
+                    <p class="text-gray-500">Keep track of approved appointments in your clinic.</p>
                 </div>
             </div>
 
             <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-xl font-semibold text-gray-700">Total Dentistry Students</h2>
-                <p class="text-3xl font-bold text-purple-600 mt-2">{{ $dentistrystudentCount }}</p>
+                <h2 class="text-xl font-semibold text-gray-700">Total Pending Appointments</h2>
+                <p class="text-3xl font-bold text-purple-600 mt-2">{{ $pendingAppointments }}</p>
                 <div class="mt-4">
-                    <p class="text-gray-500">Keep track of registered dentistry students in the system.</p>
+                    <p class="text-gray-500">Keep track of pending appointments in your clinic.</p>
                 </div>
             </div>
+        
         </div>
         
     </div>
@@ -241,7 +241,6 @@
             }
 
             document.addEventListener('DOMContentLoaded', function() {
-                // Optional: Automatically close the popup after a few seconds
                 setTimeout(closePopup, 5000); // Close after 5 seconds
             });
         </script>

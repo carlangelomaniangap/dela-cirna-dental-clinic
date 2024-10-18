@@ -4,30 +4,48 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory;
 use App\Models\User;
+use App\Models\Calendar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
-    public function index(Request $request){
-
-        // Retrieve the authenticated user's dental clinic ID
+    public function index(Request $request)
+    {
         $dentalclinicId = Auth::user()->dentalclinic_id;
-
-        $userCount = User::whereIn('usertype', ['patient', 'dentistrystudent'])->count();
-        $patientCount = User::where('usertype', 'patient')->count();
-        $dentistrystudentCount = User::where('usertype', 'dentistrystudent')->count();
-
+    
+        $clinicUsers = User::where('dentalclinic_id', $dentalclinicId)
+                           ->whereIn('usertype', ['patient', 'dentistrystudent'])
+                           ->get();
+        $userCount = $clinicUsers->count();
+        $patientCount = $clinicUsers->where('usertype', 'patient')->count();
+        $dentistrystudentCount = $clinicUsers->where('usertype', 'dentistrystudent')->count();
+    
+        $pendingAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)
+                                       ->where('approved', 'Pending Approval')
+                                       ->count();
+        $approvedAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)
+                                        ->where('approved', 'Approved')
+                                        ->count();
+    
         $inventories = Inventory::where('dentalclinic_id', $dentalclinicId)->get();
-
+    
         $showUserWelcome = $request->session()->get('showUserWelcome', false);
     
-        // Clear the session variable if it exists
         if ($showUserWelcome) {
             $request->session()->forget('showUserWelcome');
         }
-
-        return view('admin.dashboard', compact('userCount', 'patientCount', 'dentistrystudentCount', 'inventories', 'showUserWelcome'));
+    
+        return view('admin.dashboard', compact(
+            'clinicUsers', 
+            'userCount', 
+            'patientCount', 
+            'dentistrystudentCount', 
+            'inventories', 
+            'showUserWelcome', 
+            'pendingAppointments', 
+            'approvedAppointments'
+        ));
     }
     
     public function store(Request $request)
