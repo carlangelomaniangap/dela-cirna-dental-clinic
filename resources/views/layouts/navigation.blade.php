@@ -28,7 +28,7 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                @if(Auth::check())
+                    @if(Auth::check())
                         @if(Auth::user()->usertype == 'admin')
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                                 {{ __('Dashboard') }}

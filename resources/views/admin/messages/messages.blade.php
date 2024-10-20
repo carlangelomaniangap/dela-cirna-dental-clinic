@@ -45,12 +45,12 @@
                             @if ($message->sender_id == auth()->id() && $message->recipient_id == $user->id)
                                 <div class="admin">
                                     <p>You</p>
-                                    <p>{{ $message->message }}</p>
+                                    <p class="text-justify">{{ $message->message }}</p>
                                 </div>
                             @elseif ($message->sender_id == $user->id && $message->recipient_id == auth()->id())
                                 <div class="others">
                                     <p>{{ $user->name }}</p>
-                                    <p>{{ $message->message }}</p>
+                                    <p class="text-justify">{{ $message->message }}</p>
                                 </div>
                             @endif
                         @endforeach

@@ -52,9 +52,9 @@
                     </div>
                     <tbody>
                         @if($communityforums->isEmpty())
-                            <tr>
-                                <td class="px-6 py-4 text-gray-600">No topic found.</td>
-                            </tr>
+                            <div class="bg-white rounded-lg p-4 mb-5 shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
+                                <p class="text-gray-600">No topic found.</p>
+                            </div>
                         @else
                             @foreach ($communityforums as $communityforum)
                                 <div class="bg-white rounded-lg p-4 mb-5 shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">

@@ -9,68 +9,114 @@
 </head>
 <body class="min-h-screen">
 
-    <div class="bg-[#4b9cd3;] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold">
-        <h4>{{ __('Admin Dashboard') }}</h4>
+    <div class="bg-[#4b9cd3;] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 text-white text-2xl font-semibold">
+        <h4>{{ __('Dashboard') }}</h4>
     </div>
 
     <div class="p-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
             <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-                <h2 class="text-xl font-semibold text-gray-700">Total Users in Your Clinic</h2>
-                <p class="text-3xl font-bold text-blue-600 mt-2">{{ $userCount }}</p>
-                <div class="mt-4">
-                    <p class="text-gray-500">Keep track of registered users in your clinic.</p>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Total Users in Your Clinic</h2>
+                <div class="flex items-center justify-center mb-4 p-4 bg-blue-200 rounded-lg">
+                    <i class="fas fa-users fa-3x text-blue-600 mr-4"></i>
+                    <p class="text-3xl font-bold text-blue-600">{{ $userCount }}</p>
                 </div>
+                <p class="text-gray-500">Keep track of registered users in your clinic.</p>
             </div>
 
             <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-                <h2 class="text-xl font-semibold text-gray-700 mb-4">Recent Registrations</h2>
-                <ul class="list-disc list-inside">
-                    <li class="text-green-500">Patient: {{ $patientCount }}</li>
-                    <li class="text-purple-500">Dentistry Student: {{ $dentistrystudentCount }}</li>
-                </ul>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Recent Registrations</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-green-200 p-4 rounded-lg shadow flex items-center">
+                        <i class="fas fa-user-friends fa-2x text-green-600 mr-4"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-green-600">Patients</h3>
+                            <p class="text-3xl font-bold text-green-700">{{ $patientCount }}</p>
+                        </div>
+                    </div>
+                    <div class="bg-indigo-200 p-4 rounded-lg shadow flex items-center">
+                        <i class="fas fa-user-graduate fa-2x text-indigo-600 mr-4"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-indigo-600">Dentistry Students</h3>
+                            <p class="text-3xl font-bold text-indigo-700">{{ $dentistrystudentCount }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
 
-        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-700">Today's Appointments</h2>
-            <p class="text-3xl font-bold text-blue-600 mt-2">{{ $todayAppointments->count() }}</p>
-            <div class="mt-2">
-                <p class="text-gray-500">Appointments scheduled for today in your clinic.</p>
-            </div>
-            @if($todayAppointments->count() > 0)
-                <div class="mt-4">
-                    <table class="min-w-full">
-                        <thead>
-                            <tr>
-                                <th class="text-left text-xs font-medium text-black-500 uppercase tracking-wider">Time</th>
-                                <th class="text-left text-xs font-medium text-black-500 uppercase tracking-wider">Patient Name</th>
-                                <th class="text-left text-xs font-medium text-black-500 uppercase tracking-wider">Concern</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($todayAppointments as $appointment)
-                                <tr>
-                                    <td class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($appointment->appointmenttime)->format('g:i A') }}</td>
-                                    <td class="text-sm text-gray-500">{{ $appointment->name }}</td>
-                                    <td class="text-sm text-gray-500">{{ $appointment->concern ?? 'Not specified' }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+            <div class="bg-white shadow-lg rounded-lg p-6 mb-6 h-46">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Today's Appointments</h2>
+                
+                <div class="flex items-center justify-center bg-blue-200 rounded-lg p-4 mb-4">
+                    <i class="fas fa-calendar-check fa-3x text-blue-600 mr-4"></i>
+                    <p class="text-4xl font-bold text-blue-600">{{ $todayAppointments->count() }}</p>
                 </div>
+
+                @if($todayAppointments->count() > 0)
+                    <div class="mt-4 overflow-hidden rounded-lg shadow">
+                        <div class="max-h-32 overflow-y-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th class="text-left text-xs font-medium text-gray-600 uppercase tracking-wider py-2 px-2">Time</th>
+                                        <th class="text-left text-xs font-medium text-gray-600 uppercase tracking-wider py-2 px-2">Patient Name</th>
+                                        <th class="text-left text-xs font-medium text-gray-600 uppercase tracking-wider py-2 px-2">Concern</th>
+                                        <th class="text-left text-xs font-medium text-gray-600 uppercase tracking-wider py-2 px-2">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach($todayAppointments as $appointment)
+                                        <tr>
+                                            <td class="text-sm text-gray-500 py-2 px-2">{{ \Carbon\Carbon::parse($appointment->appointmenttime)->format('g:i A') }}</td>
+                                            <td class="text-sm text-gray-500 py-2 px-2">{{ $appointment->name }}</td>
+                                            <td class="text-sm text-gray-500 py-2 px-2">{{ $appointment->concern ?? 'Not specified' }}</td>
+                                            <td class="text-sm text-gray-500 py-2 px-2">{{ $appointment->status }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 @else
-                    <p class="mt-4 text-sm text-gray-500">No appointments scheduled for today.</p>
+                    <p class="mt-4 text-sm text-gray-500 text-center">No appointments scheduled for today.</p>
                 @endif
             </div>
 
+
+
             <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-                <h2 class="text-xl font-semibold text-gray-700 mb-4">Total Pending & Approved Appointments</h2>
-                <ul class="list-disc list-inside">
-                    <li class="text-green-500">Approved Appointments: {{ $approvedAppointments }}</li>
-                    <li class="text-purple-500">Pending Appointments: {{ $pendingAppointments }}</li>
-                </ul>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Appointment Status Overview</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-blue-200 rounded-lg p-4 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-blue-500 text-white rounded-full p-3 mr-3">
+                                <i class="fas fa-check-circle fa-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-blue-700">Approved</h3>
+                                <p class="text-3xl font-bold text-blue-800">{{ $approvedAppointments }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-orange-200 rounded-lg p-4 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-orange-500 text-white rounded-full p-3 mr-3">
+                                <i class="fas fa-hourglass-half fa-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-orange-700">Pending</h3>
+                                <p class="text-3xl font-bold text-orange-800">{{ $pendingAppointments }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-gray-600 text-sm mt-4">Stay organized and on top of your appointments!</p>
             </div>
+
+
         </div>
     </div>
 
@@ -152,7 +198,7 @@
                                         Edit
                                     </button>
                                     
-                                    <form id="delete-inventory-form-{{ $inventory->id }}" action="{{ route('inventory.destroy', $inventory->id) }}" class="inline" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                    <form action="{{ route('inventory.destroy', $inventory->id) }}" class="inline" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded transition duration-200 hover:bg-red-600">Delete</button>
@@ -179,7 +225,9 @@
                     <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
                     
                     @csrf
+                    
                     <input type="hidden" name="_method" id="methodInput" value="POST">
+
                     <div>
                         <label for="item_name" class="block">Item Name</label>
                         <input type="text" name="item_name" id="item_name" class="w-full rounded-lg focus:ring-2 shadow-sm" required>
