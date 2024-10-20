@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Calendar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
 {
@@ -27,7 +28,11 @@ class AdminDashboardController extends Controller
         $approvedAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)
                                         ->where('approved', 'Approved')
                                         ->count();
-    
+        $todayAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)
+        ->whereDate('appointmentdate', Carbon::today())
+        ->orderBy('appointmenttime')
+        ->get();
+        
         $inventories = Inventory::where('dentalclinic_id', $dentalclinicId)->get();
     
         $showUserWelcome = $request->session()->get('showUserWelcome', false);
@@ -44,7 +49,8 @@ class AdminDashboardController extends Controller
             'inventories', 
             'showUserWelcome', 
             'pendingAppointments', 
-            'approvedAppointments'
+            'approvedAppointments',
+            'todayAppointments'
         ));
     }
     

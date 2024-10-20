@@ -13,7 +13,7 @@
         <h4>{{ __('Admin Dashboard') }}</h4>
     </div>
 
-        <div class="p-6">
+    <div class="p-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
             <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
                 <h2 class="text-xl font-semibold text-gray-700">Total Users in Your Clinic</h2>
@@ -32,25 +32,46 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-xl font-semibold text-gray-700">Total Approved Appointments</h2>
-                <p class="text-3xl font-bold text-green-600 mt-2">{{ $approvedAppointments }}</p>
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-700">Today's Appointments</h2>
+            <p class="text-3xl font-bold text-blue-600 mt-2">{{ $todayAppointments->count() }}</p>
+            <div class="mt-2">
+                <p class="text-gray-500">Appointments scheduled for today in your clinic.</p>
+            </div>
+            @if($todayAppointments->count() > 0)
                 <div class="mt-4">
-                    <p class="text-gray-500">Keep track of approved appointments in your clinic.</p>
+                    <table class="min-w-full">
+                        <thead>
+                            <tr>
+                                <th class="text-left text-xs font-medium text-black-500 uppercase tracking-wider">Time</th>
+                                <th class="text-left text-xs font-medium text-black-500 uppercase tracking-wider">Patient Name</th>
+                                <th class="text-left text-xs font-medium text-black-500 uppercase tracking-wider">Concern</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($todayAppointments as $appointment)
+                                <tr>
+                                    <td class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($appointment->appointmenttime)->format('g:i A') }}</td>
+                                    <td class="text-sm text-gray-500">{{ $appointment->name }}</td>
+                                    <td class="text-sm text-gray-500">{{ $appointment->concern ?? 'Not specified' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
+                @else
+                    <p class="mt-4 text-sm text-gray-500">No appointments scheduled for today.</p>
+                @endif
             </div>
 
-            <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-xl font-semibold text-gray-700">Total Pending Appointments</h2>
-                <p class="text-3xl font-bold text-purple-600 mt-2">{{ $pendingAppointments }}</p>
-                <div class="mt-4">
-                    <p class="text-gray-500">Keep track of pending appointments in your clinic.</p>
-                </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Total Pending & Approved Appointments</h2>
+                <ul class="list-disc list-inside">
+                    <li class="text-green-500">Approved Appointments: {{ $approvedAppointments }}</li>
+                    <li class="text-purple-500">Pending Appointments: {{ $pendingAppointments }}</li>
+                </ul>
             </div>
-        
         </div>
-        
     </div>
 
     @if(session('success') || $errors->any())
