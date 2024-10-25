@@ -11,27 +11,23 @@ use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
 {
-    public function index(Request $request)
-    {
+    public function index(Request $request){
+
         $dentalclinicId = Auth::user()->dentalclinic_id;
     
-        $clinicUsers = User::where('dentalclinic_id', $dentalclinicId)
-                           ->whereIn('usertype', ['patient', 'dentistrystudent'])
-                           ->get();
+        $clinicUsers = User::where('dentalclinic_id', $dentalclinicId)->whereIn('usertype', ['patient', 'dentistrystudent'])->get();
+        
         $userCount = $clinicUsers->count();
+
         $patientCount = $clinicUsers->where('usertype', 'patient')->count();
+
         $dentistrystudentCount = $clinicUsers->where('usertype', 'dentistrystudent')->count();
-    
-        $pendingAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)
-                                       ->where('approved', 'Pending Approval')
-                                       ->count();
-        $approvedAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)
-                                        ->where('approved', 'Approved')
-                                        ->count();
-        $todayAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)
-        ->whereDate('appointmentdate', Carbon::today())
-        ->orderBy('appointmenttime')
-        ->get();
+
+        $approvedAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->where('approved', 'Approved')->whereDate('appointmentdate', Carbon::today())->count();
+        
+        $pendingAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->where('approved', 'Pending')->whereDate('appointmentdate', Carbon::today())->count();
+        
+        $todayAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->whereDate('appointmentdate', Carbon::today())->orderBy('appointmenttime')->get();
         
         $inventories = Inventory::where('dentalclinic_id', $dentalclinicId)->get();
     
@@ -54,8 +50,8 @@ class AdminDashboardController extends Controller
         ));
     }
     
-    public function store(Request $request)
-    {
+    public function store(Request $request){
+
         $request->validate([
             'dentalclinic_id' => 'required', 'exists:dentalclinics,id',
             'item_name' => 'required|string|max:255',
@@ -72,8 +68,8 @@ class AdminDashboardController extends Controller
         return redirect()->back()->with('success', 'Inventory created successfully.');
     }
 
-    public function update(Request $request, Inventory $inventory)
-    {
+    public function update(Request $request, Inventory $inventory){
+
         $request->validate([
             'item_name' => 'required|string|max:255',
         ]);
@@ -107,15 +103,15 @@ class AdminDashboardController extends Controller
         return redirect()->back()->with('success', 'Inventory updated successfully.');
     }
 
-    public function destroy($inventoryId)
-    {
+    public function destroy($inventoryId){
+
         $inventory = Inventory::findOrFail($inventoryId);
         $inventory->delete();
         return redirect()->back()->with('success', 'Inventory deleted successfully.');
     }
 
-    public function show(Inventory $inventory)
-    {
+    public function show(Inventory $inventory){
+
         $histories = $inventory->histories()->get();
         
         return view('admin.inventory.history', compact('inventory', 'histories'));

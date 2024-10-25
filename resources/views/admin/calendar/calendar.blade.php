@@ -51,12 +51,12 @@
         <h4><i class="fa-solid fa-calendar-days"></i> Calendar</h4>
         <div class="legend">
             <div class="legend-item">
-                <div class="legend-color" style="background-color: rgba(255, 99, 71, 0.5);"></div>
-                Pending Approval
-            </div>
-            <div class="legend-item">
                 <div class="legend-color" style="background-color: rgba(135, 206, 250, 0.5);"></div>
                 Approved
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: rgba(255, 99, 71, 0.5);"></div>
+                Pending
             </div>
         </div>
     </div>
@@ -97,13 +97,13 @@
         @for ($day = clone $startDay; $day <= $endDay; $day->modify('+1 day'))
             @php
                 $isCurrentMonth = $day->format('m') == $currentMonth->format('m');
-                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending Approval');
                 $hasApprovedAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Approved');
+                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending');
                 $dayClass = '';
-                if ($hasPendingAppointment) {
-                    $dayClass = 'pending-appointment';
-                } elseif ($hasApprovedAppointment) {
+                if ($hasApprovedAppointment) {
                     $dayClass = 'approved-appointment';
+                } elseif ($hasPendingAppointment) {
+                    $dayClass = 'pending-appointment';
                 }
             @endphp
 
@@ -129,13 +129,13 @@
                                             <strong>{{ date('g:i A', strtotime($calendar->appointmenttime)) }}</strong><br>
                                             {{ $calendar->name }}
                                             <div class="appointment-buttons mt-2 flex justify-between">
-                                                @if ($calendar->approved === 'Pending Approval')
+                                                @if ($calendar->approved === 'Pending')
                                                     <form method="post" action="{{ route('admin.approveCalendar', $calendar->id) }}">
                                                         @csrf
-                                                        <button type="submit" class="py-1 px-2 rounded bg-green-500 text-white text-xs" title="Approve">Approve</button>
+                                                        <button type="submit" class="py-1 px-2 rounded bg-yellow-500 text-white text-xs" title="Approve">Pending</button>
                                                     </form>
                                                 @else
-                                                    <span class="text-green-500 text-xs">{{ $calendar->approved }}</span>
+                                                    <span class="py-1 px-1 rounded bg-green-500 text-white text-xs">{{ $calendar->approved }}</span>
                                                 @endif
                                                 <a href="{{ route('admin.viewDetails', $calendar->id) }}" class="py-1 px-2 rounded bg-white hover:bg-gray-300 text-gray-800 text-xs" title="View"><i class="fa-solid fa-eye"></i></a>
                                                 <form method="post" action="{{ route('admin.deleteCalendar', $calendar->id) }}">

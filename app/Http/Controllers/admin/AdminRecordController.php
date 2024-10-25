@@ -47,28 +47,35 @@ class AdminRecordController extends Controller
             'file' => 'required|file',
             'patientlist_id' => 'required|exists:patientlists,id'
         ]);
-
+    
         $file = $request->file('file');
-        if($file){
-            // Get the original file name
-            $originalFileName = $file->getClientOriginalName();
-            
-            // Generate a unique file name to avoid conflicts
-            // $uniqueFileName = time() . '_' . $originalFileName;
-            $uniqueFileName = $originalFileName;
-            
+        if ($file) {
+            // Get the original file name and extension
+            $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+    
+            // Create a unique file name
+            $uniqueFileName = $originalFileName . '.' . $extension;
+            $counter = 1;
+    
+            // Ensure the unique file name doesn't conflict
+            while (Record::where('file', $uniqueFileName)->exists()) {
+                $uniqueFileName = $originalFileName . "($counter)." . $extension;
+                $counter++;
+            }
+    
             // Store the file with the unique file name
-            $filePath = $file->storeAs($uniqueFileName);
-        
+            $filePath = $file->storeAs('', $uniqueFileName); // Store in default disk
+    
             // Save record with patientlist_id
             Record::create([
                 'file' => $filePath,
                 'patientlist_id' => $request->input('patientlist_id'),
             ]);
-
+    
             return redirect()->route('admin.showRecord', ['patientlistId' => $request->input('patientlist_id')])
-                            ->with('success', 'Record added successfully!');
-        }else{
+                             ->with('success', 'Record added successfully!');
+        } else {
             return redirect()->back()->with('error', 'No file uploaded.');
         }
     }
@@ -81,46 +88,46 @@ class AdminRecordController extends Controller
         return redirect()->route('admin.showRecord', $patientlistId)->with('success', 'Record deleted successfully!');
     }
 
-    public function updateRecord($patientlistId, $recordId){
-
-        $patientlist = Patientlist::findOrFail($patientlistId);
-        $record = Record::findOrFail($recordId);
-
-        return view('admin.record.update', compact('patientlist', 'record'));
-    }
-
 
     public function updatedRecord(Request $request, $patientlistId, $recordId){
 
         $request->validate([
-            'file' => 'nullable|file',
-            'patientlist_id' => 'required|exists:patientlists,id'
+            'file' => 'required|string|max:255',
         ]);
-
+    
+        // Find the record
         $record = Record::findOrFail($recordId);
-
-        if($request->hasFile('file')){
-            
-            $file = $request->file('file');
-
-            // Get the original file name
-            $originalFileName = $file->getClientOriginalName();
-
-            // Generate a unique file name to avoid conflicts
-            $uniqueFileName = time() . '_' . $originalFileName;
-
-            // Store the file with the unique file name
-            $filePath = $file->storeAs($uniqueFileName);
-
-            // Update the file path in the record
-            $record->file = $filePath;
+    
+        // Extract the current file name and extension
+        $currentFileName = $record->file;
+        $currentBaseName = pathinfo($currentFileName, PATHINFO_FILENAME);
+        $extension = pathinfo($currentFileName, PATHINFO_EXTENSION);
+    
+        // Create the new file name
+        $newFileName = $request->file . '.' . $extension;
+    
+        // Check if the file name has changed
+        if ($currentFileName !== $newFileName) {
+            // Ensure the new file name is unique
+            $baseName = pathinfo($newFileName, PATHINFO_FILENAME);
+            $counter = 1;
+    
+            // Check if the file exists in the records
+            while (Record::where('file', $newFileName)->exists()) {
+                // Create a new file name with a counter
+                $newFileName = $baseName . "($counter)." . $extension;
+                $counter++;
+            }
+    
+            // Update the file name
+            $record->file = $newFileName;
+            $record->save();
+    
+            return redirect()->route('admin.showRecord', $patientlistId)->with('success', 'File name updated successfully.');
         }
-
-        // Update other fields
-        $record->patientlist_id = $patientlistId;
-        $record->save();
-
-        return redirect()->route('admin.showRecord', $patientlistId)->with('success', 'Record updated successfully!');
+    
+        // If no changes were made, redirect without success message
+        return redirect()->route('admin.showRecord', $patientlistId);
     }
 
     public function downloadRecord($recordId){
@@ -159,5 +166,29 @@ class AdminRecordController extends Controller
 
         return redirect()->route('admin.showRecord', ['patientlistId' => $request->input('patientlist_id')])
             ->with('success', 'Note added successfully!');
+    }
+
+    public function update(Request $request, $patientlistId, $noteId){
+        // Validate the incoming request
+        $request->validate([
+            'note' => 'required|string|max:255', // Adjust the max length as needed
+        ]);
+
+        // Find the note by ID
+        $note = Note::findOrFail($noteId);
+
+        // Check if the note content has changed
+        $newNoteContent = $request->input('note');
+        if ($note->note !== $newNoteContent) {
+            // Update the note content
+            $note->note = $newNoteContent;
+            $note->save();
+
+            // Redirect back with a success message and compact patientlistId
+            return redirect()->back()->with('success', 'Note updated successfully!')->with(compact('patientlistId'));
+        }
+
+        // If the note content is unchanged, redirect back without a message
+        return redirect()->back();
     }
 }

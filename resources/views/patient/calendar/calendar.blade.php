@@ -51,12 +51,12 @@
         <h4><i class="fa-solid fa-calendar-days"></i> Calendar</h4>
         <div class="legend">
             <div class="legend-item">
-                <div class="legend-color" style="background-color: rgba(255, 99, 71, 0.5);"></div>
-                Pending Approval
-            </div>
-            <div class="legend-item">
                 <div class="legend-color" style="background-color: rgba(135, 206, 250, 0.5);"></div>
                 Approved
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: rgba(255, 99, 71, 0.5);"></div>
+                Pending
             </div>
         </div>
     </div>
@@ -94,13 +94,13 @@
         @for ($day = clone $startDay; $day <= $endDay; $day->modify('+1 day'))
             @php
                 $isCurrentMonth = $day->format('m') == $currentMonth->format('m');
-                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending Approval');
                 $hasApprovedAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Approved');
+                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending');
                 $dayClass = '';
-                if ($hasPendingAppointment) {
-                    $dayClass = 'pending-appointment';
-                } elseif ($hasApprovedAppointment) {
+                if ($hasApprovedAppointment) {
                     $dayClass = 'approved-appointment';
+                } elseif ($hasPendingAppointment) {
+                    $dayClass = 'pending-appointment';
                 }
             @endphp
 
@@ -169,9 +169,12 @@
             window.location.search = urlParams.toString();
         }
     </script>
+    
 </body>
 </html>
+
 @section('title')
     Calendar
 @endsection
+
 </x-app-layout>

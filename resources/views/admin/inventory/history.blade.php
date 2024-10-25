@@ -5,40 +5,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="min-h-screen">
     
-    <div class="bg-[#4b9cd3;] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold">
-        <h4>Inventory / {{ $inventory->item_name }} / Current Quantity = {{ $inventory->quantity }}</h4>
+    <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
+        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold">Inventory / {{ $inventory->item_name }}</h4>
     </div>
 
-    <div class="px-6">
-        <table class="min-w-full mt-4 bg-white shadow-lg rounded-lg overflow-hidden">
-            <thead class="bg-gray-200 text-gray-600 uppercase font-semibold text-sm text-left">
-                <tr>
-                    <th class="px-6 py-3">Quantity</th>
-                    <th class="px-6 py-3">Action</th>
-                    <th class="px-6 py-3">Time</th>
-                    <th class="px-6 py-3">Date</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="p-6">
+        <div class="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-6">
+            <div class="flex flex-col mb-4">
+                <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold">History</h1>
+            </div>
+
+            <div class="space-y-4">
                 @if($histories->isEmpty())
-                    <tr>
-                        <td class="px-6 py-4 text-gray-600" colspan="3">No history found.</td>
-                    </tr>
+                    <div class="px-4 py-4 text-gray-600 text-center">No history found.</div>
                 @else
-                    @foreach ($histories as $history)
-                        <tr class="hover:bg-gray-100 transition duration-300">
-                            <td class="px-6 py-4">{{ $history->quantity }}</td>
-                            <td class="px-6 py-4">{{ $history->action }}</td>
-                            <td class="px-6 py-4">{{ $history->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</td>
-                            <td class="px-6 py-4">{{ $history->created_at->setTimezone('Asia/Manila')->format('F j, Y') }}</td>
-                        </tr>
-                    @endforeach
+                    <div class="mt-4 space-y-4 overflow-y-auto max-h-94">
+                        @foreach ($histories as $history)
+                            <div class="border border-gray-200 rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start bg-gray-50 hover:bg-gray-100 transition duration-200">
+                                <div class="flex-grow mb-2 sm:mb-0">
+                                    <div class="flex justify-between text-gray-800 text-sm sm:text-base lg:text-lg">
+                                        <span>{{ $history->quantity }} items</span>
+                                        <span class="text-gray-600">Action: {{ $history->action }}</span>
+                                    </div>
+                                    <div class="text-gray-500 text-xs sm:text-sm">
+                                        <span>{{ $history->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</span>
+                                        <span class="mx-2">|</span>
+                                        <span>{{ $history->created_at->setTimezone('Asia/Manila')->format('F j, Y') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 @endif
-            </tbody>
-        </table>
+            </div>
+
+        </div>
     </div>
 
 </body>

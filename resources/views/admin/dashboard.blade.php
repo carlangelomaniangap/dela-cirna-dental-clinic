@@ -6,15 +6,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="min-h-screen">
 
-    <div class="bg-[#4b9cd3;] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 text-white text-2xl font-semibold">
-        <h4>{{ __('Dashboard') }}</h4>
+    <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
+        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold">{{ __('Dashboard') }}</h4>
     </div>
 
-    <div class="p-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+    <div class="p-6 pb-0">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
             <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Total Users in Your Clinic</h2>
                 <div class="flex items-center justify-center mb-4 p-4 bg-blue-200 rounded-lg">
@@ -46,74 +47,77 @@
 
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+        <div class="grid grid-cols-1">
             <div class="bg-white shadow-lg rounded-lg p-6 mb-6 h-46">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Today's Appointments</h2>
                 
-                <div class="flex items-center justify-center bg-blue-200 rounded-lg p-4 mb-4">
-                    <i class="fas fa-calendar-check fa-3x text-blue-600 mr-4"></i>
-                    <p class="text-4xl font-bold text-blue-600">{{ $todayAppointments->count() }}</p>
-                </div>
-
-                @if($todayAppointments->count() > 0)
-                    <div class="mt-4 overflow-hidden rounded-lg shadow">
-                        <div class="max-h-32 overflow-y-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="text-left text-xs font-medium text-gray-600 uppercase tracking-wider py-2 px-2">Time</th>
-                                        <th class="text-left text-xs font-medium text-gray-600 uppercase tracking-wider py-2 px-2">Patient Name</th>
-                                        <th class="text-left text-xs font-medium text-gray-600 uppercase tracking-wider py-2 px-2">Concern</th>
-                                        <th class="text-left text-xs font-medium text-gray-600 uppercase tracking-wider py-2 px-2">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach($todayAppointments as $appointment)
-                                        <tr>
-                                            <td class="text-sm text-gray-500 py-2 px-2">{{ \Carbon\Carbon::parse($appointment->appointmenttime)->format('g:i A') }}</td>
-                                            <td class="text-sm text-gray-500 py-2 px-2">{{ $appointment->name }}</td>
-                                            <td class="text-sm text-gray-500 py-2 px-2">{{ $appointment->concern ?? 'Not specified' }}</td>
-                                            <td class="text-sm text-gray-500 py-2 px-2">{{ $appointment->status }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                @else
-                    <p class="mt-4 text-sm text-gray-500 text-center">No appointments scheduled for today.</p>
-                @endif
-            </div>
-
-
-
-            <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Appointment Status Overview</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Total Appointments Card -->
                     <div class="bg-blue-200 rounded-lg p-4 flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="bg-blue-500 text-white rounded-full p-3 mr-3">
-                                <i class="fas fa-check-circle fa-lg"></i>
+                                <i class="fas fa-calendar-check fa-lg"></i>
                             </div>
                             <div>
-                                <h3 class="text-lg font-semibold text-blue-700">Approved</h3>
-                                <p class="text-3xl font-bold text-blue-800">{{ $approvedAppointments }}</p>
+                                <h3 class="text-lg font-semibold text-blue-700">Total Appointments</h3>
+                                <p class="text-3xl font-bold text-blue-800">{{ $todayAppointments->count() }}</p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-orange-200 rounded-lg p-4 flex items-center justify-between">
+    
+                    <!-- Approved Appointments Card -->
+                    <div class="bg-green-200 rounded-lg p-4 flex items-center justify-between">
                         <div class="flex items-center">
-                            <div class="bg-orange-500 text-white rounded-full p-3 mr-3">
+                            <div class="bg-green-500 text-white rounded-full p-3 mr-3">
+                                <i class="fas fa-check-circle fa-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-green-700">Approved</h3>
+                                <p class="text-3xl font-bold text-green-800">{{ $approvedAppointments }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pending Appointments Card -->
+                    <div class="bg-yellow-200 rounded-lg p-4 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-yellow-500 text-white rounded-full p-3 mr-3">
                                 <i class="fas fa-hourglass-half fa-lg"></i>
                             </div>
                             <div>
-                                <h3 class="text-lg font-semibold text-orange-700">Pending</h3>
-                                <p class="text-3xl font-bold text-orange-800">{{ $pendingAppointments }}</p>
+                                <h3 class="text-lg font-semibold text-yellow-700">Pending</h3>
+                                <p class="text-3xl font-bold text-yellow-800">{{ $pendingAppointments }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <p class="text-center text-gray-600 text-sm mt-4">Stay organized and on top of your appointments!</p>
+
+                @if($todayAppointments->count() > 0)
+                    <div class="mt-4 space-y-4 overflow-y-auto max-h-64">
+                        @foreach($todayAppointments as $appointment)
+                            <div class="border border-gray-200 rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start bg-gray-50 hover:bg-gray-100 transition duration-200">
+                                <div class="flex-grow mb-2 sm:mb-0">
+                                    <p class="text-base lg:text-lg font-semibold text-gray-800">
+                                        <strong>{{ \Carbon\Carbon::parse($appointment->appointmenttime)->format('g:i A') }}</strong> - 
+                                        <span class="text-gray-600">{{ $appointment->name }}</span>
+                                    </p>
+                                    <p class="text-sm sm:text-base lg:text-lg text-gray-500">
+                                        Reason for visit: <em>{{ $appointment->concern }}</em>
+                                    </p>
+                                </div>
+                                <div class="text-sm sm:text-base lg:text-lg text-right">
+                                    <span class="text-gray-500 font-medium">Status:</span>
+                                    <span class="font-semibold {{ $appointment->status == 'Approved' ? 'text-green-600' : ($appointment->status == 'Pending' ? 'text-yellow-600' : 'text-red-600') }}">
+                                        {{ $appointment->status }}
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="mt-4 text-sm text-gray-500 text-center">There are no appointments scheduled for today.</p>
+                @endif
+
             </div>
 
 
@@ -166,93 +170,154 @@
         </div>
     @endif
 
-    <div class="px-6">
-        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+    <div class="p-6 pt-0">
+        <div class="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-6">
 
-            <div class="flex items-center justify-between mb-4">
-                <h1 class="text-2xl font-bold">Inventory</h1>
-                <button id="createInventoryButton" class="bg-blue-500 text-white px-4 py-2 rounded">Add Item</button>
+            <div class="flex flex-col sm:flex-row items-center justify-between mb-4">
+                <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold">Inventory</h1>
+                <button id="createInventoryButton" class="mt-2 sm:mt-0 bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded max-w-xs font-semibold">Add Item</button>
             </div>
 
-            <table class="min-w-full mt-4 bg-white shadow-lg rounded-lg overflow-hidden">
-                <thead class="bg-gray-200 text-gray-600 uppercase font-semibold text-sm text-left">
-                    <tr>
-                        <th class="px-6 py-3">Item Name</th>
-                        <th class="px-6 py-3">Quantity</th>
-                        <th class="px-6 py-3">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if($inventories->isEmpty())
+            <div class="flex justify-center">
+                <table class="min-w-full mt-4 bg-white shadow-lg rounded-lg">
+                    <thead class="bg-gray-200 text-gray-600 uppercase font-semibold text-xs sm:text-sm lg:text-base text-left">
                         <tr>
-                            <td class="px-6 py-4 text-gray-600">No items found.</td>
+                            <th class="px-4 sm:px-6 py-3">Item Name</th>
+                            <th class="px-4 sm:px-6 py-3">Quantity</th>
+                            <th class="px-4 sm:px-6 py-3">Actions</th>
                         </tr>
-                    @else
-                        @foreach ($inventories as $inventory)
-                            <tr class="hover:bg-gray-100 transition duration-300">
-                                <td class="border-b px-6 py-4 text-gray-800">{{ $inventory->item_name }}</td>
-                                <td class="border-b px-6 py-4 text-gray-800">{{ $inventory->quantity }}</td>
-                                <td class="border-b px-6 py-4 whitespace-nowrap">
-                                    <a href="{{ route('inventory.show', $inventory->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">History</a>
-                                    <button class="editItemButton bg-yellow-500 text-white px-4 py-2 rounded transition duration-200 hover:bg-yellow-600" data-id="{{ $inventory->id }}" data-item_name="{{ $inventory->item_name }}" data-quantity="{{ $inventory->quantity }}">
-                                        Edit
-                                    </button>
-                                    
-                                    <form action="{{ route('inventory.destroy', $inventory->id) }}" class="inline" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded transition duration-200 hover:bg-red-600">Delete</button>
-                                    </form>
-                                </td>
+                    </thead>
+                    <tbody>
+                        @if($inventories->isEmpty())
+                            <tr>
+                                <td class="px-4 sm:px-6 py-4 text-gray-600" colspan="3">No items found.</td>
                             </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
+                        @else
+                            @foreach ($inventories as $inventory)
+                                <tr class="hover:bg-gray-100 transition duration-300">
+                                    <td class="border-b px-4 sm:px-6 py-4 text-gray-800 text-sm sm:text-base lg:text-lg">{{ $inventory->item_name }}</td>
+                                    <td class="border-b px-4 sm:px-6 py-4 text-gray-800 text-sm sm:text-base lg:text-lg">{{ $inventory->quantity }}</td>
+                                    <td class="border-b px-4 sm:px-6 py-4 whitespace-nowrap">
+                                        <div class="relative inline-block text-left">
+                                            <button type="button" class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none dropdown-button" aria-haspopup="true" aria-expanded="false" data-dropdown-id="dropdown-{{ $inventory->id }}">
+                                                <span class="text-gray-600"><i class="fa-solid fa-ellipsis"></i></span>
+                                            </button>
+
+                                            <div class="absolute right-0 z-10 mt-2 w-28 lg:w-48 px-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden dropdown-menu" id="dropdown-{{ $inventory->id }}" role="menu" aria-orientation="vertical">
+                                                <div class="py-1" role="none">
+                                                    <a href="{{ route('inventory.show', $inventory->id) }}" class="block px-4 py-2 text-sm sm:text-base text-gray-700 hover:bg-gray-100 hover:rounded-lg" role="menuitem"><i class="fas fa-history"></i> History</a>
+                                                    <button class="editItemButton block w-full text-left px-4 py-2 text-sm sm:text-base text-blue-700 hover:bg-blue-100 hover:rounded-lg" data-id="{{ $inventory->id }}" data-item_name="{{ $inventory->item_name }}" data-quantity="{{ $inventory->quantity }}" role="menuitem"><i class="fa-solid fa-pen"></i> Edit</button>
+                                                    <div class="h-px bg-gray-300 my-1"></div>
+                                                    <form action="{{ route('inventory.destroy', $inventory->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm sm:text-base text-red-700 hover:bg-red-100 hover:rounded-lg" role="menuitem"><i class="fa-regular fa-trash-can"></i> Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
+
+
     <!-- Modal for Create/Edit Item -->
-    <div id="inventoryModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+    <div id="inventoryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
         
-        <div class="absolute inset-0 bg-black opacity-50"></div>
-
-            <div class="bg-white p-4 rounded-lg shadow-md z-10">
-                <div class="bg-[#4b9cd3;] rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
-                    <h4 class="text-lg font-bold" id="modalTitle">Add Item</h4>
-                </div>
-                <form id="inventoryForm" action="{{ route('inventory.store') }}" method="POST">
-                    <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
-                    
-                    @csrf
-                    
-                    <input type="hidden" name="_method" id="methodInput" value="POST">
-
-                    <div>
-                        <label for="item_name" class="block">Item Name</label>
-                        <input type="text" name="item_name" id="item_name" class="w-full rounded-lg focus:ring-2 shadow-sm" required>
-                    </div>
-                    <div id="quantityContainer" class="mt-2">
-                        <label for="quantity" class="block">Quantity</label>
-                        <input type="number" name="quantity" id="quantity" class="w-full rounded-lg focus:ring-2 shadow-sm">
-                    </div>
-                    <div id="actionContainer" class="mt-2 hidden">
-                        <label for="action" class="block">Action</label>
-                        <select name="action" id="action" class="w-full rounded-lg focus:ring-2 shadow-sm">
-                            <option value="" disabled selected>Select here</option>
-                            <option value="add">Add</option>
-                            <option value="subtract">Subtract</option>
-                        </select>
-                    </div>
-                    <div class="mt-4 text-right">
-                        <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Save</button>
-                        <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
-                    </div>
-                </form>
+        <div class="bg-white p-4 rounded-lg shadow-md z-10">
+            <div style="background-color: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
+                <h4 class="text-lg font-bold" id="modalTitle">Add Item</h4>
             </div>
+            <form id="inventoryForm" action="{{ route('inventory.store') }}" method="POST">
+                <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
+                    
+                @csrf
+                    
+                <input type="hidden" name="_method" id="methodInput" value="POST">
+
+                <div>
+                    <label for="item_name" class="block">Item Name</label>
+                    <input type="text" name="item_name" id="item_name" class="w-full rounded-lg focus:ring-2 shadow-sm" required>
+                </div>
+                <div id="quantityContainer" class="mt-2">
+                    <label for="quantity" class="block">Quantity</label>
+                    <input type="number" name="quantity" id="quantity" class="w-full rounded-lg focus:ring-2 shadow-sm">
+                </div>
+                <div id="actionContainer" class="mt-2 hidden">
+                    <label for="action" class="block">Action</label>
+                    <select name="action" id="action" class="w-full py-2 px-3 rounded-lg focus:ring-2 shadow-sm">
+                        <option value="" disabled selected>Select here</option>
+                        <option value="add">Add</option>
+                        <option value="subtract">Subtract</option>
+                    </select>
+                </div>
+                <div class="mt-4 text-right">
+                    <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Save</button>
+                    <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropdownButtons = document.querySelectorAll('.dropdown-button');
+            const dropdownHeight = 155; // Set your fixed dropdown height here
+
+            dropdownButtons.forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.stopPropagation(); // Prevents event from bubbling up to the window
+
+                    const dropdownId = this.getAttribute('data-dropdown-id');
+                    const dropdownMenu = document.getElementById(dropdownId);
+                    const rect = this.getBoundingClientRect(); // Get button position
+                    const spaceBelow = window.innerHeight - rect.bottom; // Space below button
+                    const spaceAbove = rect.top; // Space above button
+
+                    // Close all other dropdowns
+                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                        if (menu !== dropdownMenu) {
+                            menu.classList.add('hidden');
+                        }
+                    });
+
+                    // Toggle the clicked dropdown
+                    const isHidden = dropdownMenu.classList.contains('hidden');
+                    dropdownMenu.classList.toggle('hidden', !isHidden);
+
+                    // Position the dropdown
+                    if (isHidden) {
+                        if (spaceBelow >= dropdownHeight) {
+                            // Show below if there's enough space
+                            dropdownMenu.style.top = '100%'; // Default position
+                        } else if (spaceAbove >= dropdownHeight) {
+                            // Show above if there's not enough space below
+                            dropdownMenu.style.top = `-${dropdownHeight}px`; // Adjust for spacing
+                        } else {
+                            // If there's not enough space above or below, keep it hidden or handle accordingly
+                            dropdownMenu.classList.add('hidden'); // Or keep it open
+                        }
+                    }
+                });
+            });
+
+            // Close dropdowns if clicked outside
+            window.addEventListener('click', function () {
+                document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
+                    dropdown.classList.add('hidden');
+                });
+            });
+        });
+
+
+
         const createInventoryButton = document.getElementById('createInventoryButton');
         const editInventoryButton = document.querySelectorAll('.editItemButton');
         const inventoryModal = document.getElementById('inventoryModal');

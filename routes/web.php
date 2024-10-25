@@ -66,7 +66,7 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::get('/admin/patientlist/{patientlistId}/records', [AdminRecordController::class, 'showRecord'])->name('admin.showRecord');
     Route::get('/admin/patientlist/{patientlistId}/records/add', [AdminRecordController::class, 'createRecord'])->name('admin.record.create');
     Route::post('/admin/patientlist/{patientlistId}/records/store', [AdminRecordController::class, 'storeRecord'])->name('admin.record.store');
-    Route::get('/admin/patientlist/{patientlistId}/records/{recordId}/update', [AdminRecordController::class, 'updateRecord'])->name('admin.updateRecord');
+    
     Route::put('/admin/patientlist/{patientlistId}/records/{recordId}/updated', [AdminRecordController::class, 'updatedRecord'])->name('admin.record.update');
     Route::delete('/admin/patientlist/{patientlistId}/records/{recordId}/delete', [AdminRecordController::class, 'deleteRecord'])->name('admin.deleteRecord');
     Route::get('/admin/patientlist/{patientlistId}/records/{recordId}/download', [AdminRecordController::class, 'downloadRecord'])->name('admin.downloadRecord');
@@ -74,8 +74,7 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     
     Route::get('/admin/patientlist/{patientlistId}/records/note/add', [AdminRecordController::class, 'createNote'])->name('admin.note.create');
     Route::post('/admin/patientlist/{patientlistId}/records/note/store', [AdminRecordController::class, 'storeNote'])->name('admin.note.store');
-    
-    Route::get('/admin/patientlist/{patientlistId}/records/calendar/{Id}/details', [AdminRecordController::class, 'showRecords']);
+    Route::put('/admin/patientlist/{patientlistId}/records/note/{noteId}', [AdminRecordController::class, 'update'])->name('admin.note.update');
 
     // messages
     Route::get('/admin/messages',[AdminMessagesController::class,'index'])->name('admin.messages');
