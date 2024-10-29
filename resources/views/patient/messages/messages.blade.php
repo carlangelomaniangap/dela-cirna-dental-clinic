@@ -9,6 +9,9 @@
 </head>
 <body>
     <div class="chat-container">
+        <div class="hamburger-menu">
+            <button id="toggle-users-list"><i class="fas fa-arrow-right"></i></button>
+        </div>
         <div class="users-list" id="users">
             <div>
                 <h1><i class="fa-regular fa-comment-dots"></i> Messages</h1>
@@ -66,6 +69,29 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('toggle-users-list');
+            const usersList = document.getElementById('users');
+            const chatBox = document.getElementById('chat-box');
+
+            toggleButton.addEventListener('click', function() {
+                usersList.classList.toggle('show');
+                chatBox.classList.toggle('hide');
+            });
+
+            const userItems = document.querySelectorAll('.user-item');
+            userItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        usersList.classList.remove('show');
+                        chatBox.classList.remove('hide');
+                    }
+                });
+            });
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

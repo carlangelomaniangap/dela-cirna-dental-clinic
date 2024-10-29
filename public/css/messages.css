@@ -23,8 +23,9 @@ h1 {
 
 .chat-container {
     display: flex;
-    height: calc(100vh - 70px); /*eto nabago yung 70px dati 60px*/
+    height: calc(100vh - 70px);
     margin-top: 3px;
+    position: relative;
 }
 
 .users-list {
@@ -63,13 +64,14 @@ h1 {
     background-color: #fff;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 .chat-messages {
     flex: 1;
     overflow-y: auto;
     padding: 10px;
-    display: none; /* Hide all chat panels initially */
+    display: block;
 }
 
 .chat-input {
@@ -92,16 +94,16 @@ h1 {
     width: 10%;
     background-color: #007bff;
     color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .admin, .others {
     margin: 10px 0;
     padding: 10px;
     border-radius: 5px;
- }
+}
 
 .admin {
     background-color: #4bd39c;
@@ -112,4 +114,92 @@ h1 {
 .others {
     background-color: #e5e5e5;
     text-align: left;
+}
+
+.hamburger-menu {
+    display: none;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .chat-container {
+        flex-direction: column;
+    }
+
+    .users-list {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: -100%;
+        transition: left 0.3s ease;
+        z-index: 10;
+    }
+
+    .users-list.show {
+        left: 0;
+    }
+
+    .chat-box {
+        width: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-input {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-top: 1px solid #ddd;
+    }
+
+    .chat-messages {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding-bottom: 60px;
+    }
+
+    .hamburger-menu {
+        display: block;
+        position: fixed;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        z-index: 20;
+    }
+
+    .hamburger-menu button {
+        background-color: rgba(240, 240, 240, 0.7);
+        border: 2px solid rgba(0, 123, 255, 0.7);
+        border-radius: 50%;
+        font-size: 24px;
+        color: rgba(0, 123, 255, 0.7);
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s, transform 0.3s, opacity 0.3s;
+        opacity: 0.5;
+    }
+
+    .hamburger-menu button:hover {
+        background-color: rgba(0, 123, 255, 0.9);
+        color: #fff;
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    .chat-input button {
+        width: 20%;
+    }
 }
