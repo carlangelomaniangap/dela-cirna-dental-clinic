@@ -9,8 +9,21 @@
 </head>
 <body class="min-h-screen">
 
-    <div class="bg-[#4b9cd3;] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold">
-        <h4><i class="fa-regular fa-comments"></i> Community Forum</h4>
+    <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
+        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-regular fa-comments"></i> Community Forum</h4>
+    </div>
+
+    <div class="px-6 py-4 flex justify-between items-center">
+        <button id="openModal" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white text-xs sm:text-sm lg:text-base font-semibold"><i class="fa-solid fa-plus"></i> Post</button>
+
+        <form action="{{ route('admin.communityforum') }}" method="GET">
+            <div class="relative">
+                <input type="text" name="search" placeholder="Search" class="w-full h-10 text-xs sm:text-sm lg:text-base px-3 rounded-full focus:ring-2 border border-gray-100 focus:outline-none focus:border-blue-500 transition-shadow duration-300 shadow-sm hover:shadow-md">
+                <button type="submit" class="absolute top-0 end-0 p-2.5 pr-3 text-sm font-medium h-full text-white bg-blue-700 rounded-e-full border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </form>
     </div>
 
     @if(session('success') || $errors->any())
@@ -59,8 +72,8 @@
         </div>
     @endif
 
-    <div class="max-w-full px-4 mx-auto mt-4">
-        
+    <div class="p-6 pt-0">
+
         <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                 <h4 class="text-blue-800 font-bold text-2xl mb-3">Post a New Topic</h4>
@@ -81,19 +94,6 @@
             </div>
         </div>
 
-        <div class="actions px-6 py-4 flex justify-between items-center">
-            <button id="openModal" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white"><i class="fa-solid fa-plus"></i> Add Post</button>
-
-            <form action="{{ route('admin.communityforum') }}" method="GET" class="w-64">
-                <div class="relative">
-                    <input type="text" name="search" placeholder="Search by name or topic..." class="w-full h-10 px-3 pr-10 rounded-full text-sm focus:ring-2 border border-gray-300 focus:outline-none focus:border-blue-500">
-                    <button type="submit" class="absolute inset-y-0 right-0 px-3 flex items-center bg-blue-500 rounded-r-full text-white hover:bg-blue-600">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-
         <div class="bg-white rounded-lg p-5 shadow-md mb-5">
             @if($communityforums->isEmpty())
                 <div>
@@ -105,7 +105,7 @@
                         <div class="flex items-center justify-between mb-2.5">
                             <div>
                                 <span class="text-blue-800 font-bold">{{ $communityforum->user->name }}</span>
-                                <p class="text-sm text-gray-500">{{ $communityforum->created_at->setTimezone('Asia/Manila')->format('F j, Y') }} at {{ $communityforum->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</p>
+                                <p class="text-xs lg:text-sm text-gray-500">{{ $communityforum->created_at->setTimezone('Asia/Manila')->format('F j, Y') }} at {{ $communityforum->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</p>
                             </div>
                         </div>
                         <div class="mt-2.5 text-sm leading-6 break-words">
@@ -116,13 +116,13 @@
                                     <div class="mb-3">
                                         <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500" id="topic" name="topic" placeholder="What's on your mind?" value="{{ old('topic', $communityforum->topic) }}" required>
                                     </div>
-                                    <div class="mb-3">
+                                    <div>
                                         <label for="image" class="block text-sm font-medium text-gray-700">Update image (optional)</label>
                                         <input type="file" id="image" name="image" accept="image/*" class="mt-2 pb-4 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:shadow-md">
                                     </div>
-                                    <div class="flex mb-3">
-                                        <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Update</button>
-                                        <button type="button" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 ml-2" onclick="cancelEdit('{{ $communityforum->id }}')">Cancel</button>
+                                    <div class="flex">
+                                        <button type="submit" class="px-2 lg:px-4 py-1 lg:py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Update</button>
+                                        <button type="button" class="px-2 lg:px-4 py-1 lg:py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 ml-2" onclick="cancelEdit('{{ $communityforum->id }}')">Cancel</button>
                                     </div>
                                 </form>
                             </div>
@@ -137,13 +137,13 @@
                         </div>
                         
                         <div class="mt-2.5 flex justify-end">
-                            <button class="text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="toggleComments('{{ $communityforum->id }}')"><i class="fa-regular fa-message"></i> Comments</button>
+                            <button class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out hover:bg-gray-200" onclick="toggleComments('{{ $communityforum->id }}')"><i class="fa-regular fa-message"></i> Comments</button>
                             @if(Auth::id() === $communityforum->user_id || Auth::user()->is_admin)
-                                <button class="text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="editTopic('{{ $communityforum->id }}')"><i class="fa-solid fa-pen"></i> Edit</button>
-                                <form method="post" action="{{ route('admin.deleteCommunityforum', $communityforum->id) }}" class="d-inline">
+                                <button class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="editTopic('{{ $communityforum->id }}')"><i class="fa-solid fa-pen"></i> Edit</button>
+                                <form method="post" action="{{ route('admin.deleteCommunityforum', $communityforum->id) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="return confirm('Are you sure you want to delete this post?')"><i class="fa-regular fa-trash-can"></i> Delete</button>
+                                    <button type="submit" class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="return confirm('Are you sure you want to delete this post?')"><i class="fa-regular fa-trash-can"></i> Delete</button>
                                 </form>
                             @endif
                         </div>
@@ -154,11 +154,14 @@
                             <div class="add-comment-form mt-5">
                                 <form action="{{ route('admin.addComment', $communityforum->id) }}" method="POST">
                                     @csrf
-                                    <div class="flex items-center mb-3">
+                                    <div class="flex items-center">
                                         <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500" id="comment" name="comment" placeholder="Add a comment..." required></textarea>
-                                        <div class="flex-shrink-0">
+                                        <div class="sm:flex sm:items-start hidden">
                                             <button type="submit" class="px-4 py-5 rounded bg-blue-500 hover:bg-blue-700 text-white">Comment</button>
                                         </div>
+                                    </div>
+                                    <div class="flex justify-end mt-2 mb-2 sm:hidden">
+                                        <button type="submit" class="px-4 py-2 text-xs rounded bg-blue-500 hover:bg-blue-700 text-white">Comment</button>
                                     </div>
                                 </form>
                             </div>
@@ -168,7 +171,7 @@
                                     <div class="flex items-center justify-between mb-2.5">
                                         <div>
                                             <span class="text-blue-800 font-bold">{{ $comment->user->name }}</span>
-                                            <p class="text-sm text-gray-500">{{ $communityforum->created_at->setTimezone('Asia/Manila')->format('F j, Y') }} at {{ $communityforum->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</p>
+                                            <p class="text-xs lg:text-sm text-gray-500">{{ $communityforum->created_at->setTimezone('Asia/Manila')->format('F j, Y') }} at {{ $communityforum->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</p>
                                         </div>
                                     </div>
                                     <div class="mt-2.5 text-sm leading-6 break-words">
@@ -180,8 +183,8 @@
                                                     <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500" id="comment" name="comment" placeholder="Edit your comment" value="{{ old('comment', $comment->comment) }}" required>
                                                 </div>
                                                 <div class="update-cancel-buttons">
-                                                    <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Update</button>
-                                                    <button type="button" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800" onclick="cancelEditComment('{{ $comment->id }}')">Cancel</button>
+                                                    <button type="submit" class="px-4 py-2 text-xs lg:text-sm rounded bg-blue-500 hover:bg-blue-700 text-white">Update</button>
+                                                    <button type="button" class="px-4 py-2 text-xs lg:text-sm rounded bg-gray-300 hover:bg-gray-400 text-gray-800" onclick="cancelEditComment('{{ $comment->id }}')">Cancel</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -191,11 +194,11 @@
                                     </div>
                                     <div class="mt-2.5 flex justify-end">
                                         @if(Auth::id() === $comment->user_id || Auth::user()->is_admin)
-                                            <button class="text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="editComment('{{ $comment->id }}')"><i class="fa-solid fa-pen"></i> Edit</button>
+                                            <button class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out hover:bg-gray-200" onclick="editComment('{{ $comment->id }}')"><i class="fa-solid fa-pen"></i> Edit</button>
                                             <form method="post" action="{{ route('admin.deleteComment', $comment->id) }}" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="return confirm('Are you sure you want to delete this comment?')"><i class="fa-regular fa-trash-can"></i> Delete</button>
+                                                <button type="submit" class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="return confirm('Are you sure you want to delete this comment?')"><i class="fa-regular fa-trash-can"></i> Delete</button>
                                             </form>
                                         @endif
                                     </div>
@@ -207,6 +210,7 @@
             @endif
             {{ $communityforums->links() }}
         </div>
+        
     </div>
 
     <script>

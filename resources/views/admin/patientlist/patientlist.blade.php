@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="min-h-screen">
 
@@ -117,10 +116,10 @@
                                         <a href="{{ route('admin.showRecord', $patient->id) }}" class="block px-4 py-2 text-sm sm:text-base text-gray-700 hover:bg-gray-100 hover:rounded-lg"><i class="fa-solid fa-folder-closed"></i> Records</a>
                                         <a href="{{ route('admin.updatePatient', $patient->id) }}" class="block px-4 py-2 text-sm sm:text-base text-blue-700 hover:bg-blue-100 hover:rounded-lg"><i class="fa-solid fa-pen"></i> Edit</a>
                                         <div class="h-px bg-gray-300 my-1"></div>
-                                        <form method="post" action="{{ route('admin.deletePatient', $patient->id) }}" class="block px-4 py-2 text-sm sm:text-base text-red-700 hover:bg-red-100 hover:rounded-lg">
+                                        <form method="post" action="{{ route('admin.deletePatient', $patient->id) }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" onclick="return confirm('Are you sure you want to delete this patient?')"><i class="fa-regular fa-trash-can"></i> Delete</button>
+                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm sm:text-base text-red-700 hover:bg-red-100 hover:rounded-lg" onclick="return confirm('Are you sure you want to delete this patient?')"><i class="fa-regular fa-trash-can"></i> Delete</button>
                                         </form>
                                     </div>
                                 </div>
@@ -142,7 +141,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const dropdownButtons = document.querySelectorAll('.dropdown-button');
-            const dropdownHeight = 155; // Set your fixed dropdown height here
 
             dropdownButtons.forEach(button => {
                 button.addEventListener('click', function (event) {

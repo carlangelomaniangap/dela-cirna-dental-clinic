@@ -96,7 +96,7 @@
         </div>
 
         <div class="mt-4">
-            <x-primary-button class="w-full justify-center bg-blue-600 hover:bg-blue-800">
+            <x-primary-button class="ms-4 w-full justify-center">
                 {{ __('Register') }}
             </x-primary-button>
         </div>
@@ -141,4 +141,5 @@
 @section('title')
     Register
 @endsection
+
 </x-guest-layout>

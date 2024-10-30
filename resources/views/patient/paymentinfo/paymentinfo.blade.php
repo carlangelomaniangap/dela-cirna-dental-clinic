@@ -9,43 +9,52 @@
 </head>
 <body class="min-h-screen">
         
-    <div class="bg-[#4b9cd3;] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold">
-        <h4><i class="fa-solid fa-money-bills"></i> Payment Info</h4>
+    <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
+        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-money-bills"></i> Payment Info</h4>
     </div>
 
     <div class="p-6">
-        <table class="min-w-full mt-4 bg-white shadow-lg rounded-lg overflow-hidden">
-            <thead class="bg-white text-gray-600 uppercase font-semibold text-sm text-left border-b-2">
-                <tr>
-                    <th class="px-6 py-4">Name</th>
-                    <th class="px-6 py-4">Concern</th>
-                    <th class="px-6 py-4">Amount</th>
-                    <th class="px-6 py-4">Balance</th>
-                    <th class="px-6 py-4">Date</th>
-                    <th class="px-6 py-4">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if($paymentinfo->isEmpty())
-                    <tr>
-                        <td class="px-6 py-4 text-gray-600">No payment info found.</td>
-                    </tr>
-                @else
-                    @foreach ($paymentinfo as $payment)
-                        <tr class="bg-white border-b hover:bg-gray-100">
-                            <td class="px-6 py-4">{{ $payment->name }}</td>
-                            <td class="px-6 py-4">{{ $payment->concern }}</td>
-                            <td class="px-6 py-4">{{ $payment->amount > 0 ? number_format($payment->amount, 0, ',', ',') : '' }}</td>
-                            <td class="px-6 py-4">{{ $payment->balance == 0 ? 'Paid' : number_format($payment->balance, 0, ',', ',') }}</td>
-                            <td class="px-6 py-4">{{ date('F j, Y', strtotime($payment->date)) }}</td>
-                            <td class="px-6 py-4">
-                                <a href="{{ route('patient.paymentHistory', $payment->id) }}" class="px-4 py-2 text-white bg-blue-600 rounded cursor-pointer">History</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                @endif
-            </tbody>
-        </table>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            @if($paymentinfo->isEmpty())
+                <div>
+                    <p class="px-4 sm:px-6 py-3 text-gray-600">No payment info found.</p>
+                </div>
+            @else
+                @foreach ($paymentinfo as $payment)
+                    <div class="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-200">
+                        <div class="flex flex-col">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800">{{ $payment->name }}</p>
+                                    <ul class="text-sm sm:text-base text-gray-600 list-disc pl-5">
+                                        <li>
+                                            <span class="font-semibold">Concern:</span> <span>{{ $payment->concern }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="font-semibold">Amount:</span> <span>{{ $payment->amount > 0 ? number_format($payment->amount, 0, ',', ',') : 'N/A' }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="font-semibold">Balance:</span> <span>{{ $payment->balance == 0 ? 'Paid' : number_format($payment->balance, 0, ',', ',') }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="font-semibold">Date:</span> <span>{{ date('F j, Y', strtotime($payment->date)) }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="sm:flex sm:items-start hidden">
+                                    <a href="{{ route('patient.paymentHistory', $payment->id) }}" class="px-2 sm:px-4 py-2 text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-800 transition duration-300 rounded"><i class="fas fa-history"></i> History</a>
+                                </div>
+                            </div>
+                            <div class="flex justify-end mt-2 sm:hidden">
+                                <a href="{{ route('patient.paymentHistory', $payment->id) }}" class="px-2 sm:px-4 py-2 text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-800 transition duration-300 rounded">
+                                    <i class="fas fa-history"></i> History
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
     </div>
     
 </body>

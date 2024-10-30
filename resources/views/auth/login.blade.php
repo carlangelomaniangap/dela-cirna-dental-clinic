@@ -32,7 +32,7 @@
             </label>
             
             @if (Route::has('password.request'))
-                <a class="font-bold text-sm text-blue-600 hover:text-blue-800 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                <a class="font-bold text-sm text-gray-600 hover:text-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
@@ -40,7 +40,7 @@
         </div>
 
         <div class="mt-4">
-            <x-primary-button class="w-full justify-center bg-blue-600 hover:bg-blue-800">
+            <x-primary-button class="ms-3 w-full justify-center">
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
@@ -55,4 +55,5 @@
 @section('title')
     Log In
 @endsection
+
 </x-guest-layout>
