@@ -98,12 +98,13 @@
             @php
                 $isCurrentMonth = $day->format('m') == $currentMonth->format('m');
                 $hasApprovedAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Approved');
-                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending');
+                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending Approval');
                 $dayClass = '';
-                if ($hasApprovedAppointment) {
-                    $dayClass = 'approved-appointment';
-                } elseif ($hasPendingAppointment) {
+                if ($hasPendingAppointment) {
                     $dayClass = 'pending-appointment';
+                } elseif ($hasApprovedAppointment) {
+                    
+                    $dayClass = 'approved-appointment';
                 }
             @endphp
 
@@ -129,7 +130,7 @@
                                             <strong>{{ date('g:i A', strtotime($calendar->appointmenttime)) }}</strong><br>
                                             {{ $calendar->name }}
                                             <div class="appointment-buttons mt-2 flex justify-between">
-                                                @if ($calendar->approved === 'Pending')
+                                                @if ($calendar->approved === 'Pending Approval')
                                                     <form method="post" action="{{ route('admin.approveCalendar', $calendar->id) }}">
                                                         @csrf
                                                         <button type="submit" class="py-1 px-2 rounded bg-yellow-500 text-white text-xs" title="Approve">Pending</button>

@@ -95,7 +95,7 @@
             @php
                 $isCurrentMonth = $day->format('m') == $currentMonth->format('m');
                 $hasApprovedAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Approved');
-                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending');
+                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending Approval');
                 $dayClass = '';
                 if ($hasApprovedAppointment) {
                     $dayClass = 'approved-appointment';

@@ -19,10 +19,24 @@ class AdminMessagesController extends Controller
 
         // Retrieve users (patients) from the same dental clinic, excluding the logged-in user
         $users = User::where('dentalclinic_id', $dentalclinicId)->where('id', '!=', auth()->id())->where('usertype', 'patient')->get();
-        
+        $usersWithLastMessage = $users->map(function ($user) {
+            $lastMessage = Message::where(function ($query) use ($user) {
+                $query->where('sender_id', auth()->id())
+                      ->where('recipient_id', $user->id);
+            })->orWhere(function ($query) use ($user) {
+                $query->where('sender_id', $user->id)
+                      ->where('recipient_id', auth()->id());
+            })->latest()->first();
+
+            $user->last_message = $lastMessage
+                ? ($lastMessage->sender_id == auth()->id() ? 'You: ' : $user->name . ': ') . $lastMessage->message
+                : 'No messages yet';
+
+            return $user;
+        });
         $messages = Message::all();
 
-        return view('admin.messages.messages', compact('users', 'messages'));
+        return view('admin.messages.messages', compact('users', 'messages', 'usersWithLastMessage'));
     }
 
     public function storeMessage(Request $request){
