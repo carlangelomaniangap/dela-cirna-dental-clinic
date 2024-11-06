@@ -105,8 +105,14 @@ class PatientCalendarController extends Controller
     public function deleteCalendar($id){
 
         $calendar = Calendar::findOrFail($id);
-        $calendar->delete();
+        
 
+        if (Auth::user()->usertype !== 'admin' && Auth::id() !== $calendar->user_id) {
+            return view('home');
+        }
+        
+        $calendar->delete();
+        
         return back()->with('success', 'Appointment deleted successfully!');
     }
 
@@ -114,52 +120,72 @@ class PatientCalendarController extends Controller
         
         $calendar = Calendar::findOrFail($id);
 
+        if (Auth::user()->usertype !== 'admin' && Auth::id() !== $calendar->user_id) {
+            return view('home');
+        }
+
         return view('patient.calendar.updateCalendar')->with('calendar', $calendar);
     }
 
     public function updatedCalendar(Request $request, $id){
 
         $calendar = Calendar::findOrFail($id);
-        
+
+        if (Auth::user()->usertype !== 'admin' && Auth::id() !== $calendar->user_id) {
+            return view('home');
+        }
+
         $request->validate([
-            'user_id' => 'required|exists:user,id',
+            'user_id' => 'nullable|exists:users,id',
             'appointmentdate' => 'required|date',
-            'appointmenttime' => 'required|date_format:H:i',
-            'concern' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
-            'birthday' => 'required|date',
-            'gender' => 'required|string',
-            'address' => 'required|string|max:255',
-            'phone' => 'required|string|regex:/^0[0-9]{10}$/',
-            'email' => 'required|string|lowercase|max:255',
-            'medicalhistory' => 'nullable|string',
-            'emergencycontactname' => 'required|string|max:255',
-            'emergencycontactrelation' => 'required|string',
-            'emergencycontactphone' => 'required|string|regex:/^0[0-9]{10}$/',
+            'appointmenttime' => 'required',
+            'concern' => 'nullable|string|max:255',
             'name' => 'nullable|string|max:255',
+            'gender' => 'nullable|string|max:255',
+            'birthday' => 'nullable|date',
+            'age' => 'nullable|string',
+            'address' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|regex:/^0[0-9]{10}$/',
+            'email' => 'nullable|string|lowercase|email|max:255',
+            'medicalhistory' => 'nullable|string',
+            'emergencycontactname' => 'nullable|string|max:255',
+            'emergencycontactrelation' => 'nullable|string',
+            'emergencycontactphone' => 'nullable|string|regex:/^0[0-9]{10}$/',
+            'relationname' => 'nullable|string|max:255',
             'relation' => 'nullable|string',
         ]);
-
+    
         $calendar->update([
-            'user_id' => $request->input('user_id'),
+            'user_id' => $request->input('user_id', $calendar->user_id),
             'appointmentdate' => $request->input('appointmentdate'),
             'appointmenttime' => $request->input('appointmenttime'),
-            'concern' => $request->input('concern'),
-            'name' => $request->input('name'),
-            'gender' => $request->input('gender'),
-            'birthday' => $request->input('birthday'),
-            'age' => $request->input('age'),
-            'address' => $request->input('address'),
-            'phone' => $request->input('phone'),
-            'email' => $request->input('email'),
-            'medicalhistory' => $request->input('medicalhistory'),
-            'emergencycontactname' => $request->input('emergencycontactname'),
-            'emergencycontactrelation' => $request->input('emergencycontactrelation'),
-            'emergencycontactphone' => $request->input('emergencycontactphone'),
-            'relationname' => $request->input('relationname'),
-            'relation' => $request->input('relation'),
+            'concern' => $request->input('concern', $calendar->concern),
+            'name' => $request->input('name', $calendar->name),
+            'gender' => $request->input('gender', $calendar->gender),
+            'birthday' => $request->input('birthday', $calendar->birthday),
+            'age' => $request->input('age', $calendar->age),
+            'address' => $request->input('address', $calendar->address),
+            'phone' => $request->input('phone', $calendar->phone),
+            'email' => $request->input('email', $calendar->email),
+            'medicalhistory' => $request->input('medicalhistory', $calendar->medicalhistory),
+            'emergencycontactname' => $request->input('emergencycontactname', $calendar->emergencycontactname),
+            'emergencycontactrelation' => $request->input('emergencycontactrelation', $calendar->emergencycontactrelation),
+            'emergencycontactphone' => $request->input('emergencycontactphone', $calendar->emergencycontactphone),
+            'relationname' => $request->input('relationname', $calendar->relationname),
+            'relation' => $request->input('relation', $calendar->relation),
         ]);
 
-        return redirect()->route('patient.calendar')->with('success', 'Appointment updated successfully!');
+        return redirect()->route('patient.viewDetails', $calendar->id)->with('success', 'Appointment updated successfully!');
+    }
+
+    public function viewDetails($Id){
+        
+        $calendar = Calendar::where('id', $Id)->first();
+
+        if (Auth::user()->usertype !== 'admin' && Auth::id() !== $calendar->user_id) {
+            return view('home');
+        }
+
+        return view('patient.calendar.viewDetails', compact('calendar'));
     }
 }

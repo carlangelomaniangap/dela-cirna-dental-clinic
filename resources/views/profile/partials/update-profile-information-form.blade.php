@@ -96,4 +96,36 @@
             @endif
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const birthdayInput = document.getElementById('birthday');
+            const ageInput = document.getElementById('age');
+
+            // Calculate age based on birthday
+            function calculateAge(birthDate) {
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                return age;
+            }
+
+            birthdayInput.addEventListener('change', function() {
+                const birthDate = new Date(this.value);
+                ageInput.value = calculateAge(birthDate);
+            });
+
+            // Trigger age calculation on page load if birthday is already set
+            if (birthdayInput.value) {
+                birthdayInput.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
+
 </section>

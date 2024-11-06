@@ -14,7 +14,11 @@
     </div>
 
     <div class="p-6">
-        <form method="post" action="{{ route('admin.updatedCalendar', $calendar->id) }}" class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-lg shadow-md p-6">
+        <form method="post" action="{{ route('patient.updatedCalendar', $calendar->id) }}" class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-lg shadow-md p-6">
+            
+            <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
+            
+            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
             
             @csrf
 
@@ -50,6 +54,20 @@
                     <label for="concern" class="text-sm lg:text-base font-semibold">Concern</label>
                     <input type="text" class="rounded-lg focus:ring-2 shadow-sm w-full" id="concern" name="concern" value="{{ old('concern', $calendar->concern) }}" placeholder="e.g., Cleaning, Pasta, Braces" required>
                 </div>
+
+                <input type="hidden" name="name" value="{{ auth()->user()->name }}">
+
+                <input type="hidden" name="gender" value="{{ auth()->user()->gender }}">
+
+                <input type="hidden" name="birthday" value="{{ auth()->user()->birthday }}">
+                    
+                <input type="hidden" name="age" value="{{ auth()->user()->age }}">
+
+                <input type="hidden" name="address" value="{{ auth()->user()->address }}">
+                
+                <input type="hidden" name="phone" value="{{ auth()->user()->phone }}">
+                    
+                <input type="hidden" name="email" value="{{ auth()->user()->email }}">
 
                 <div class="col-span-1 md:col-span-2">
                     <label for="medicalhistory" class="text-sm lg:text-base font-semibold">Medical History <span class="text-gray-500">(Optional)</span></label>
@@ -122,7 +140,7 @@
 
             <div class="flex justify-end col-span-1 md:col-span-2">
                 <button type="submit" class="px-4 py-2 text-xs lg:text-base rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 mr-2"><i class="fa-regular fa-calendar-check"></i> Update</button>
-                <a href="{{ route('admin.viewDetails', $calendar->id) }}" class="px-4 py-2 text-xs lg:text-base rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300"><i class="fa-regular fa-rectangle-xmark"></i> Cancel</a>
+                <a href="{{ route('patient.viewDetails', $calendar->id) }}" class="px-4 py-2 text-xs lg:text-base rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300"><i class="fa-regular fa-rectangle-xmark"></i> Cancel</a>
             </div>
         </form>
     </div>

@@ -16,7 +16,7 @@
     <div class="p-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             @if($paymentinfo->isEmpty())
-                <div>
+                <div class="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-200">
                     <p class="px-4 sm:px-6 py-3 text-gray-600">No payment info found.</p>
                 </div>
             @else

@@ -14,12 +14,12 @@
     </div>
 
     <div class="p-4">
-        <form method="post" action="{{ route('admin.patient.store') }}" class="text-sm lg:text-base bg-white rounded-lg shadow-lg p-4">
+        <form method="post" action="{{ route('admin.patient.store') }}" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm lg:text-base bg-white rounded-lg shadow-lg p-4">
             <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
             
             @csrf
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col space-y-4">
                 <div>
                     <label for="users_id" class="font-semibold text-gray-700">Patient Account</label>
                     <select class="w-full py-2 px-3 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" id="users_id" name="users_id" required>
@@ -48,7 +48,9 @@
                     <label for="birthday" class="font-semibold text-gray-700">Birthday</label>
                     <input type="date" id="birthday" name="birthday" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" required>
                 </div>
+            </div>
 
+            <div class="flex flex-col space-y-4">
                 <div>
                     <label for="age" class="font-semibold text-gray-700">Age</label>
                     <input type="number" id="age" name="age" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" required>
@@ -68,19 +70,14 @@
                     <label for="email" class="font-semibold text-gray-700">Email</label>
                     <input type="email" id="email" name="email" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" required>
                 </div>
-            </div>
 
-            <div class="text-right mt-4">
-                <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-200">
-                    <i class="fa-solid fa-user-plus"></i> Add
-                </button>
-                <a href="{{ route('admin.patientlist') }}" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-200">
-                    <i class="fa-regular fa-rectangle-xmark"></i> Cancel
-                </a>
+                <div class="flex justify-end">
+                    <button type="submit" class="px-4 py-2 text-xs lg:text-base rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 mr-2"><i class="fa-solid fa-user-plus"></i> Add</button>
+                    <a href="{{ route('admin.patientlist') }}" class="px-4 py-2 text-xs lg:text-base rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300"><i class="fa-regular fa-rectangle-xmark"></i> Cancel</a>
+                </div>
             </div>
         </form>
     </div>
-    
 
     <script>
         document.getElementById('users_id').addEventListener('change', function() {

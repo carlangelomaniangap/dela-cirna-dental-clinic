@@ -136,8 +136,14 @@
                     <label for="emergencycontactrelation" class="text-sm lg:text-base font-semibold">Relation</label>
                     <select id="emergencycontactrelation" name="emergencycontactrelation" class="rounded-lg focus:ring-2 shadow-sm w-full" required>
                         <option value="" disabled selected>Select your Relation</option>
+                        <option value="GrandFather" {{ old('emergencycontactrelation') == 'GrandFather' ? 'selected' : '' }}>Grand Father</option>
+                        <option value="GrandMother" {{ old('emergencycontactrelation') == 'GrandMother' ? 'selected' : '' }}>Grand Mother</option>
                         <option value="Father" {{ old('emergencycontactrelation') == 'Father' ? 'selected' : '' }}>Father</option>
                         <option value="Mother" {{ old('emergencycontactrelation') == 'Mother' ? 'selected' : '' }}>Mother</option>
+                        <option value="Uncle" {{ old('emergencycontactrelation') == 'Uncle' ? 'selected' : '' }}>Uncle</option>
+                        <option value="Auntie" {{ old('emergencycontactrelation') == 'Auntie' ? 'selected' : '' }}>Auntie</option>
+                        <option value="Brother" {{ old('emergencycontactrelation') == 'Brother' ? 'selected' : '' }}>Brother</option>
+                        <option value="Sister" {{ old('emergencycontactrelation') == 'Sister' ? 'selected' : '' }}>Sister</option>
                         <option value="Son" {{ old('emergencycontactrelation') == 'Son' ? 'selected' : '' }}>Son</option>
                         <option value="Daughter" {{ old('emergencycontactrelation') == 'Daughter' ? 'selected' : '' }}>Daughter</option>
                         <option value="Nephew" {{ old('emergencycontactrelation') == 'Nephew' ? 'selected' : '' }}>Nephew</option>
@@ -163,12 +169,18 @@
                     <label for="relation" class="text-sm lg:text-base font-semibold">Relation <span class="text-gray-500">(Optional)</span></label>
                     <select id="relation" name="relation" class="rounded-lg focus:ring-2 shadow-sm w-full">
                         <option value="" disabled selected>Select your Relation</option>
-                        <option value="Father" {{ old('relation') == 'Father' ? 'selected' : '' }}>Father</option>
-                        <option value="Mother" {{ old('relation') == 'Mother' ? 'selected' : '' }}>Mother</option>
-                        <option value="Son" {{ old('relation') == 'Son' ? 'selected' : '' }}>Son</option>
-                        <option value="Daughter" {{ old('relation') == 'Daughter' ? 'selected' : '' }}>Daughter</option>
-                        <option value="Nephew" {{ old('relation') == 'Nephew' ? 'selected' : '' }}>Nephew</option>
-                        <option value="Niece" {{ old('relation') == 'Niece' ? 'selected' : '' }}>Niece</option>
+                        <option value="GrandFather" {{ old('emergencycontactrelation') == 'GrandFather' ? 'selected' : '' }}>Grand Father</option>
+                        <option value="GrandMother" {{ old('emergencycontactrelation') == 'GrandMother' ? 'selected' : '' }}>Grand Mother</option>
+                        <option value="Father" {{ old('emergencycontactrelation') == 'Father' ? 'selected' : '' }}>Father</option>
+                        <option value="Mother" {{ old('emergencycontactrelation') == 'Mother' ? 'selected' : '' }}>Mother</option>
+                        <option value="Uncle" {{ old('emergencycontactrelation') == 'Uncle' ? 'selected' : '' }}>Uncle</option>
+                        <option value="Auntie" {{ old('emergencycontactrelation') == 'Auntie' ? 'selected' : '' }}>Auntie</option>
+                        <option value="Brother" {{ old('emergencycontactrelation') == 'Brother' ? 'selected' : '' }}>Brother</option>
+                        <option value="Sister" {{ old('emergencycontactrelation') == 'Sister' ? 'selected' : '' }}>Sister</option>
+                        <option value="Son" {{ old('emergencycontactrelation') == 'Son' ? 'selected' : '' }}>Son</option>
+                        <option value="Daughter" {{ old('emergencycontactrelation') == 'Daughter' ? 'selected' : '' }}>Daughter</option>
+                        <option value="Nephew" {{ old('emergencycontactrelation') == 'Nephew' ? 'selected' : '' }}>Nephew</option>
+                        <option value="Niece" {{ old('emergencycontactrelation') == 'Niece' ? 'selected' : '' }}>Niece</option>
                     </select>
                 </div>
             </div>

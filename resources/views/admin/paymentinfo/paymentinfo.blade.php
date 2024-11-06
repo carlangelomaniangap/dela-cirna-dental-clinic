@@ -14,7 +14,7 @@
     </div>
 
     <div class="px-6 py-4 flex justify-between items-center">
-        <a href="{{ route('admin.payment.create') }}" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white text-xs sm:text-sm lg:text-base font-semibold"><i class="fa-solid fa-cash-register"></i> New</a>
+        <a href="{{ route('admin.payment.create') }}" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 text-xs sm:text-sm lg:text-base font-semibold"><i class="fa-solid fa-cash-register"></i> New</a>
 
         <form action="{{ route('admin.paymentinfo.search') }}" method="GET">
             <div class="relative w-full">
@@ -76,7 +76,7 @@
     <div class="p-6 pt-0">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             @if($paymentinfo->isEmpty())
-                <div>
+                <div class="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-200">
                     <p class="px-4 sm:px-6 py-3 text-gray-600">No payment info found.</p>
                 </div>
             @else
@@ -130,9 +130,9 @@
 
         <!-- Modal Background -->
         <div id="paymentModal" class="fixed inset-0 flex items-center justify-center hidden bg-black bg-opacity-50">
-            <div class="bg-white rounded-lg p-6 shadow-lg w-1/3">
-                <div class="bg-[#4b9cd3;] rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-10">
-                    <h4>Make a Payment</h4>
+            <div class="bg-white rounded-lg p-6 shadow-lg">
+            <div style="background-color: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
+            <h4 class="text-lg font-bold">Make a Payment</h4>
                 </div>
                 <form method="POST" id="paymentForm">
                     @csrf
@@ -143,8 +143,8 @@
                     </div>
 
                     <div class="flex justify-end space-x-2">
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Submit</button>
-                        <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white transition duration-300 rounded">Submit</button>
+                        <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
                     </div>
                 </form>
             </div>

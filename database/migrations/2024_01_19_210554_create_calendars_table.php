@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('emergencycontactphone');
             $table->string('relationname')->nullable();
             $table->string('relation')->nullable();
-            $table->string('approved')->default('Pending Approval');
+            $table->string('approved')->default('Pending');
             $table->timestamps();
         });
     }

@@ -10,7 +10,7 @@
 <body class="min-h-screen">
 
     <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
-        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-calendar-days"></i> Appointment Details / {{ $calendar->user->name }}</h4>
+        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-calendar-days"></i> Appointment Details / {{ $calendar->name }}</h4>
     </div>
 
     @if(session('success') || $errors->any())
@@ -117,8 +117,8 @@
                 </div>
 
                 <div class="flex justify-end">
-                    <a href="{{ route('admin.updateCalendar', $calendar->id) }}" class="px-4 py-2 text-xs lg:text-base rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 mr-2" title="Update"><i class="fa-regular fa-calendar-check"></i> Update</a>
-                    <a href="{{ route('admin.calendar') }}" class="px-4 py-2 text-xs lg:text-base rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300"><i class="fa-regular fa-rectangle-xmark"></i> Back</a>
+                    <a href="{{ route('patient.updateCalendar', $calendar->id) }}" class="px-4 py-2 text-xs lg:text-base rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 mr-2" title="Update"><i class="fa-regular fa-calendar-check"></i> Update</a>
+                    <a href="{{ route('patient.calendar') }}" class="px-4 py-2 text-xs lg:text-base rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300"><i class="fa-regular fa-rectangle-xmark"></i> Back</a>
                 </div>
             </div>
         </div>

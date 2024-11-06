@@ -14,7 +14,7 @@
     </div>
     
     <div class="px-6 py-4 flex justify-between items-center">
-        <a href="{{ route('admin.patient.create') }}" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white text-xs sm:text-sm lg:text-base font-semibold"><i class="fa-solid fa-user-plus"></i> New</a>
+        <a href="{{ route('admin.patient.create') }}" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 text-xs sm:text-sm lg:text-base font-semibold"><i class="fa-solid fa-user-plus"></i> New</a>
 
         <form action="{{ route('admin.search') }}" method="GET">
             <div class="relative w-full">

@@ -182,7 +182,7 @@ class AdminCalendarController extends Controller
             'relation' => $request->input('relation', $calendar->relation),
         ]);
 
-        return redirect()->route('admin.calendar')->with('success', 'Appointment updated successfully!');
+        return redirect()->route('admin.viewDetails', $calendar->id)->with('success', 'Appointment updated successfully!');
     }
 
     public function viewDetails($Id){

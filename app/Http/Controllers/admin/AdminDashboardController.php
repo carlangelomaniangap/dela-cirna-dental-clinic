@@ -23,11 +23,11 @@ class AdminDashboardController extends Controller
 
         $dentistrystudentCount = $clinicUsers->where('usertype', 'dentistrystudent')->count();
 
-        $approvedAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->where('approved', 'Approved')->whereDate('appointmentdate', Carbon::today())->count();
+        $approvedAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->where('approved', 'Approved')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
         
-        $pendingAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->where('approved', 'Pending')->whereDate('appointmentdate', Carbon::today())->count();
+        $pendingAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->where('approved', 'Pending')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
         
-        $todayAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->whereDate('appointmentdate', Carbon::today())->orderBy('appointmenttime')->get();
+        $todayAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->orderBy('appointmenttime')->get();
         
         $inventories = Inventory::where('dentalclinic_id', $dentalclinicId)->get();
     

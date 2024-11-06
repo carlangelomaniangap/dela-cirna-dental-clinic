@@ -4,27 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dela Cirna Dental Clinic: Record Management System with Community Forum</title>
+    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="min-h-screen">
 
     <div class="relative min-h-screen bg-gray-100 dark:bg-gray-900">
-        <img class="absolute inset-0 object-cover w-full h-full z-0" src="{{ asset('images/background.png') }}" alt="Background image">
-        <div class="pt-5">
-            <div class="p-6 text-right z-10">
+        <img class="absolute inset-0 object-cover w-screen h-screen z-0" src="{{ asset('images/background.png') }}" alt="Background image">
+        <div class="">
+            <div class="p-6 flex justify-end z-10">
                 @if (Auth::check())
-                    <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+                    <div class="z-10">
                         @if(Auth::user()->usertype == 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Admin Dashboard</a>
                         @elseif(Auth::user()->usertype == 'patient')
                             <a href="{{ route('patient.dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Patient Dashboard</a>
                         @elseif(Auth::user()->usertype == 'dentistrystudent')
-                            <a href="{{ route('dentistrystudent.communityforum') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dentistry Student Dashboard</a>
+                            <a href="{{ route('dentistrystudent.dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dentistry Student Dashboard</a>
                         @endif
                     </div>
                 @else
-                    <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+                    <div class="z-10">
                         <a href="{{ route('login') }}" class="font-semibold text-white hover:text-gray-300 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 bg-gray-900 p-1 px-2 rounded-lg hover:bg-gray-800">Log in</a>
 
                         @if (Route::has('register'))
@@ -39,9 +40,9 @@
 
                 <div class="bg-white rounded-lg p-5 shadow-lg flex flex-col justify-center z-10">
                     <div class="flex justify-center items-center">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="mb-4 w-64 h-64">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="mb-4 w-36 h-36 lg:w-64 lg:h-64">
                     </div>
-                    <div class="text-center mb-36">
+                    <div class="text-center h-28 lg:h-36">
                         <a href="{{ route('dentalclinics.create') }}" class="font-bold text-xl text-white hover:text-gray-300 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 bg-blue-600 p-4 px-6 rounded-lg hover:bg-blue-700">Create Clinic</a>
                     </div>
                 </div>
