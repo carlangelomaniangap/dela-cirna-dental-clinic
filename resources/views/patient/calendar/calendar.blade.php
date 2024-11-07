@@ -1,69 +1,61 @@
 <x-app-layout>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
-    <style>
-        .calendar-nav-button {
-            background-color: #4b9cd3;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 0 10px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .calendar-nav-button:hover {
-            background-color: #3a7ca5;
-        }
-        .appointment-day {
-            background-color: rgba(75, 156, 211, 0.2);
-        }
-        .pending-appointment {
-            background-color: rgba(255, 99, 71, 0.2);
-        }
-        .approved-appointment {
-            background-color: rgba(135, 206, 250, 0.2);
-        }
-        .legend {
-            display: flex;
-            justify-content: flex-end;
-            margin: 10px 20px;
-            font-size: 14px;
-        }
-        .legend-item {
-            margin-left: 15px;
-        }
-        .legend-color {
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            margin-right: 5px;
-            vertical-align: middle;
-        }
-    </style>
 </head>
 <body class="min-h-screen">
     
-    <div class="bg-[#4b9cd3] shadow-[0_2px_4px_rgba(0,0,0,0.4)] py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold">
-        <h4><i class="fa-solid fa-calendar-days"></i> Calendar</h4>
-        <div class="legend">
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: rgba(135, 206, 250, 0.5);"></div>
-                Approved
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: rgba(255, 99, 71, 0.5);"></div>
-                Pending
-            </div>
-        </div>
+    <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
+        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-calendar-days"></i> Calendar</h4>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success text-center my-5 p-2.5">
-            {{ session('success') }}
+    @if(session('success') || $errors->any())
+        <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="relative p-4 w-full max-w-md">
+                <div class="relative p-5 text-center bg-white rounded-lg shadow">
+                    <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center" onclick="this.closest('.fixed').style.display='none'">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+
+                    @if(session('success'))
+                        <div class="w-12 h-12 rounded-full bg-green-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                            <i class="fa-solid fa-check text-green-500 text-2xl"></i>
+                            <span class="sr-only">Success</span>
+                        </div>
+                    @else
+                        <div class="w-12 h-12 rounded-full bg-red-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                            <i class="fa-solid fa-xmark text-red-500 text-2xl"></i>
+                            <span class="sr-only">Error</span>
+                        </div>
+                    @endif
+
+                    @if(session('success'))
+                        <p class="mb-4 text-lg font-semibold text-gray-900">{{ session('success') }}</p>
+                    @endif
+
+                    @if ($errors->any())
+                        @foreach ($errors->all() as $error)
+                            <p class="mb-4 text-lg font-semibold text-red-600">{{ $error }}</p>
+                        @endforeach
+                    @endif
+
+                    @if(session('success'))
+                        <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300" onclick="this.closest('.fixed').style.display='none'">
+                            Continue
+                        </button>
+                    @else
+                        <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300" onclick="this.closest('.fixed').style.display='none'">
+                            Continue
+                        </button>
+                    @endif
+                    
+                </div>
+            </div>
         </div>
     @endif
 
@@ -71,19 +63,30 @@
         $currentMonth = isset($_GET['month']) ? new DateTime($_GET['month']) : new DateTime();
     @endphp
 
-    <div class="grid grid-cols-7 gap-px p-2.5">
-        <div class="w-full text-center my-5 flex justify-between items-center py-3.5 px-5 text-white mb-1 shadow-md text-2xl font-semibold" style="background-color: #4b9cd3; grid-column: 1 / -1;">
-            <button onclick="changeMonth('prev')" class="calendar-nav-button">&lt; Prev</button>
-            <h2><i class="fa-solid fa-calendar-days"></i> {{ $currentMonth->format('F Y') }}</h2>
-            <button onclick="changeMonth('next')" class="calendar-nav-button">Next &gt;</button>
+    <div class="grid grid-cols-7 p-6">
+        <!-- Month navigation and display -->
+        <div class="w-full text-center flex justify-between items-center py-3.5 px-5 text-white shadow-md" style="background-color: #4b9cd3; grid-column: 1 / -1;">
+            <button onclick="changeMonth('prev')" class="text-xs sm:text-base lg:text-xl font-semibold"><i class="fa-solid fa-backward"></i></button>
+            <h2 class="text-base sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-calendar-days"></i> {{ $currentMonth->format('F Y') }}</h2>
+            <button onclick="changeMonth('next')" class="text-xs sm:text-base lg:text-xl font-semibold"><i class="fa-solid fa-forward"></i></button>
         </div>
 
-        <!-- Days of the week headers -->
-        @foreach(['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'] as $day)
-            <div class="bg-white border border-gray-300 font-bold text-center py-2.5">{{ $day }}</div>
-        @endforeach
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:flex sm:justify-center hidden">Saturday</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:flex sm:justify-center hidden">Sunday</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:flex sm:justify-center hidden">Monday</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:flex sm:justify-center hidden">Tuesday</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:flex sm:justify-center hidden">Wednesday</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:flex sm:justify-center hidden">Thursday</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:flex sm:justify-center hidden">Friday</div>
 
-        <!-- Generating days for the current month -->
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:hidden">Sa</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:hidden">Su</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:hidden">Mo</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:hidden">Tu</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:hidden">We</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:hidden">Th</div>
+        <div class="bg-white border border-gray-300 font-bold text-center py-2.5 sm:hidden">Fr</div>
+
         @php
             $firstDayOfMonth = (clone $currentMonth)->modify('first day of this month');
             $lastDayOfMonth = (clone $currentMonth)->modify('last day of this month');
@@ -95,49 +98,55 @@
             @php
                 $isCurrentMonth = $day->format('m') == $currentMonth->format('m');
                 $hasApprovedAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Approved');
-                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending Approval');
-                $dayClass = '';
-                if ($hasApprovedAppointment) {
-                    $dayClass = 'approved-appointment';
-                } elseif ($hasPendingAppointment) {
-                    $dayClass = 'pending-appointment';
-                }
+                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending');
             @endphp
 
-            <div class="day bg-white min-h-[100px] flex flex-col items-center justify-center p-2.5 border border-gray-300 relative cursor-pointer {{ !$isCurrentMonth ? 'text-gray-400' : '' }} {{ $dayClass }}" onclick="toggleAppointments(this)">
+            <div class="day py-6 flex flex-col items-center justify-center p-2.5 border border-gray-300 relative cursor-pointer {{ !$isCurrentMonth ? 'text-gray-400' : '' }} {{ $hasApprovedAppointment ? 'bg-green-500' : ($hasPendingAppointment ? 'bg-yellow-500' : 'bg-white') }}" onclick="toggleAppointments(this)">
                 <div>{{ $day->format('j') }}</div>
-                <div class="hourly-appointments hidden absolute top-full left-0 w-full bg-white shadow-lg z-50 p-2.5 max-h-[200px] overflow-y-auto">
-                    @foreach (range(8, 19) as $hour)
-                        @if (($hour >= 8 && $hour < 12) || ($hour >= 16 && $hour < 20))
-                            @php
-                                $startHour = $hour;
-                                $endHour = $hour + 1;
-                                $startPeriod = $startHour >= 12 ? 'PM' : 'AM';
-                                $endPeriod = $endHour >= 12 ? 'PM' : 'AM';
-                                $startHour12 = $startHour > 12 ? $startHour - 12 : $startHour;
-                                $endHour12 = $endHour > 12 ? $endHour - 12 : $endHour;
-                            @endphp
-                            <div class="hourly-slot mb-1 p-1 text-center border-2 border-gray-200 rounded shadow-md">
-                                <strong>{{ $startHour12 }}:00{{ $startPeriod }} - {{ $endHour12 }}:00{{ $endPeriod }}</strong>
-                                @php $hasAppointment = false; @endphp
-                                @foreach ($calendars as $calendar)
-                                    @if ($calendar->appointmentdate == $day->format('Y-m-d') && date('G', strtotime($calendar->appointmenttime)) == $hour)
-                                        <div class="appointment bg-gray-200 p-2 mt-1 rounded text-center w-full box-border">
-                                            <strong>{{ date('g:i A', strtotime($calendar->appointmenttime)) }}</strong><br>
-                                            {{ $calendar->name }}
-                                            <span class="{{ $calendar->approved === 'Approved' ? 'text-green-500' : 'text-yellow-500' }}">
-                                                {{ $calendar->approved }}
-                                            </span>
-                                        </div>
-                                        @php $hasAppointment = true; @endphp
-                                    @endif
-                                @endforeach
-                                @if (!$hasAppointment)
-                                    <div class="text-gray-400 text-xs">No Appointments</div>
+                <div class="hourly-appointments hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                    <div class="bg-white shadow-lg rounded-lg h-64 w-64 overflow-y-auto p-6">
+                        <div class="flex flex-col">
+                            <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="text-lg font-semibold text-center rounded-lg mb-4 py-2 px-2">{{ $day->format('F j, Y') }}</div>
+                            @foreach (range(8, 19) as $hour)
+                                @if (($hour >= 8 && $hour < 12) || ($hour >= 16 && $hour < 20))
+                                    @php
+                                        $startHour = $hour;
+                                        $endHour = $hour + 1;
+                                        $startPeriod = $startHour >= 12 ? 'PM' : 'AM';
+                                        $endPeriod = $endHour >= 12 ? 'PM' : 'AM';
+                                        $startHour12 = $startHour > 12 ? $startHour - 12 : $startHour;
+                                        $endHour12 = $endHour > 12 ? $endHour - 12 : $endHour;
+                                    @endphp
+                                    <div class="hourly-slot mb-1 p-1 text-center border-2 border-gray-200 rounded shadow-md">
+                                        <strong>{{ $startHour12 }}:00{{ $startPeriod }} - {{ $endHour12 }}:00{{ $endPeriod }}</strong>
+                                        @php $hasAppointment = false; @endphp
+                                        @foreach ($calendars as $calendar)
+                                            @if ($calendar->appointmentdate == $day->format('Y-m-d') && date('G', strtotime($calendar->appointmenttime)) == $hour)
+                                                <div class="appointment bg-gray-200 p-2 mt-1 rounded text-center w-full box-border">
+                                                    <div>{{ $calendar->user->name }}</div>
+                                                    <div class="appointment-buttons mt-2 flex justify-between">
+                                                        <span class="{{ $calendar->approved === 'Approved' ? 'text-green-500' : 'text-yellow-500' }}">
+                                                            {{ $calendar->approved }}
+                                                        </span>
+                                                        <a href="{{ route('patient.viewDetails', $calendar->id) }}" class="py-1 px-2 rounded bg-white hover:bg-gray-300 text-gray-800 transition duration-300 text-sm" title="View"><i class="fa-solid fa-eye"></i></a>
+                                                        <form method="post" action="{{ route('patient.deleteCalendar', $calendar->id) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="py-1 px-2 rounded bg-white text-red-800 hover:bg-red-200 transition duration-300 text-sm" title="Delete" onclick="return confirm('Are you sure you want to delete this appointment?')"><i class="fa-solid fa-trash"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                @php $hasAppointment = true; @endphp
+                                            @endif
+                                        @endforeach
+                                        @if (!$hasAppointment)
+                                            <div class="text-gray-400 text-xs">No Appointments</div>
+                                        @endif
+                                    </div>
                                 @endif
-                            </div>
-                        @endif
-                    @endforeach
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
         @endfor
@@ -145,6 +154,7 @@
 
     <script>
         function toggleAppointments(dayElement) {
+            // Close other open appointments
             document.querySelectorAll('.day.active').forEach(day => {
                 if (day !== dayElement) {
                     day.classList.remove('active');
@@ -152,6 +162,7 @@
                 }
             });
 
+            // Toggle the current day's appointments
             dayElement.classList.toggle('active');
             const hourlyAppointments = dayElement.querySelector('.hourly-appointments');
             hourlyAppointments.classList.toggle('hidden');
@@ -169,7 +180,7 @@
             window.location.search = urlParams.toString();
         }
     </script>
-    
+
 </body>
 </html>
 

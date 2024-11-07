@@ -10,7 +10,7 @@
 <body class="min-h-screen">
 
     <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
-        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-users"></i> Patient List / {{ $patientlist->name }}</h4>
+        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-users"></i> Patient List / {{ $patientlist->user->name }}</h4>
     </div>
 
     @if(session('success') || $errors->any())
@@ -52,25 +52,25 @@
             <div class="mt-5">
                 <ul class="text-sm sm:text-base text-gray-700 list-disc pl-5">
                     <li>
-                        <span class="font-semibold">Name:</span> <span>{{ $patientlist->name }}</span>
+                        <span class="font-semibold">Name:</span> <span>{{ $patientlist->user->name }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Gender:</span> <span>{{ $patientlist->gender }}</span>
+                        <span class="font-semibold">Gender:</span> <span>{{ $patientlist->user->gender }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Birthday:</span> <span>{{ date('F j, Y', strtotime($patientlist->birthday)) }}</span>
+                        <span class="font-semibold">Birthday:</span> <span>{{ date('F j, Y', strtotime($patientlist->user->birthday)) }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Age:</span> <span>{{ $patientlist->age }}</span>
+                        <span class="font-semibold">Age:</span> <span>{{ $patientlist->user->age }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Address:</span> <span>{{ $patientlist->address }}</span>
+                        <span class="font-semibold">Address:</span> <span>{{ $patientlist->user->address }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Phone:</span> <span>{{ $patientlist->phone }}</span>
+                        <span class="font-semibold">Phone:</span> <span>{{ $patientlist->user->phone }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Email:</span> <span>{{ $patientlist->email }}</span>
+                        <span class="font-semibold">Email:</span> <span>{{ $patientlist->user->email }}</span>
                     </li>
                 </ul>
             </div>
@@ -82,7 +82,7 @@
             <div class="flex justify-between">
                 <h1 class="text-lg lg:text-xl font-bold">Notes</h1>
                 <!-- Button to open modal -->
-                <button id="openModalBtn" class="px-4 py-1 bg-blue-500 text-white rounded">Add Notes</button>
+                <button id="openModalBtn" class="px-4 py-1 text-xs lg:text-base rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Add Notes</button>
             </div>
 
             <!-- Display Notes -->
@@ -92,14 +92,14 @@
                 @else    
                     @foreach ($notes as $note)
                         <div class="note-item p-4 bg-gray-50 rounded-md border border-gray-200">
-                            <form action="{{ route('admin.note.update', [$patientlist->id, $note->id]) }}" method="POST" class="inline">
+                            <form action="{{ route('admin.note.update', [$patientlist->id, $note->id]) }}" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <p class="justify text-gray-800 cursor-pointer">{{ $note->note }}</p>
                                 <p class="hidden full-text text-gray-800 cursor-pointer">{{ $note->note }}</p>
                                 <textarea class="hidden edit-input w-full text-gray-800" name="note" onblur="this.form.submit()">{{ $note->note }}</textarea>
-                                <button type="button" class="hidden save-btn px-2 py-1 bg-blue-500 text-white rounded text-xs sm:text-sm mt-1" onclick="saveEdit(event)">Save</button>
-                                <button type="button" class="hidden cancel-btn px-2 py-1 bg-gray-300 text-gray-800 rounded text-xs sm:text-sm mt-1" onclick="cancelEdit(event)">Cancel</button>
+                                <button type="button" class="hidden save-btn px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white transition duration-300 rounded text-xs sm:text-sm mt-1" onclick="saveEdit(event)">Save</button>
+                                <button type="button" class="hidden cancel-btn px-2 py-1 bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300 rounded text-xs sm:text-sm mt-1" onclick="cancelEdit(event)">Cancel</button>
                             </form>
                         </div>
                     @endforeach
@@ -122,9 +122,9 @@
                             <label for="note" class="block text-sm font-medium text-gray-700">Note</label>
                             <textarea id="note" name="note" rows="4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Type your notes here..." required></textarea>
                         </div>
-                        <div class="flex justify-end space-x-2">
-                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Save Notes</button>
-                            <button type="button" id="closeModalBtn" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
+                        <div class="flex justify-end">
+                            <button type="submit" class="px-4 py-2 text-xs lg:text-base rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 mr-2">Save</button>
+                            <button type="button" id="closeModalBtn" class="px-4 py-2 text-xs lg:text-base rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
                         </div>
                     </form>
                 </div>
@@ -136,7 +136,7 @@
             
             <div class="flex justify-between mb-4">
                 <h1 class="text-lg lg:text-xl font-bold"><i class="fa-regular fa-folder-open"></i> List of Records</h1>
-                <button id="openModal" class="px-4 py-1 rounded bg-blue-500 hover:bg-blue-700 text-white"><i class="fa-solid fa-file-circle-plus"></i></a>
+                <button id="openModal" class="px-4 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300"><i class="fa-solid fa-file-circle-plus"></i></a>
             </div>
 
             <div id="recordsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
@@ -154,8 +154,8 @@
                             <input type="file" class="w-full pb-5 " id="file" name="file" required>
                         </div>
                         <div class="text-right">
-                            <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Upload File</button>
-                            <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
+                            <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Upload File</button>
+                            <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
                         </div>
                     </form>
                 </div>
@@ -168,7 +168,7 @@
             
             <div class="max-h-96 overflow-y-auto overflow-x-auto p-2 border border-gray-300 rounded-lg">
                 
-                <table class="min-w-full bg-white">
+                <table class="min-w-full">
                     <tbody>
                         @if($records->isEmpty())
                             <tr>
@@ -176,7 +176,7 @@
                             </tr>
                         @else
                             @foreach ($records as $record)
-                                <tr class="relative group bg-white border-b hover:bg-gray-100">
+                                <tr class="relative group bg-white hover:bg-gray-100">
                                     <td class="py-4 px-4 max-w-20">
                                         <form action="{{ route('admin.record.update', [$patientlist->id, $record->id]) }}" method="POST" class="inline">
                                             @csrf
@@ -184,8 +184,8 @@
                                             <p class="truncate overflow-hidden overflow-ellipsis whitespace-nowrap text-gray-800 cursor-pointer">{{ $record->file }}</p>
                                             <p class="hidden full-text text-gray-800 cursor-pointer">{{ $record->file }}</p>
                                             <input type="text" class="hidden edit-input w-full text-gray-800" name="file" value="{{ pathinfo($record->file, PATHINFO_FILENAME) }}" onblur="this.form.submit()" />
-                                            <button type="button" class="hidden save-btn px-2 py-1 bg-blue-500 text-white rounded text-xs sm:text-sm mt-1" onclick="saveEdit(event)">Save</button>
-                                            <button type="button" class="hidden cancel-btn px-2 py-1 bg-gray-300 text-gray-800 rounded text-xs sm:text-sm mt-1" onclick="cancelEdit(event)">Cancel</button>
+                                            <button type="button" class="hidden save-btn px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white transition duration-300 rounded text-xs sm:text-sm mt-1" onclick="saveEdit(event)">Save</button>
+                                            <button type="button" class="hidden cancel-btn px-2 py-1 bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300 rounded text-xs sm:text-sm mt-1" onclick="cancelEdit(event)">Cancel</button>
                                         </form>
                                     </td>
                                     <td class="py-4">
@@ -236,7 +236,7 @@
                                     <strong>{{ date('F j, Y', strtotime($calendar->appointmentdate)) }}</strong> at <strong>{{ date('g:i A', strtotime($calendar->appointmenttime)) }}</strong>
                                 </p>
                                 <p class="text-sm lg:text-base text-gray-600">
-                                    <span>{{ $calendar->name }}</span>
+                                    <span>{{ $calendar->user->name }}</span>
                                 </p>
                             </div>
                             <div class="text-sm lg:text-base text-right">
@@ -317,18 +317,30 @@
                         }
                     });
 
+                    // Move the dropdown outside of the scrollable container (to the body)
+                    const dropdownContainer = document.getElementById('dropdowns-container') || document.body;
+                    dropdownContainer.appendChild(dropdownMenu);
+
                     // Toggle the clicked dropdown
                     const isHidden = dropdownMenu.classList.contains('hidden');
                     dropdownMenu.classList.toggle('hidden', !isHidden);
+
+                    // Set the dropdown to be positioned absolutely
+                    dropdownMenu.style.position = 'absolute';
+                    dropdownMenu.style.zIndex = '50'; // Ensure it appears above other content
+
+                    // Adjust the 'right' position to align with the left side of the button
+                    const offset = 30;  // Adjust this to add a margin (e.g., 10px from the button's left)
+                    dropdownMenu.style.right = `${window.innerWidth - rect.left - offset + window.scrollX}px`;
 
                     // Position the dropdown
                     if (isHidden) {
                         if (spaceBelow >= dropdownHeight) {
                             // Show below if there's enough space
-                            dropdownMenu.style.top = '100%'; // Default position
+                            dropdownMenu.style.top = `${rect.bottom + window.scrollY}px`; // Default position
                         } else if (spaceAbove >= dropdownHeight) {
                             // Show above if there's not enough space below
-                            dropdownMenu.style.top = `-${dropdownHeight}px`; // Adjust for spacing
+                            dropdownMenu.style.top = `${rect.top - dropdownHeight + window.scrollY}px`; // Adjust for spacing
                         } else {
                             // If there's not enough space above or below, keep it hidden or handle accordingly
                             dropdownMenu.classList.add('hidden'); // Or keep it open

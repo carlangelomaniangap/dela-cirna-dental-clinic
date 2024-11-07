@@ -36,10 +36,12 @@
         </div>
         <div class="chat-box" id="chat-box">
             <div id="selected-user-box" class="selected-user-box" style="display: none;">
-                <button id="back-button">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </button>
-                <p id="selected-user-name"></p>
+                <div class="flex items-center space-x-2">
+                    <button id="back-button">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <p id="selected-user-name"></p>
+                </div>
             </div>
 
             @foreach ($users as $user)

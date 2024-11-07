@@ -84,25 +84,25 @@
                     <div class="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-200">
                         <div class="flex justify-between items-start mb-2">
                             <div>
-                                <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800">{{ $patient->name }}</p>
+                                <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800">{{ $patient->user->name }}</p>
                                 <ul class="text-sm sm:text-base text-gray-600 list-disc pl-5">
                                     <li>
-                                        <span class="font-semibold">Gender:</span> <span>{{ $patient->gender }}</span>
+                                        <span class="font-semibold">Gender:</span> <span>{{ $patient->user->gender }}</span>
                                     </li>
                                     <li>
-                                        <span class="font-semibold">Birthday:</span> <span>{{ date('F j, Y', strtotime($patient->birthday)) }}</span>
+                                        <span class="font-semibold">Birthday:</span> <span>{{ date('F j, Y', strtotime($patient->user->birthday)) }}</span>
                                     </li>
                                     <li>
-                                        <span class="font-semibold">Age:</span> <span>{{ $patient->age }}</span>
+                                        <span class="font-semibold">Age:</span> <span>{{ $patient->user->age }}</span>
                                     </li>
                                     <li>
-                                        <span class="font-semibold">Address:</span> <span>{{ $patient->address }}</span>
+                                        <span class="font-semibold">Address:</span> <span>{{ $patient->user->address }}</span>
                                     </li>
                                     <li>
-                                        <span class="font-semibold">Phone:</span> <span>{{ $patient->phone }}</span>
+                                        <span class="font-semibold">Phone:</span> <span>{{ $patient->user->phone }}</span>
                                     </li>
                                     <li>
-                                        <span class="font-semibold">Email:</span> <span>{{ $patient->email }}</span>
+                                        <span class="font-semibold">Email:</span> <span>{{ $patient->user->email }}</span>
                                     </li>
                                 </ul>
                             </div>

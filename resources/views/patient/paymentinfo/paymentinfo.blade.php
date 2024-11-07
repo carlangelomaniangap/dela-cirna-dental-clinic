@@ -25,7 +25,7 @@
                         <div class="flex flex-col">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800">{{ $payment->name }}</p>
+                                    <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800">{{ $payment->user->name }}</p>
                                     <ul class="text-sm sm:text-base text-gray-600 list-disc pl-5">
                                         <li>
                                             <span class="font-semibold">Concern:</span> <span>{{ $payment->concern }}</span>

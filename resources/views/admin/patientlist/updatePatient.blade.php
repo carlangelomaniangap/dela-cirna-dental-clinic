@@ -34,43 +34,43 @@
 
                 <div>
                     <label for="name" class="font-semibold text-gray-700">Name</label>
-                    <input type="text" id="name" name="name" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('name', $patient->name) }}" required>
+                    <input type="text" id="name" name="name" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('name', $patient->user->name) }}" required>
                 </div>
 
                 <div>
                     <label for="gender" class="font-semibold text-gray-700">Gender</label>
                     <select id="gender" name="gender" class="w-full py-2 px-3 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" required>
                         <option value="" disabled selected>Select your Gender</option>
-                        <option value="Male" {{ old('gender', $patient->gender) == 'Male' ? 'selected' : '' }}>Male</option>
-                        <option value="Female" {{ old('gender', $patient->gender) == 'Female' ? 'selected' : '' }}>Female</option>
+                        <option value="Male" {{ old('gender', $patient->user->gender) == 'Male' ? 'selected' : '' }}>Male</option>
+                        <option value="Female" {{ old('gender', $patient->user->gender) == 'Female' ? 'selected' : '' }}>Female</option>
                     </select>
                 </div>
 
                 <div>
                     <label for="birthday" class="font-semibold text-gray-700">Birthday</label>
-                    <input type="date" id="birthday" name="birthday" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('birthday', $patient->birthday) }}" required>
+                    <input type="date" id="birthday" name="birthday" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('birthday', $patient->user->birthday) }}" required>
                 </div>
             </div>
 
             <div class="flex flex-col space-y-4">
                 <div>
                     <label for="age" class="font-semibold text-gray-700">Age</label>
-                    <input type="number" id="age" name="age" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('age', $patient->age) }}" required>
+                    <input type="number" id="age" name="age" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('age', $patient->user->age) }}" required>
                 </div>
 
                 <div>
                     <label for="address" class="font-semibold text-gray-700">Address</label>
-                    <input type="text" id="address" name="address" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('address', $patient->address) }}" required>
+                    <input type="text" id="address" name="address" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('address', $patient->user->address) }}" required>
                 </div>
 
                 <div>
                     <label for="phone" class="font-semibold text-gray-700">Phone No.</label>
-                    <input type="tel" id="phone" name="phone" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('phone', $patient->phone) }}" required>
+                    <input type="tel" id="phone" name="phone" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('phone', $patient->user->phone) }}" required>
                 </div>
 
                 <div>
                     <label for="email" class="font-semibold text-gray-700">Email</label>
-                    <input type="email" id="email" name="email" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('email', $patient->email) }}" required>
+                    <input type="email" id="email" name="email" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" value="{{ old('email', $patient->user->email) }}" required>
                 </div>
 
                 <div class="flex justify-end">

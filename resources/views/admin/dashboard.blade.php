@@ -98,7 +98,7 @@
                                 <div class="flex-grow mb-2 sm:mb-0">
                                     <p class="text-base lg:text-lg font-semibold text-gray-800">
                                         <strong>{{ \Carbon\Carbon::parse($appointment->appointmenttime)->format('g:i A') }}</strong> - 
-                                        <span class="text-gray-600">{{ $appointment->name }}</span>
+                                        <span class="text-gray-600">{{ $appointment->user->name }}</span>
                                     </p>
                                     <p class="text-sm sm:text-base lg:text-lg text-gray-500">
                                         Reason for visit: <em>{{ $appointment->concern }}</em>
@@ -174,7 +174,7 @@
 
             <div class="flex flex-col sm:flex-row items-center justify-between mb-4">
                 <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold">Inventory</h1>
-                <button id="createInventoryButton" class="mt-2 sm:mt-0 bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded max-w-xs font-semibold">Add Item</button>
+                <button id="createInventoryButton" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-4 py-2 rounded max-w-xs font-semibold">Add Item</button>
             </div>
 
             <div class="flex justify-center">
@@ -225,8 +225,6 @@
         </div>
     </div>
 
-
-
     <!-- Modal for Create/Edit Item -->
     <div id="inventoryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
         
@@ -258,8 +256,8 @@
                     </select>
                 </div>
                 <div class="mt-4 text-right">
-                    <button type="submit" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white">Save</button>
-                    <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
+                    <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Save</button>
+                    <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
                 </div>
             </form>
         </div>
