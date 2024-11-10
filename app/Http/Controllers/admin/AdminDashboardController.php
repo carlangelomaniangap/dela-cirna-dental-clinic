@@ -5,6 +5,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Inventory;
 use App\Models\User;
 use App\Models\Calendar;
+use App\Models\DentalClinic;
+use App\Models\Schedule;
+use App\Models\Treatment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -36,6 +39,16 @@ class AdminDashboardController extends Controller
         if ($showUserWelcome) {
             $request->session()->forget('showUserWelcome');
         }
+
+        $treatments = Treatment::all();
+
+        $dentalclinic = DentalClinic::find($dentalclinicId);
+
+        $users = User::where('dentalclinic_id', $dentalclinicId)
+             ->where('usertype', 'admin')
+             ->get();
+
+        $schedule = Schedule::first();
     
         return view('admin.dashboard', compact(
             'clinicUsers', 
@@ -46,7 +59,11 @@ class AdminDashboardController extends Controller
             'showUserWelcome', 
             'pendingAppointments', 
             'approvedAppointments',
-            'todayAppointments'
+            'todayAppointments',
+            'treatments',
+            'dentalclinic',
+            'users',
+            'schedule'
         ));
     }
     

@@ -10,10 +10,12 @@
 </head>
 <body class="min-h-screen">
 
-    <div class="relative min-h-screen bg-gray-100 dark:bg-gray-900">
-        <img class="absolute inset-0 object-cover w-screen h-screen z-0" src="{{ asset('images/background.png') }}" alt="Background image">
-        <div class="">
-            <div class="p-6 flex justify-end z-10">
+    <header class="bg-white border-gray-200 border-b">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
+            <div class="flex ml-6 text-2xl">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-14 h-14">
+            </div>
+            <div class="p-4 flex justify-end z-10">
                 @if (Auth::check())
                     <div class="z-10">
                         @if(Auth::user()->usertype == 'admin')
@@ -26,15 +28,21 @@
                     </div>
                 @else
                     <div class="z-10">
-                        <a href="{{ route('login') }}" class="font-semibold text-white hover:text-gray-300 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 bg-gray-900 p-1 px-2 rounded-lg hover:bg-gray-800">Log in</a>
+                        <a href="{{ route('login') }}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Log in</a>
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="ml-1 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 bg-white p-1 px-2 rounded-lg hover:bg-gray-200">Register</a>
+                            <a href="{{ route('register') }}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Register</a>
 
                         @endif
                     </div>
                 @endif
             </div>
+        </div>
+    </header>
+
+    <div class="relative min-h-screen bg-gray-100 dark:bg-gray-900 pt-6">
+        <img class="absolute inset-0 object-cover w-screen h-screen z-0" src="{{ asset('images/background.png') }}" alt="Background image">
+        <div class="">
 
             <div class="grid grid-cols-1 md:grid-cols-2 w-full gap-6 p-5">
 

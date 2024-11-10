@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 // admin
 use App\Http\Controllers\admin\AdminDashboardController;
+use App\Http\Controllers\admin\AdminTreatmentController;
+use App\Http\Controllers\admin\AdminScheduleController;
 use App\Http\Controllers\admin\AdminPatientListController;
 use App\Http\Controllers\admin\AdminRecordController;
 use App\Http\Controllers\admin\AdminMessagesController;
@@ -12,7 +14,7 @@ use App\Http\Controllers\admin\AdminPaymentInfoController;
 use App\Http\Controllers\admin\AdminCalendarController;
 use App\Http\Controllers\admin\AdminCommunityForumController;
 use App\Http\Controllers\admin\AdminCommentController;
-use App\Http\Controllers\DentalClinicController;
+
 // patient
 use App\Http\Controllers\patient\PatientDashboardController;
 use App\Http\Controllers\patient\PatientAppointmentController;
@@ -29,6 +31,7 @@ use App\Http\Controllers\dentistrystudent\DentistryStudentCommentController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\DentalClinicController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +54,9 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     // dashboard
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::resource('/admin/inventory', AdminDashboardController::class);
+    Route::resource('admin/treatments', AdminTreatmentController::class);
+    Route::resource('admin/schedules', AdminScheduleController::class);
+    
     // paitent list
     Route::get('/admin/patientlist',[AdminPatientListController::class,'index'])->name('admin.patientlist');
     Route::get('/admin/patientlist/add', [AdminPatientListController::class, 'createPatient'])->name('admin.patient.create');
