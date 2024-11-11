@@ -102,7 +102,7 @@ class AdminCalendarController extends Controller
                 $dentalClinic = $calendar->dentalClinic; // Assuming a relationship exists
 
                 // Send the approval email to the patient
-                Mail::to($patientEmail)->queue(new AppointmentApproved($patientName, $calendar, $dentalClinic, $adminEmail));
+                Mail::mailer('notification')->to($patientEmail)->queue(new AppointmentApproved($patientName, $calendar, $dentalClinic, $adminEmail));
             } catch (\Exception $e) {
                 return redirect()->back()->with('error', 'Failed to send email: ' . $e->getMessage());
             }
