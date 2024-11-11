@@ -95,29 +95,17 @@ class AdminCalendarController extends Controller
         if ($user) {
             $adminEmail = Auth::user()->email;
             $patientEmail = $user->email;
-
-            Log::info("Admin email: " . $adminEmail);
-            // Log the patient email to ensure it's correct
-            Log::info("Patient email: " . $patientEmail);
+            $patientName = $user->name;
             
             try {
-                // Log before sending email
-                Log::info($adminEmail . " Attempting to send email to: " . $patientEmail);
-                
                 // Get the dental clinic associated with the appointment
-            $dentalClinic = $calendar->dentalClinic; // Assuming a relationship exists
+                $dentalClinic = $calendar->dentalClinic; // Assuming a relationship exists
 
-            // Send the approval email to the patient
-            Mail::to($patientEmail)->send(new AppointmentApproved($calendar, $dentalClinic));
-                
-                // Log success
-                Log::info($adminEmail . " Email sent successfully to: " . $patientEmail);
+                // Send the approval email to the patient
+                Mail::to($patientEmail)->queue(new AppointmentApproved($patientName, $calendar, $dentalClinic, $adminEmail));
             } catch (\Exception $e) {
-                // Log error details
-                Log::error($adminEmail . " Failed to send email: " . $e->getMessage());
+                return redirect()->back()->with('error', 'Failed to send email: ' . $e->getMessage());
             }
-        } else {
-            Log::error("No user found for calendar ID: " . $id);
         }
     
         return redirect()->back()->with('success', 'Appointment approved! and Email sent!');

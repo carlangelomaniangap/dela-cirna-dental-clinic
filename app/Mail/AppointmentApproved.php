@@ -11,29 +11,50 @@ class AppointmentApproved extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $patientName;
     public $appointment;
     public $appointmentTime;
     public $appointmentDate;
     public $dentalclinic;
-    
-    public function __construct($appointment, $dentalclinic){
+    public $adminEmail;
 
+    /**
+     * Create a new message instance.
+     *
+     * @param  $patientName
+     * @param  $appointment
+     * @param  $dentalclinic
+     * @param  $adminEmail
+     * @return void
+     */
+    public function __construct($patientName, $appointment, $dentalclinic, $adminEmail)
+    {
+        $this->patientName = $patientName;
         $this->appointment = $appointment;
-
         $this->appointmentDate = Carbon::parse($appointment->appointmentdate)->format('F j, Y'); // Example format
         $this->appointmentTime = Carbon::parse($appointment->appointmenttime)->format('g:i A'); // Example format
         $this->dentalclinic = $dentalclinic;
+        $this->adminEmail = $adminEmail;
     }
 
-    public function build(){
-
-        return $this->subject('Your Appointment has been Approved')
-                    ->view('admin.calendar.appointmentapproved')
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        // The 'from' address is set to a general notification email
+        // 'replyTo' is dynamically set based on the admin's email
+        return $this->from('notification@bataandental.com', 'Bataan Dental')  // Sender
+                    ->replyTo($this->adminEmail)  // Admin's email for replies
+                    ->subject('Your Appointment has been Approved')  // Subject
+                    ->view('admin.calendar.appointmentapproved')  // Email view
                     ->with([
-                        'appointmentDate' => $this->appointmentDate,
-                        'appointmentTime' => $this->appointmentTime,
-                        'dentalclinicname' => $this->dentalclinic->dentalclinicname,
+                        'patientName' => $this->patientName,
+                        'appointmentDate' => $this->appointmentDate,  // Date of the appointment
+                        'appointmentTime' => $this->appointmentTime,  // Time of the appointment
+                        'dentalclinicname' => $this->dentalclinic->dentalclinicname,  // Clinic name
                     ]);
     }
 }
-
