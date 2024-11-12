@@ -105,6 +105,20 @@
                         <div class="flex items-center justify-between mb-2.5">
                             <div>
                                 <span class="text-blue-800 font-bold">{{ $communityforum->user->name }}</span>
+                                <!-- Show user type with icon and badge -->
+                                @if ($communityforum->user->usertype === 'admin')
+                                    <span class="text-xs lg:text-sm text-gray-500">
+                                        <i class="fa-solid fa-user-doctor"></i> Admin
+                                    </span>
+                                @elseif ($communityforum->user->usertype === 'patient')
+                                    <span class="text-xs lg:text-sm text-gray-500">
+                                        <i class="fas fa-tooth"></i> Patient
+                                    </span>
+                                @elseif ($communityforum->user->usertype === 'dentistrystudent')
+                                    <span class="text-xs lg:text-sm text-gray-500">
+                                        <i class="fas fa-graduation-cap"></i> Dentistry Student
+                                    </span>
+                                @endif
                                 <p class="text-xs lg:text-sm text-gray-500">{{ $communityforum->created_at->setTimezone('Asia/Manila')->format('F j, Y') }} at {{ $communityforum->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</p>
                             </div>
                         </div>
@@ -171,6 +185,20 @@
                                     <div class="flex items-center justify-between mb-2.5">
                                         <div>
                                             <span class="text-blue-800 font-bold">{{ $comment->user->name }}</span>
+                                            <!-- Show user type with icon and badge -->
+                                            @if ($comment->user->usertype === 'admin')
+                                                <span class="text-xs lg:text-sm text-gray-500">
+                                                    <i class="fa-solid fa-user-doctor"></i> Admin
+                                                </span>
+                                            @elseif ($comment->user->usertype === 'patient')
+                                                <span class="text-xs lg:text-sm text-gray-500">
+                                                    <i class="fas fa-tooth"></i> Patient
+                                                </span>
+                                            @elseif ($comment->user->usertype === 'dentistrystudent')
+                                                <span class="text-xs lg:text-sm text-gray-500">
+                                                    <i class="fas fa-graduation-cap"></i> Dentistry Student
+                                                </span>
+                                            @endif
                                             <p class="text-xs lg:text-sm text-gray-500">{{ $communityforum->created_at->setTimezone('Asia/Manila')->format('F j, Y') }} at {{ $communityforum->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</p>
                                         </div>
                                     </div>
