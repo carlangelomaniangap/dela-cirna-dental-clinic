@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 class AdminScheduleController extends Controller
 {
     public function store(Request $request){
+        
         // Validate the input data
         $validated = $request->validate([
+            'dentalclinic_id' => 'required', 'exists:dentalclinics,id',
             'startweek' => 'required|string',
             'endweek' => 'required|string',
             'startmorningtime' => 'required',
@@ -28,6 +30,7 @@ class AdminScheduleController extends Controller
 
     // Update an existing schedule
     public function update(Request $request, $scheduleId){
+
         // Validate the input data
         $validated = $request->validate([
             'startweek' => 'required|string',
@@ -47,9 +50,10 @@ class AdminScheduleController extends Controller
         return redirect()->route('admin.dashboard')->with('success', 'Opening hours updated successfully.');
     }
 
-    public function destroy(Schedule $schedule)
-    {
+    public function destroy($scheduleId){
+
+        $schedule = Schedule::findOrFail($scheduleId);
         $schedule->delete();
-        return redirect()->route('admin.dashboard')->with('success', 'Schedule deleted successfully.');
+        return redirect()->back()->with('success', 'Schedule deleted successfully.');
     }
 }

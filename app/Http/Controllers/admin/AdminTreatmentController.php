@@ -8,17 +8,11 @@ use Illuminate\Http\Request;
 
 class AdminTreatmentController extends Controller
 {
-    // Show the form for creating a new treatment
-    public function create()
-    {
-        return view('admin.dashboard');
-    }
+    public function store(Request $request){
 
-    // Store a new treatment in the database
-    public function store(Request $request)
-    {
         // Validate the input data
         $validatedData = $request->validate([
+            'dentalclinic_id' => 'required', 'exists:dentalclinics,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'treatment' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
@@ -46,6 +40,7 @@ class AdminTreatmentController extends Controller
 
         // Create a new treatment record in the database
         Treatment::create([
+            'dentalclinic_id' => $request->dentalclinic_id,
             'image' => 'treatments/' . $newImageName, // Store the image path
             'treatment' => $request->treatment,
             'description' => $request->description,
@@ -54,15 +49,8 @@ class AdminTreatmentController extends Controller
         return redirect()->route('admin.dashboard')->with('success', 'Treatment added successfully!');
     }
 
-    // Show the form to edit the treatment
-    public function edit(Treatment $treatment)
-    {
-        return view('admin.dashboard', compact('treatment'));
-    }
+    public function update(Request $request, Treatment $treatment){
 
-    // Update the treatment in the database
-    public function update(Request $request, Treatment $treatment)
-    {
         // Validate the input data
         $validatedData = $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -110,9 +98,8 @@ class AdminTreatmentController extends Controller
         return redirect()->route('admin.dashboard')->with('success', 'Treatment updated successfully!');
     }
 
-    // Delete a treatment from the database
-    public function destroy(Treatment $treatment)
-    {
+    public function destroy(Treatment $treatment){
+        
         // Delete the image file
         if (file_exists(public_path($treatment->image))) {
             unlink(public_path($treatment->image));

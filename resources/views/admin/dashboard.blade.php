@@ -313,8 +313,11 @@
 
                         <!-- Edit Form (Initially hidden) -->
                         <form id="edit-treatment-form-{{ $treatment->id }}" class="hidden bg-white shadow-md rounded-lg p-4 w-80 treatment-form treatment-card flex-shrink-0 w-64 h-80 relative border-2" action="{{ route('treatments.update', $treatment->id) }}" method="POST" enctype="multipart/form-data">
+                            
                             @csrf
+
                             @method('PUT')
+                            
                             <h2 class="text-xl font-bold text-center">Update</h2>
 
                             <!-- Image -->
@@ -352,7 +355,11 @@
 
                     <!-- Form for Adding Treatment (Initially hidden) -->
                     <form id="treatment-form" class="hidden" action="{{ route('treatments.store') }}" method="POST" enctype="multipart/form-data">
+                        
+                        <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
+                    
                         @csrf
+                        
                         <h2 class="text-xl font-bold text-center">Create</h2>
 
                         <!-- Image -->
@@ -489,7 +496,11 @@
                     </h2>
 
                     <form action="{{ isset($schedule) ? route('schedules.update', $schedule->id) : route('schedules.store') }}" method="POST">
+                        
+                        <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
+
                         @csrf
+                        
                         @if(isset($schedule))  
                             @method('PUT') <!-- If editing, include PUT method -->
                         @endif

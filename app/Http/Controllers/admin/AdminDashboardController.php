@@ -40,15 +40,13 @@ class AdminDashboardController extends Controller
             $request->session()->forget('showUserWelcome');
         }
 
-        $treatments = Treatment::all();
+        $treatments = Treatment::where('dentalclinic_id', $dentalclinicId)->get();
 
         $dentalclinic = DentalClinic::find($dentalclinicId);
 
-        $users = User::where('dentalclinic_id', $dentalclinicId)
-             ->where('usertype', 'admin')
-             ->get();
+        $users = User::where('dentalclinic_id', $dentalclinicId)->where('usertype', 'admin')->get();
 
-        $schedule = Schedule::first();
+        $schedule = Schedule::where('dentalclinic_id', $dentalclinicId)->first();
     
         return view('admin.dashboard', compact(
             'clinicUsers', 
