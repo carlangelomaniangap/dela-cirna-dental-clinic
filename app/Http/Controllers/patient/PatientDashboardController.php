@@ -30,7 +30,7 @@ class PatientDashboardController extends Controller
             $request->session()->forget('showUserWelcome');
         }
 
-        return view('dentistrystudent.dashboard', compact('treatments', 'dentalclinic', 'users', 'schedule', 'showUserWelcome'));
+        return view('patient.dashboard', compact('treatments', 'dentalclinic', 'users', 'schedule', 'showUserWelcome'));
     }
 
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('logo');
             $table->string('dentalclinicname');
+            $table->enum('status', ['pending', 'approved'])->default('pending');
             $table->timestamps();
         });
     }

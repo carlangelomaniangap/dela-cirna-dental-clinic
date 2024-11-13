@@ -21,8 +21,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        // Retrieve dental clinics
-        $dentalclinics = DentalClinic::all();
+        // Fetch only approved dental clinics for registration
+        $dentalclinics = DentalClinic::where('status', 'approved')->get();
+        
         return view('auth.register', compact('dentalclinics'));
     }
 
@@ -33,8 +34,8 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'dentalclinic_id' => ['required', 'exists:dentalclinics,id'],
+        $rules = [
+            'dentalclinic_id' => ['nullable', 'exists:dentalclinics,id'],
             'usertype' => ['required', 'string', 'in:patient,dentistrystudent'], // Add validation for usertype
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -44,7 +45,30 @@ class RegisteredUserController extends Controller
             'age' => ['required', 'integer'],
             'address' => ['required', 'string'],
             'phone' => ['required', 'string', 'regex:/^0[0-9]{10}$/'],
-        ]);
+        ];
+
+        // If the usertype is 'patient', make dentalclinic_id required
+        if ($request->usertype == 'patient') {
+            $rules['dentalclinic_id'] = ['required', 'exists:dentalclinics,id'];
+        } else {
+            // If not a patient, dentalclinic_id remains nullable
+            $rules['dentalclinic_id'] = ['nullable', 'exists:dentalclinics,id'];
+        }
+
+        $message = [
+            'dentalclinic_id.required' => 'Please select a dental clinic for patients.',
+        ];
+
+        // Validate the incoming request based on the defined rules
+        $request->validate($rules, $message);
+
+        // Check if the user is a Dentistry Student and selected a dentalclinic_id
+        if ($request->usertype == 'dentistrystudent' && $request->filled('dentalclinic_id')) {
+            // If a dental clinic is selected, prevent account creation
+            return redirect()->back()->withErrors([
+                'dentalclinic_id' => 'Dentistry students cannot be assigned a dental clinic. Please leave this field empty.'
+            ]);
+        }
 
         $user = User::create([
             'dentalclinic_id' => $request->dentalclinic_id,
@@ -72,7 +96,7 @@ class RegisteredUserController extends Controller
                 return redirect()->route('patient.dashboard');
                 break;
             case 'dentistrystudent':
-                return redirect()->route('dentistrystudent.dashboard');
+                return redirect()->route('dentistrystudent.communityforum');
                 break;
             default:
                 return redirect(RouteServiceProvider::HOME);

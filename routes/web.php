@@ -3,6 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+// super admin
+use App\Http\Controllers\superadmin\SuperAdminDashboardController;
+
+
 // admin
 use App\Http\Controllers\admin\AdminDashboardController;
 use App\Http\Controllers\admin\AdminTreatmentController;
@@ -25,7 +29,6 @@ use App\Http\Controllers\patient\PatientCommunityForumController;
 use App\Http\Controllers\patient\PatientCommentController;
 
 // dentistrystudent
-use App\Http\Controllers\dentistrystudent\DentistryStudentDashboardController;
 use App\Http\Controllers\dentistrystudent\DentistryStudentCommunityForumController;
 use App\Http\Controllers\dentistrystudent\DentistryStudentCommentController;
 
@@ -49,6 +52,11 @@ use App\Http\Controllers\DentalClinicController;
 Route::get('/dentalclinics', [DentalClinicController::class, 'create'])->name('dentalclinics.create');
 Route::post('/dentalclinics/store', [DentalClinicController::class, 'store'])->name('dentalclinics.store');
 
+Route::group(['middleware' => ['auth', 'checkUserType:superadmin']], function () {
+    // dashboard
+    Route::get('/superadmin', [SuperAdminDashboardController::class, 'index'])->name('superadmin.dashboard');
+    Route::put('dentalclinics/{dentalClinic}/approve', [DentalClinicController::class, 'approve'])->name('dentalclinics.approve');
+});
 
 Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     // dashboard
@@ -162,8 +170,6 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
 });
 
 Route::group(['middleware' => ['auth', 'checkUserType:dentistrystudent']], function () {
-    // dashboard
-    Route::get('/dentistrystudent', [DentistryStudentDashboardController::class, 'index'])->name('dentistrystudent.dashboard');
     // community forum
     Route::get('/dentistrystudent/communityforum',[DentistryStudentCommunityForumController::class,'index'])->name('dentistrystudent.communityforum');
     Route::get('/dentistrystudent/communityforum/post', [DentistryStudentCommunityForumController::class, 'createCommunityforum'])->name('dentistrystudent.communityforum.create');

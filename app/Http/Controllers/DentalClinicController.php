@@ -37,6 +37,7 @@ class DentalClinicController extends Controller
         $dentalclinic = DentalClinic::create([
             'logo' => $request->file('logo')->getClientOriginalName(),
             'dentalclinicname' => $request->dentalclinicname,
+            'status' => 'pending',
         ]);
 
         // Create the admin user associated with the clinic
@@ -56,5 +57,22 @@ class DentalClinicController extends Controller
         Auth::login($admin);
 
         return redirect()->route('admin.dashboard')->with('success', 'Clinic and Admin created successfully!');
+    }
+
+    public function approve($id){
+
+        $dentalclinic = DentalClinic::findOrFail($id);
+
+        // Check if the dental clinic is already approved
+        if ($dentalclinic->status === 'approved') {
+            return redirect()->route('superadmin.dashboard')->with('status', 'This dental clinic is already approved.');
+        }
+
+        // Change the status to approved
+        $dentalclinic->status = 'approved';
+        $dentalclinic->save();
+
+        // Redirect back to the dashboard
+        return redirect()->route('superadmin.dashboard')->with('status', $dentalclinic->dentalclinicname . ' has been approved successfully.');
     }
 }

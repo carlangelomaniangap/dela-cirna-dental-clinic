@@ -14,11 +14,14 @@
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
             <div class="flex ml-6 text-2xl">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-14 h-14">
+                <!-- <h1 class="font-bold mr-2">BATAAN</h1><h1 class="text-blue-400 font-bold">DENTAL</h1> -->
             </div>
             <div class="p-4 flex justify-end z-10">
                 @if (Auth::check())
                     <div class="z-10">
-                        @if(Auth::user()->usertype == 'admin')
+                        @if(Auth::user()->usertype == 'superadmin')
+                            <a href="{{ route('superadmin.dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Super Admin Dashboard</a>
+                        @elseif(Auth::user()->usertype == 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Admin Dashboard</a>
                         @elseif(Auth::user()->usertype == 'patient')
                             <a href="{{ route('patient.dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Patient Dashboard</a>
@@ -70,6 +73,20 @@
                                     <div class="flex items-center justify-between mb-2">
                                         <div>
                                             <span class="text-blue-800 font-bold">{{ $communityforum->user->name }}</span>
+                                            <!-- Show user type with icon and badge -->
+                                            @if ($communityforum->user->usertype === 'admin')
+                                                <span class="text-xs lg:text-sm text-gray-500">
+                                                    <i class="fa-solid fa-user-doctor"></i> Admin
+                                                </span>
+                                            @elseif ($communityforum->user->usertype === 'patient')
+                                                <span class="text-xs lg:text-sm text-gray-500">
+                                                    <i class="fas fa-tooth"></i> Patient
+                                                </span>
+                                            @elseif ($communityforum->user->usertype === 'dentistrystudent')
+                                                <span class="text-xs lg:text-sm text-gray-500">
+                                                    <i class="fas fa-graduation-cap"></i> Dentistry Student
+                                                </span>
+                                            @endif
                                             <p class="text-sm text-gray-500">{{ $communityforum->created_at->setTimezone('Asia/Manila')->format('F j, Y') }} at {{ $communityforum->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</p>
                                         </div>
                                     </div>
