@@ -18,6 +18,7 @@ class ProfileController extends Controller
     {
         return view('profile.edit', [
             'user' => $request->user(),
+            'dentalclinic' => $request->user()->dentalclinic,
         ]);
     }
 
@@ -33,6 +34,28 @@ class ProfileController extends Controller
         }
 
         $request->user()->save();
+
+        // Handle the Dental Clinic update (logo and name)
+        $dentalclinic = $request->user()->dentalclinic;  // Fetch the associated dental clinic
+
+        // Update dental clinic name
+        $dentalclinic->dentalclinicname = $request->dentalclinicname;
+
+        // If logo is provided, handle the logo file update
+        if ($request->hasFile('logo')) {
+            // Delete old logo if it exists
+            if ($dentalclinic->logo && file_exists(public_path('logos/' . $dentalclinic->logo))) {
+                unlink(public_path('logos/' . $dentalclinic->logo));
+            }
+
+            // Move new logo to the 'logos' folder and update clinic logo field
+            $logoName = $request->file('logo')->getClientOriginalName();
+            $request->file('logo')->move(public_path('logos'), $logoName);
+            $dentalclinic->logo = $logoName;
+        }
+
+        // Save the updated clinic details
+        $dentalclinic->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

@@ -13,9 +13,36 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
+
+        <div class="border-2 p-4 rounded-lg space-y-4">
+            <h1 class="font-semibold">Dental Clinic Details</h1>
+        
+            @if(auth()->user()->usertype === 'admin') 
+
+                <!-- Clinic Logo -->
+                <div>
+                    <x-input-label for="logo" :value="__('Logo')" />
+                    <div class="flex items-center">
+                        <!-- Display Existing Logo -->
+                        @if ($user->dentalclinic && $user->dentalclinic->logo)
+                            <img src="{{ asset('logos/' . $user->dentalclinic->logo) }}" alt="Logo" class="mt-1 w-16 h-16 rounded-lg border-2">
+                        @endif
+                        <div>
+                            <input type="file" name="logo" id="logo" accept="image/*" class="ml-2">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dental Clinic Name -->
+                <div>
+                    <x-input-label for="dentalclinicname" :value="__('Dental Clinic Name')" />
+                    <x-text-input type="text" name="dentalclinicname" id="dentalclinicname" class="mt-1 block w-full" :value="old('dentalclinicname', $user->dentalclinic->dentalclinicname)" required />
+                </div>
+            @endif
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
