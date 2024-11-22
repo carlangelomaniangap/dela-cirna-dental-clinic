@@ -54,8 +54,6 @@ class DentalClinicController extends Controller
             'phone' => $request->phone,
         ]);
 
-        Auth::login($admin);
-
         return redirect()->route('pending')->with('status', 'clinic_pending');
     }
 
