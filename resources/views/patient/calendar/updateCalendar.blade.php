@@ -16,10 +16,6 @@
     <div class="p-6">
         <form method="post" action="{{ route('patient.updatedCalendar', $calendar->id) }}" class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-lg shadow-md p-6">
             
-            <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
-            
-            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-            
             @csrf
 
             @method('PUT')
@@ -43,6 +39,7 @@
                         <option value="09:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '09:00:00' ? 'selected' : '' }}>9:00 AM - 10:00 AM</option>
                         <option value="10:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '10:00:00' ? 'selected' : '' }}>10:00 AM - 11:00 AM</option>
                         <option value="11:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '11:00:00' ? 'selected' : '' }}>11:00 AM - 12:00 PM</option>
+                        <option value="15:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '15:00:00' ? 'selected' : '' }}>3:00 PM - 4:00 PM</option>
                         <option value="16:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '16:00:00' ? 'selected' : '' }}>4:00 PM - 5:00 PM</option>
                         <option value="17:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '17:00:00' ? 'selected' : '' }}>5:00 PM - 6:00 PM</option>
                         <option value="18:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '18:00:00' ? 'selected' : '' }}>6:00 PM - 7:00 PM</option>
@@ -54,20 +51,6 @@
                     <label for="concern" class="text-sm lg:text-base font-semibold">Concern</label>
                     <input type="text" class="rounded-lg focus:ring-2 shadow-sm w-full" id="concern" name="concern" value="{{ old('concern', $calendar->concern) }}" placeholder="e.g., Cleaning, Pasta, Braces" required>
                 </div>
-
-                <input type="hidden" name="name" value="{{ auth()->user()->name }}">
-
-                <input type="hidden" name="gender" value="{{ auth()->user()->gender }}">
-
-                <input type="hidden" name="birthday" value="{{ auth()->user()->birthday }}">
-                    
-                <input type="hidden" name="age" value="{{ auth()->user()->age }}">
-
-                <input type="hidden" name="address" value="{{ auth()->user()->address }}">
-                
-                <input type="hidden" name="phone" value="{{ auth()->user()->phone }}">
-                    
-                <input type="hidden" name="email" value="{{ auth()->user()->email }}">
 
                 <div class="col-span-1 md:col-span-2">
                     <label for="medicalhistory" class="text-sm lg:text-base font-semibold">Medical History <span class="text-gray-500">(Optional)</span></label>

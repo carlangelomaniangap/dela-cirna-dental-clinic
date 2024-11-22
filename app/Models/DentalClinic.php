@@ -18,5 +18,10 @@ class DentalClinic extends Model
     {
         return $this->hasMany(User::class, 'dentalclinic_id');
     }
+
+    public function admin()
+    {
+        return $this->hasOne(User::class, 'dentalclinic_id')->where('usertype', 'admin');
+    }
 }
 

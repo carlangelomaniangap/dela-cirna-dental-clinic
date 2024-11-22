@@ -39,7 +39,9 @@
 
     <!-- Include Animate.css for animation effects -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 @section('title')
     Access Denied
 @endsection
+
 </x-guest-layout>

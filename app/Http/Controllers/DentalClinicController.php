@@ -56,7 +56,7 @@ class DentalClinicController extends Controller
 
         Auth::login($admin);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Clinic and Admin created successfully!');
+        return redirect()->route('pending')->with('status', 'clinic_pending');
     }
 
     public function approve($id){

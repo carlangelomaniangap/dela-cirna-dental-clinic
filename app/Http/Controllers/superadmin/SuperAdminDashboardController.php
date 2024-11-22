@@ -9,7 +9,7 @@ class SuperAdminDashboardController extends Controller
 {
     public function index(){
 
-        $dentalclinics = DentalClinic::all();
+        $dentalclinics = DentalClinic::with('admin')->get();
         
         return view('superadmin.dashboard', compact('dentalclinics'));
     }

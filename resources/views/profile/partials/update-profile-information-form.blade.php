@@ -17,10 +17,9 @@
         @csrf
         @method('patch')
 
-        <div class="border-2 p-4 rounded-lg space-y-4">
-            <h1 class="font-semibold">Dental Clinic Details</h1>
-        
-            @if(auth()->user()->usertype === 'admin') 
+        @if(auth()->user()->usertype === 'admin')
+            <div class="border-2 p-4 rounded-lg space-y-4">
+                <h1 class="font-semibold">Dental Clinic Details</h1>
 
                 <!-- Clinic Logo -->
                 <div>
@@ -41,8 +40,8 @@
                     <x-input-label for="dentalclinicname" :value="__('Dental Clinic Name')" />
                     <x-text-input type="text" name="dentalclinicname" id="dentalclinicname" class="mt-1 block w-full" :value="old('dentalclinicname', $user->dentalclinic->dentalclinicname)" required />
                 </div>
-            @endif
-        </div>
+            </div>
+        @endif
 
         <div>
             <x-input-label for="name" :value="__('Name')" />

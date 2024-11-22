@@ -10,7 +10,7 @@
 <body class="min-h-screen">
 
     <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
-        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-calendar-days"></i> Appointment Details / {{ $calendar->user->name }}</h4>
+        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-calendar-days"></i> Appointment Details / {{ $calendar->name }}</h4>
     </div>
 
     @if(session('success') || $errors->any())
@@ -73,29 +73,29 @@
                     <p><strong>Concern:</strong> {{ $calendar->concern }}</p>
                 </div>
                 <div class="p-4 border rounded-md">
-                    <p><strong>Name:</strong> {{ $calendar->user->name }}</p>
+                    <p><strong>Name:</strong> {{ $calendar->name }}</p>
                 </div>
                 <div class="p-4 border rounded-md">
-                    <p><strong>Gender:</strong> {{ $calendar->user->gender }}</p>
+                    <p><strong>Gender:</strong> {{ $calendar->gender }}</p>
                 </div>
                 <div class="p-4 border rounded-md">
-                    <p><strong>Birthday:</strong> {{ date('F j, Y', strtotime($calendar->user->birthday)) }}</p>
+                    <p><strong>Birthday:</strong> {{ date('F j, Y', strtotime($calendar->birthday)) }}</p>
                 </div>
                 <div class="p-4 border rounded-md">
-                    <p><strong>Age:</strong> {{ $calendar->user->age }}</p>
+                    <p><strong>Age:</strong> {{ $calendar->age }}</p>
                 </div>
                 <div class="p-4 border rounded-md">
-                    <p><strong>Address:</strong> {{ $calendar->user->address }}</p>
+                    <p><strong>Address:</strong> {{ $calendar->address }}</p>
                 </div>
             </div>
 
             <!-- Second Column -->
             <div class="flex flex-col space-y-4 text-xs lg:text-base">
                 <div class="p-4 border rounded-md">
-                    <p><strong>Phone No.:</strong> {{ $calendar->user->phone }}</p>
+                    <p><strong>Phone No.:</strong> {{ $calendar->phone }}</p>
                 </div>
                 <div class="p-4 border rounded-md">
-                    <p><strong>Email:</strong> {{ $calendar->user->email }}</p>
+                    <p><strong>Email:</strong> {{ $calendar->email }}</p>
                 </div>
                 <div class="p-4 border rounded-md">
                     <p><strong>Medical History:</strong> {{ $calendar->medicalhistory }}</p>

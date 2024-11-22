@@ -39,6 +39,7 @@
                         <option value="09:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '09:00:00' ? 'selected' : '' }}>9:00 AM - 10:00 AM</option>
                         <option value="10:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '10:00:00' ? 'selected' : '' }}>10:00 AM - 11:00 AM</option>
                         <option value="11:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '11:00:00' ? 'selected' : '' }}>11:00 AM - 12:00 PM</option>
+                        <option value="15:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '15:00:00' ? 'selected' : '' }}>3:00 PM - 4:00 PM</option>
                         <option value="16:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '16:00:00' ? 'selected' : '' }}>4:00 PM - 5:00 PM</option>
                         <option value="17:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '17:00:00' ? 'selected' : '' }}>5:00 PM - 6:00 PM</option>
                         <option value="18:00:00" {{ old('appointmenttime', $calendar->appointmenttime) == '18:00:00' ? 'selected' : '' }}>6:00 PM - 7:00 PM</option>

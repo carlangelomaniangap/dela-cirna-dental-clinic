@@ -59,51 +59,57 @@
         </div>
     @endif
 
-    <div class="max-w-7xl mx-auto">
-        <div class="p-6">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="space-y-6">
 
             <!-- Clinic List -->
-            <div class="space-y-4">
-                @foreach($dentalclinics as $dentalclinic)
-                    <div class="flex items-center justify-between bg-white border border-gray-200 shadow-md rounded-lg p-4 transition-transform transform hover:scale-105 hover:shadow-2xl duration-300">
-                            
-                        <!-- Clinic Logo -->
-                        <div class="flex-shrink-0 mr-4">
-                            @if($dentalclinic->logo)
-                                <div class="aspect-w-1 aspect-h-1 w-10 h-10 lg:w-16 lg:h-16 rounded-full overflow-hidden bg-gray-200">
-                                    <img src="{{ asset('logos/' . $dentalclinic->logo) }}" alt="Logo" class="object-cover w-full h-full">
-                                </div>
-                            @else
-                                <span class="text-gray-400">No logo</span>
-                            @endif
-                        </div>
-
-                        <!-- Clinic Info (Name, Status) -->
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm lg:text-lg font-semibold text-gray-700">{{ $dentalclinic->dentalclinicname }}</p>
-                            <p class="text-xs lg:text-sm text-gray-500 mt-1">
-                                Status: 
-                                @if($dentalclinic->status === 'pending')
-                                    <span class="text-blue-500">Pending</span>
-                                @else
-                                    <span class="text-green-500">Approved</span>
-                                @endif
-                            </p>
-                        </div>
-
-                        <!-- Approve Button for Pending Clinics -->
-                        @if($dentalclinic->status === 'pending')
-                            <form action="{{ route('dentalclinics.approve', $dentalclinic->id) }}" method="POST" class="ml-4">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="bg-yellow-500 text-white text-xs lg:text-base px-2 py-1 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    Approve
-                                </button>
-                            </form>
+            @foreach($dentalclinics as $dentalclinic)
+                <div class="flex flex-col sm:flex-row items-center justify-between bg-white border border-gray-200 shadow-md rounded-lg p-4 transition-transform transform hover:scale-105 hover:shadow-2xl duration-300">
+                    
+                    <!-- Clinic Logo -->
+                    <div class="flex-shrink-0 mr-4 mb-4 sm:mb-0">
+                        @if($dentalclinic->logo)
+                            <div class="aspect-w-1 aspect-h-1 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden bg-gray-200">
+                                <img src="{{ asset('logos/' . $dentalclinic->logo) }}" alt="Logo" class="object-cover w-full h-full">
+                            </div>
+                        @else
+                            <span class="text-gray-400">No logo</span>
                         @endif
                     </div>
-                @endforeach
-            </div>
+
+                    <!-- Clinic Info (Name, Status) -->
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-700">{{ $dentalclinic->dentalclinicname }}</p>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-1">
+                            Status: 
+                            @if($dentalclinic->status === 'pending')
+                                <span class="text-blue-500">Pending</span>
+                            @else
+                                <span class="text-green-500">Approved</span>
+                            @endif
+                        </p>
+
+                        <div class="mt-4">
+                            <h1 class="text-sm sm:text-base lg:text-lg font-medium text-gray-700">Admin Details</h1>
+                            @if($dentalclinic->admin)
+                                <p class="text-sm sm:text-base text-gray-500">Name: {{ $dentalclinic->admin->name }}</p>
+                                <p class="text-sm sm:text-base text-gray-500">Email: {{ $dentalclinic->admin->email }}</p>
+                            @else
+                                <p class="text-sm sm:text-base text-gray-500">No Admin Assigned</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Approve Button for Pending Clinics -->
+                    @if($dentalclinic->status === 'pending')
+                        <form action="{{ route('dentalclinics.approve', $dentalclinic->id) }}" method="POST" class="mt-4 sm:mt-0 sm:ml-4">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="bg-yellow-500 text-white text-xs sm:text-sm px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300">Approve</button>
+                        </form>
+                    @endif
+                </div>
+            @endforeach
 
         </div>
     </div>

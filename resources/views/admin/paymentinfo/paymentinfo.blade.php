@@ -84,7 +84,7 @@
                     <div class="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-200">
                         <div class="flex justify-between items-start mb-2">
                             <div>
-                                <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800">{{ $payment->user->name }}</p>
+                                <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800">{{ $payment->name }}</p>
                                 <ul class="text-sm sm:text-base text-gray-600 list-disc pl-5">
                                     <li>
                                         <span class="font-semibold">Concern:</span> <span>{{ $payment->concern }}</span>

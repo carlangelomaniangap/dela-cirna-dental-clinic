@@ -10,7 +10,7 @@
 <body class="min-h-screen">
 
     <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
-        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-users"></i> Patient List / {{ $patientlist->user->name }}</h4>
+        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-users"></i> Patient List / {{ $patientlist->name }}</h4>
     </div>
 
     @if(session('success') || $errors->any())
@@ -52,25 +52,25 @@
             <div class="mt-5">
                 <ul class="text-sm sm:text-base text-gray-700 list-disc pl-5">
                     <li>
-                        <span class="font-semibold">Name:</span> <span>{{ $patientlist->user->name }}</span>
+                        <span class="font-semibold">Name:</span> <span>{{ $patientlist->name }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Gender:</span> <span>{{ $patientlist->user->gender }}</span>
+                        <span class="font-semibold">Gender:</span> <span>{{ $patientlist->gender }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Birthday:</span> <span>{{ date('F j, Y', strtotime($patientlist->user->birthday)) }}</span>
+                        <span class="font-semibold">Birthday:</span> <span>{{ date('F j, Y', strtotime($patientlist->birthday)) }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Age:</span> <span>{{ $patientlist->user->age }}</span>
+                        <span class="font-semibold">Age:</span> <span>{{ $patientlist->age }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Address:</span> <span>{{ $patientlist->user->address }}</span>
+                        <span class="font-semibold">Address:</span> <span>{{ $patientlist->address }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Phone:</span> <span>{{ $patientlist->user->phone }}</span>
+                        <span class="font-semibold">Phone:</span> <span>{{ $patientlist->phone }}</span>
                     </li>
                     <li>
-                        <span class="font-semibold">Email:</span> <span>{{ $patientlist->user->email }}</span>
+                        <span class="font-semibold">Email:</span> <span>{{ $patientlist->email }}</span>
                     </li>
                 </ul>
             </div>
@@ -236,7 +236,7 @@
                                     <strong>{{ date('F j, Y', strtotime($calendar->appointmentdate)) }}</strong> at <strong>{{ date('g:i A', strtotime($calendar->appointmenttime)) }}</strong>
                                 </p>
                                 <p class="text-sm lg:text-base text-gray-600">
-                                    <span>{{ $calendar->user->name }}</span>
+                                    <span>{{ $calendar->name }}</span>
                                 </p>
                             </div>
                             <div class="text-sm lg:text-base text-right">

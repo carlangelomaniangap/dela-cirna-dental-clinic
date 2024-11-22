@@ -108,7 +108,7 @@
                         <div class="flex flex-col">
                             <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="text-lg font-semibold text-center rounded-lg mb-4 py-2 px-2">{{ $day->format('F j, Y') }}</div>
                             @foreach (range(8, 19) as $hour)
-                                @if (($hour >= 8 && $hour < 12) || ($hour >= 16 && $hour < 20))
+                                @if (($hour >= 8 && $hour < 12) || ($hour >= 15 && $hour < 20))
                                     @php
                                         $startHour = $hour;
                                         $endHour = $hour + 1;

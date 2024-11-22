@@ -34,6 +34,7 @@ use App\Http\Controllers\dentistrystudent\DentistryStudentCommentController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\PendingController;
 use App\Http\Controllers\DentalClinicController;
 
 /*
@@ -192,6 +193,8 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
+
+Route::get('/pending', [PendingController::class, 'index'])->name('pending');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
