@@ -36,7 +36,7 @@
 
                 <div>
                     <label for="name" class="font-semibold">Name</label>
-                    <input type="text" class="w-full rounded-lg focus:ring-2 shadow-sm" id="name" name="name" value="{{ old('name', $payment->user->name) }}" required>
+                    <input type="text" class="w-full rounded-lg focus:ring-2 shadow-sm" id="name" name="name" value="{{ old('name', $payment->name) }}" required>
                 </div>
 
                 <div>

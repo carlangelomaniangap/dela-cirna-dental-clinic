@@ -38,24 +38,28 @@ class ProfileController extends Controller
         // Handle the Dental Clinic update (logo and name)
         $dentalclinic = $request->user()->dentalclinic;  // Fetch the associated dental clinic
 
-        // Update dental clinic name
-        $dentalclinic->dentalclinicname = $request->dentalclinicname;
+        // Check if the user is an admin based on the 'usertype' field
+        if (Auth::user()->usertype === 'admin') {  // Check if the user's type is 'admin'
 
-        // If logo is provided, handle the logo file update
-        if ($request->hasFile('logo')) {
-            // Delete old logo if it exists
-            if ($dentalclinic->logo && file_exists(public_path('logos/' . $dentalclinic->logo))) {
-                unlink(public_path('logos/' . $dentalclinic->logo));
+            // Update dental clinic name
+            $dentalclinic->dentalclinicname = $request->dentalclinicname;
+
+            // If logo is provided, handle the logo file update
+            if ($request->hasFile('logo')) {
+                // Delete old logo if it exists
+                if ($dentalclinic->logo && file_exists(public_path('logos/' . $dentalclinic->logo))) {
+                    unlink(public_path('logos/' . $dentalclinic->logo));
+                }
+
+                // Move new logo to the 'logos' folder and update clinic logo field
+                $logoName = $request->file('logo')->getClientOriginalName();
+                $request->file('logo')->move(public_path('logos'), $logoName);
+                $dentalclinic->logo = $logoName;
             }
 
-            // Move new logo to the 'logos' folder and update clinic logo field
-            $logoName = $request->file('logo')->getClientOriginalName();
-            $request->file('logo')->move(public_path('logos'), $logoName);
-            $dentalclinic->logo = $logoName;
+            // Save the updated clinic details
+            $dentalclinic->save();
         }
-
-        // Save the updated clinic details
-        $dentalclinic->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
