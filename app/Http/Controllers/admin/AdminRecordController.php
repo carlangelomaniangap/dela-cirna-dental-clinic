@@ -130,7 +130,9 @@ class AdminRecordController extends Controller
         return redirect()->route('admin.showRecord', $patientlistId);
     }
 
-    public function downloadRecord($recordId){
+    public function downloadRecord($patientlistId, $recordId){
+
+        PatientList::findOrFail($patientlistId);
 
         $record = Record::findOrFail($recordId);
 
