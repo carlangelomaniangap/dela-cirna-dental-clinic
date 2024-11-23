@@ -29,8 +29,17 @@
                 @foreach ($usersWithLastMessage as $user)
                     <div class="user-item" data-username="{{ $user->name }}" data-userid="{{ $user->id }}">
                         <div>
-                            {{ $user->name }}
-                            <div class="recent-message" id="recent-{{ $user->name }}">{{ $user->last_message }}</div>
+                            <div>{{ $user->name }}</div>
+                            <div class="recent-message-container">
+                                <div class="recent-message" id="recent-{{ $user->name }}">
+                                    {{ $user->last_message }}
+                                </div>
+                                @if ($user->last_message_time)
+                                    <div class="message-timestamp">
+                                        {{ $user->last_message_time->diffForHumans() }}
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -53,7 +62,7 @@
                             @if ($message->sender_id == auth()->id() && $message->recipient_id == $user->id)
                                 <div class="admin">
                                     <p>You</p>
-                                    <p class="text-justify">{{ $message->message }}</p>
+                                    <p>{{ $message->message }}</p>
                                 </div>
                             @elseif ($message->sender_id == $user->id && $message->recipient_id == auth()->id())
                                 <div class="others">

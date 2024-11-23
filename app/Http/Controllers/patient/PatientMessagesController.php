@@ -31,9 +31,12 @@ class PatientMessagesController extends Controller
             $user->last_message = $lastMessage
                 ? ($lastMessage->sender_id == auth()->id() ? 'You: ' : $user->name . ': ') . $lastMessage->message
                 : 'No messages yet';
-
+            $user->last_message_time = $lastMessage ? $lastMessage->created_at : null;
+            
             return $user;
         });
+
+        $usersWithLastMessage = $usersWithLastMessage->sortByDesc('last_message_time');
 
         $messages = Message::all();
 

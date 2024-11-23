@@ -12,32 +12,42 @@ use Illuminate\Support\Facades\Auth;
 class AdminMessagesController extends Controller
 {
     
-    public function index(){
-        
-        // Get the dentalclinic_id from the authenticated user
-        $dentalclinicId = Auth::user()->dentalclinic_id;
+    public function index() {
+    // Get the dentalclinic_id from the authenticated user
+    $dentalclinicId = Auth::user()->dentalclinic_id;
 
-        // Retrieve users (patients) from the same dental clinic, excluding the logged-in user
-        $users = User::where('dentalclinic_id', $dentalclinicId)->where('id', '!=', auth()->id())->where('usertype', 'patient')->get();
-        $usersWithLastMessage = $users->map(function ($user) {
-            $lastMessage = Message::where(function ($query) use ($user) {
-                $query->where('sender_id', auth()->id())
-                      ->where('recipient_id', $user->id);
-            })->orWhere(function ($query) use ($user) {
-                $query->where('sender_id', $user->id)
-                      ->where('recipient_id', auth()->id());
-            })->latest()->first();
+    // Retrieve users (patients) from the same dental clinic, excluding the logged-in user
+    $users = User::where('dentalclinic_id', $dentalclinicId)
+        ->where('id', '!=', auth()->id())
+        ->where('usertype', 'patient')
+        ->get();
 
-            $user->last_message = $lastMessage
-                ? ($lastMessage->sender_id == auth()->id() ? 'You: ' : $user->name . ': ') . $lastMessage->message
-                : 'No messages yet';
+    // Get users with their last messages and timestamps
+    $usersWithLastMessage = $users->map(function ($user) {
+        $lastMessage = Message::where(function ($query) use ($user) {
+            $query->where('sender_id', auth()->id())
+                ->where('recipient_id', $user->id);
+        })->orWhere(function ($query) use ($user) {
+            $query->where('sender_id', $user->id)
+                ->where('recipient_id', auth()->id());
+        })->latest()->first();
 
-            return $user;
-        });
-        $messages = Message::all();
+        $user->last_message = $lastMessage
+            ? ($lastMessage->sender_id == auth()->id() ? 'You: ' : $user->name . ': ') . $lastMessage->message
+            : 'No messages yet';
+        $user->last_message_time = $lastMessage ? $lastMessage->created_at : null;
 
-        return view('admin.messages.messages', compact('users', 'messages', 'usersWithLastMessage'));
-    }
+        return $user;
+    });
+
+    // Sort users by the last message timestamp in descending order
+    $usersWithLastMessage = $usersWithLastMessage->sortByDesc('last_message_time');
+
+    $messages = Message::all();
+
+    return view('admin.messages.messages', compact('users', 'messages', 'usersWithLastMessage'));
+}
+
 
     public function storeMessage(Request $request){
 

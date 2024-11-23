@@ -154,6 +154,26 @@ h1 {
 #back-button {
     display: none; /* Show on mobile */
 }
+.recent-message {
+    font-size: 12px;
+    color: #666;
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Show "..." for truncated text */
+    max-width: 180px; /* Adjust width to fit your layout */
+}
+.user-item {
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    align-items: flex-start; /* Align items at the start */
+    flex-direction: column; /* Stack elements vertically */
+}
+.message-timestamp {
+    font-size: 11px;
+    color: #999;
+    text-align: left; /* Align timestamp with the message */
+}
 
 /* Mobile Styles */
 @media (max-width: 768px) {
