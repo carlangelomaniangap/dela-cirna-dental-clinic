@@ -4,13 +4,27 @@ namespace App\Http\Controllers\superadmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\DentalClinic;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class SuperAdminDashboardController extends Controller
 {
     public function index(){
+    
+        $users = User::all();
 
-        $dentalclinics = DentalClinic::with('admin')->get();
+        $dentalclinics = DentalClinic::all();
         
-        return view('superadmin.dashboard', compact('dentalclinics'));
+        $usersCount = $users->count();
+
+        $dentalclinicsCount = $dentalclinics->count();
+
+        $adminCount = $users->where('usertype', 'admin')->count();
+
+        $patientCount = $users->where('usertype', 'patient')->count();
+
+        $dentistrystudentCount = $users->where('usertype', 'dentistrystudent')->count();
+        
+        return view('superadmin.dashboard', compact('users', 'usersCount', 'dentalclinicsCount', 'adminCount', 'patientCount', 'dentistrystudentCount'));
     }
 }

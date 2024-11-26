@@ -14,9 +14,9 @@
     </div>
 
     <div class="px-6 py-4 flex justify-between items-center">
-        <button id="openModal" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white text-xs sm:text-sm lg:text-base font-semibold"><i class="fa-solid fa-plus"></i> Post</button>
+        <button id="openModal" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 text-xs sm:text-sm lg:text-base font-semibold"><i class="fa-solid fa-plus"></i> Post</button>
 
-        <form action="{{ route('dentistrystudent.communityforum') }}" method="GET">
+        <form action="{{ route('superadmin.communityforum') }}" method="GET">
             <div class="relative">
                 <input type="text" name="search" placeholder="Search" class="w-full h-10 text-xs sm:text-sm lg:text-base px-3 rounded-full focus:ring-2 border border-gray-100 focus:outline-none focus:border-blue-500 transition-shadow duration-300 shadow-sm hover:shadow-md">
                 <button type="submit" class="absolute top-0 end-0 p-2.5 pr-3 text-sm font-medium h-full text-white bg-blue-700 rounded-e-full border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
@@ -77,7 +77,7 @@
         <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                 <h4 class="text-blue-800 font-bold text-2xl mb-3">Post a New Topic</h4>
-                <form action="{{ route('dentistrystudent.communityforum.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('superadmin.communityforum.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <textarea type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500" id="topic" name="topic" placeholder="What's on your mind?" required></textarea>
@@ -128,7 +128,7 @@
                         </div>
                         <div class="mt-2.5 text-sm leading-6 break-words">
                             <div class="editing-content" id="edit-form-{{ $communityforum->id }}" style="display: none;">
-                                <form method="post" action="{{ route('dentistrystudent.updatedCommunityforum', $communityforum->id) }}" enctype="multipart/form-data">
+                                <form method="post" action="{{ route('superadmin.updatedCommunityforum', $communityforum->id) }}" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
                                     <div class="mb-3">
@@ -156,21 +156,21 @@
                         
                         <div class="mt-2.5 flex justify-end">
                             <button class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out hover:bg-gray-200" onclick="toggleComments('{{ $communityforum->id }}')"><i class="fa-regular fa-message"></i> Comments</button>
-                            @if(Auth::id() === $communityforum->user_id || Auth::user()->is_dentistrystudent)
+                            @if(Auth::id() === $communityforum->user_id || Auth::user()->is_superadmin)
                                 <button class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="editTopic('{{ $communityforum->id }}')"><i class="fa-solid fa-pen"></i> Edit</button>
-                                <form method="post" action="{{ route('dentistrystudent.deleteCommunityforum', $communityforum->id) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="return confirm('Are you sure you want to delete this post?')"><i class="fa-regular fa-trash-can"></i> Delete</button>
-                                </form>
                             @endif
+                            <form method="post" action="{{ route('superadmin.deleteCommunityforum', $communityforum->id) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="return confirm('Are you sure you want to delete this post?')"><i class="fa-regular fa-trash-can"></i> Delete</button>
+                            </form>
                         </div>
 
                         <!-- Comments Section -->
                         <div id="comments-section-{{ $communityforum->id }}" class="comments-section hidden">
                             <!-- Add Comment Form -->
                             <div class="add-comment-form mt-5">
-                                <form action="{{ route('dentistrystudent.addComment', $communityforum->id) }}" method="POST">
+                                <form action="{{ route('superadmin.addComment', $communityforum->id) }}" method="POST">
                                     @csrf
                                     <div class="flex items-center">
                                         <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500" id="comment" name="comment" placeholder="Add a comment..." required></textarea>
@@ -193,7 +193,7 @@
                                             @if ($comment->user->usertype === 'superadmin')
                                                 <span class="text-xs lg:text-sm text-gray-500">
                                                     <i class="fa-solid fa-user-tie"></i> Superadmin
-                                                </span>
+                                                </span> 
                                             @elseif ($comment->user->usertype === 'admin')
                                                 <span class="text-xs lg:text-sm text-gray-500">
                                                     <i class="fa-solid fa-user-doctor"></i> Admin
@@ -212,7 +212,7 @@
                                     </div>
                                     <div class="mt-2.5 text-sm leading-6 break-words">
                                         <div class="editing-content" id="edit-comment-form-{{ $comment->id }}" style="display: none;">
-                                            <form method="post" action="{{ route('dentistrystudent.updatedComment', $comment->id) }}">
+                                            <form method="post" action="{{ route('superadmin.updatedComment', $comment->id) }}">
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="mb-3">
@@ -229,14 +229,14 @@
                                         </div>
                                     </div>
                                     <div class="mt-2.5 flex justify-end">
-                                        @if(Auth::id() === $comment->user_id || Auth::user()->is_dentistrystudent)
+                                        @if(Auth::id() === $comment->user_id || Auth::user()->is_superadmin)
                                             <button class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out hover:bg-gray-200" onclick="editComment('{{ $comment->id }}')"><i class="fa-solid fa-pen"></i> Edit</button>
-                                            <form method="post" action="{{ route('dentistrystudent.deleteComment', $comment->id) }}" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="return confirm('Are you sure you want to delete this comment?')"><i class="fa-regular fa-trash-can"></i> Delete</button>
-                                            </form>
                                         @endif
+                                        <form method="post" action="{{ route('superadmin.deleteComment', $comment->id) }}" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-xs lg:text-sm rounded-full px-3 py-1.5 bg-gray-100 text-gray-800 border border-gray-300 transition-colors duration-300 ease-in-out ml-2.5 hover:bg-gray-200" onclick="return confirm('Are you sure you want to delete this comment?')"><i class="fa-regular fa-trash-can"></i> Delete</button>
+                                        </form>
                                     </div>
                                 </div>
                             @endforeach
@@ -246,7 +246,7 @@
             @endif
             {{ $communityforums->links() }}
         </div>
-
+        
     </div>
 
     <script>

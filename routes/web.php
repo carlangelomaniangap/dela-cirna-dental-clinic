@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 
 // super admin
 use App\Http\Controllers\superadmin\SuperAdminDashboardController;
-
+use App\Http\Controllers\superadmin\SuperAdminDentalClinicListController;
+use App\Http\Controllers\superadmin\SuperAdminCommunityForumController;
+use App\Http\Controllers\superadmin\SuperAdminCommentController;
 
 // admin
 use App\Http\Controllers\admin\AdminDashboardController;
@@ -56,7 +58,24 @@ Route::post('/dentalclinics/store', [DentalClinicController::class, 'store'])->n
 Route::group(['middleware' => ['auth', 'checkUserType:superadmin']], function () {
     // dashboard
     Route::get('/superadmin', [SuperAdminDashboardController::class, 'index'])->name('superadmin.dashboard');
-    Route::put('dentalclinics/{dentalClinic}/approve', [DentalClinicController::class, 'approve'])->name('dentalclinics.approve');
+    
+    // dental clinic list
+    Route::get('/superadmin/dentalcliniclist', [SuperAdminDentalClinicListController::class, 'index'])->name('superadmin.dentalcliniclist');
+    Route::put('/superadmin/dentalcliniclist/dentalclinics/{dentalClinic}/approve', [SuperAdminDentalClinicListController::class, 'approve'])->name('superadmin.Approve');
+
+    // community forum
+    Route::get('/superadmin/communityforum',[SuperAdminCommunityForumController::class,'index'])->name('superadmin.communityforum');
+    Route::get('/superadmin/communityforum/post', [SuperAdminCommunityForumController::class, 'createCommunityforum'])->name('superadmin.communityforum.create');
+    Route::post('/superadmin/communityforum/store', [SuperAdminCommunityForumController::class, 'store'])->name('superadmin.communityforum.store');
+    Route::get('/superadmin/communityforum/edit/{id}', [SuperAdminCommunityForumController::class, 'editCommunityforum'])->name('superadmin.editCommunityforum');
+    Route::put('/superadmin/communityforum/update/{id}', [SuperAdminCommunityForumController::class, 'updateCommunityforum'])->name('superadmin.updatedCommunityforum');
+    Route::delete('/superadmin/communityforum/delete/{id}', [SuperAdminCommunityForumController::class, 'deleteCommunityforum'])->name('superadmin.deleteCommunityforum');
+    Route::get('/communityforum', [SuperAdminCommunityForumController::class, 'comment'])->name('superadmin.communityforum');
+    
+    Route::post('/superadmin/communityforum/{communityforum}/comment', [SuperAdminCommentController::class, 'addComment'])->name('superadmin.addComment');
+    Route::put('/superadmin/communityforum/comment/{comment}', [SuperAdminCommentController::class, 'updateComment'])->name('superadmin.updatedComment');
+    Route::delete('/superadmin/communityforum/comment/{comment}', [SuperAdminCommentController::class, 'deleteComment'])->name('superadmin.deleteComment');
+    Route::get('/superadmin/communityforum/comment/{comment}/edit', [SuperAdminCommentController::class, 'editComment'])->name('superadmin.editComment');
 });
 
 Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {

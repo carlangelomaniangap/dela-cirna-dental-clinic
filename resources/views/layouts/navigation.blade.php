@@ -37,6 +37,12 @@
                             <x-nav-link :href="route('superadmin.dashboard')" :active="request()->routeIs('superadmin.dashboard')">
                                 {{ __('Dashboard') }}
                             </x-nav-link>
+                            <x-nav-link :href="route('superadmin.dentalcliniclist')" :active="request()->routeIs('superadmin.dentalcliniclist')">
+                                {{ __('Dental Clinic List') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('superadmin.communityforum')" :active="request()->routeIs('superadmin.communityforum')">
+                                {{ __('Community Forum') }}
+                            </x-nav-link>
                         @elseif(Auth::user()->usertype == 'admin')
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                                 {{ __('Dashboard') }}
@@ -137,6 +143,12 @@
                 @if(Auth::user()->usertype == 'superadmin')
                     <x-responsive-nav-link :href="route('superadmin.dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('superadmin.dentalcliniclist')" :active="request()->routeIs('dentalcliniclist')">
+                        {{ __('Dental Clinic List') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('superadmin.communityforum')" :active="request()->routeIs('superadmin.communityforum')">
+                        {{ __('Community Forum') }}
                     </x-responsive-nav-link>
                 @elseif(Auth::user()->usertype == 'admin')
                     <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('dashboard')">

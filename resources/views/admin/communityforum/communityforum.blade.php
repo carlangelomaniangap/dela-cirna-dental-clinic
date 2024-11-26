@@ -106,7 +106,11 @@
                             <div>
                                 <span class="text-blue-800 font-bold">{{ $communityforum->user->name }}</span>
                                 <!-- Show user type with icon and badge -->
-                                @if ($communityforum->user->usertype === 'admin')
+                                @if ($communityforum->user->usertype === 'superadmin')
+                                    <span class="text-xs lg:text-sm text-gray-500">
+                                        <i class="fa-solid fa-user-tie"></i> Superadmin
+                                    </span>
+                                @elseif ($communityforum->user->usertype === 'admin')
                                     <span class="text-xs lg:text-sm text-gray-500">
                                         <i class="fa-solid fa-user-doctor"></i> Admin
                                     </span>
@@ -186,7 +190,11 @@
                                         <div>
                                             <span class="text-blue-800 font-bold">{{ $comment->user->name }}</span>
                                             <!-- Show user type with icon and badge -->
-                                            @if ($comment->user->usertype === 'admin')
+                                            @if ($comment->user->usertype === 'superadmin')
+                                                <span class="text-xs lg:text-sm text-gray-500">
+                                                    <i class="fa-solid fa-user-tie"></i> Superadmin
+                                                </span>
+                                            @elseif ($comment->user->usertype === 'admin')
                                                 <span class="text-xs lg:text-sm text-gray-500">
                                                     <i class="fa-solid fa-user-doctor"></i> Admin
                                                 </span>
