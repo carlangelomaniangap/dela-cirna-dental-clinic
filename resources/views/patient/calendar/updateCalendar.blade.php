@@ -72,8 +72,14 @@
                     <label for="emergencycontactrelation" class="text-sm lg:text-base font-semibold">Relation</label>
                     <select id="emergencycontactrelation" name="emergencycontactrelation" class="rounded-lg focus:ring-2 shadow-sm w-full" required>
                         <option value="" disabled selected>Select your Relation</option>
+                        <option value="Great-grandfather" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Great-grandfather' ? 'selected' : '' }}>Great-grandfather</option>
+                        <option value="Great-grandmother" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Great-grandmother' ? 'selected' : '' }}>Great-grandmother</option>
+                        <option value="Great-grandson" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Great-grandson' ? 'selected' : '' }}>Great-grandson</option>
+                        <option value="Great-granddaughter" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Great-granddaughter' ? 'selected' : '' }}>Great-granddaughter</option>
                         <option value="GrandFather" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'GrandFather' ? 'selected' : '' }}>Grand Father</option>
                         <option value="GrandMother" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'GrandMother' ? 'selected' : '' }}>Grand Mother</option>
+                        <option value="Grandson" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Grandson' ? 'selected' : '' }}>Grandson</option>
+                        <option value="Granddaughter" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Granddaughter' ? 'selected' : '' }}>Granddaughter</option>
                         <option value="Father" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Father' ? 'selected' : '' }}>Father</option>
                         <option value="Mother" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Mother' ? 'selected' : '' }}>Mother</option>
                         <option value="Spouse" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Spouse' ? 'selected' : '' }}>Spouse</option>
@@ -86,6 +92,18 @@
                         <option value="Nephew" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Nephew' ? 'selected' : '' }}>Nephew</option>
                         <option value="Niece" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Niece' ? 'selected' : '' }}>Niece</option>
                         <option value="Cousin" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Cousin' ? 'selected' : '' }}>Cousin</option>
+                        <option value="Father-in-law" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Father-in-law' ? 'selected' : '' }}>Father-in-law</option>
+                        <option value="Mother-in-law" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Mother-in-law' ? 'selected' : '' }}>Mother-in-law</option>
+                        <option value="Brother-in-law" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Brother-in-law' ? 'selected' : '' }}>Brother-in-law</option>
+                        <option value="Sister-in-law" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Sister-in-law' ? 'selected' : '' }}>Sister-in-law</option>
+                        <option value="Son-in-law" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Son-in-law' ? 'selected' : '' }}>Son-in-law</option>
+                        <option value="Daughter-in-law" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Daughter-in-law' ? 'selected' : '' }}>Daughter-in-law</option>
+                        <option value="Stepfather" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Stepfather' ? 'selected' : '' }}>Stepfather</option>
+                        <option value="Stepmother" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Stepmother' ? 'selected' : '' }}>Stepmother</option>
+                        <option value="Stepbrother" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Stepbrother' ? 'selected' : '' }}>Stepbrother</option>
+                        <option value="Stepsister" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Stepsister' ? 'selected' : '' }}>Stepsister</option>
+                        <option value="Half-brother" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Half-brother' ? 'selected' : '' }}>Half-brother</option>
+                        <option value="Half-sister" {{ old('emergencycontactrelation', $calendar->emergencycontactrelation) == 'Half-sister' ? 'selected' : '' }}>Half-sister</option>
                     </select>
                 </div>
 
@@ -107,8 +125,14 @@
                     <label for="relation" class="text-sm lg:text-base font-semibold">Relation <span class="text-gray-500">(Optional)</span></label>
                     <select id="relation" name="relation" class="rounded-lg focus:ring-2 shadow-sm w-full">
                         <option value="" disabled selected>Select your Relation</option>
+                        <option value="Great-grandfather" {{ old('relation', $calendar->relation) == 'Great-grandfather' ? 'selected' : '' }}>Great-grandfather</option>
+                        <option value="Great-grandmother" {{ old('relation', $calendar->relation) == 'Great-grandmother' ? 'selected' : '' }}>Great-grandmother</option>
+                        <option value="Great-grandson" {{ old('relation', $calendar->relation) == 'Great-grandson' ? 'selected' : '' }}>Great-grandson</option>
+                        <option value="Great-granddaughter" {{ old('relation', $calendar->relation) == 'Great-granddaughter' ? 'selected' : '' }}>Great-granddaughter</option>
                         <option value="GrandFather" {{ old('relation', $calendar->relation) == 'GrandFather' ? 'selected' : '' }}>Grand Father</option>
                         <option value="GrandMother" {{ old('relation', $calendar->relation) == 'GrandMother' ? 'selected' : '' }}>Grand Mother</option>
+                        <option value="Grandson" {{ old('relation', $calendar->relation) == 'Grandson' ? 'selected' : '' }}>Grandson</option>
+                        <option value="Granddaughter" {{ old('relation', $calendar->relation) == 'Granddaughter' ? 'selected' : '' }}>Granddaughter</option>
                         <option value="Father" {{ old('relation', $calendar->relation) == 'Father' ? 'selected' : '' }}>Father</option>
                         <option value="Mother" {{ old('relation', $calendar->relation) == 'Mother' ? 'selected' : '' }}>Mother</option>
                         <option value="Spouse" {{ old('relation', $calendar->relation) == 'Spouse' ? 'selected' : '' }}>Spouse</option>
@@ -121,6 +145,18 @@
                         <option value="Nephew" {{ old('relation', $calendar->relation) == 'Nephew' ? 'selected' : '' }}>Nephew</option>
                         <option value="Niece" {{ old('relation', $calendar->relation) == 'Niece' ? 'selected' : '' }}>Niece</option>
                         <option value="Cousin" {{ old('relation', $calendar->relation) == 'Cousin' ? 'selected' : '' }}>Cousin</option>
+                        <option value="Father-in-law" {{ old('relation', $calendar->relation) == 'Father-in-law' ? 'selected' : '' }}>Father-in-law</option>
+                        <option value="Mother-in-law" {{ old('relation', $calendar->relation) == 'Mother-in-law' ? 'selected' : '' }}>Mother-in-law</option>
+                        <option value="Brother-in-law" {{ old('relation', $calendar->relation) == 'Brother-in-law' ? 'selected' : '' }}>Brother-in-law</option>
+                        <option value="Sister-in-law" {{ old('relation', $calendar->relation) == 'Sister-in-law' ? 'selected' : '' }}>Sister-in-law</option>
+                        <option value="Son-in-law" {{ old('relation', $calendar->relation) == 'Son-in-law' ? 'selected' : '' }}>Son-in-law</option>
+                        <option value="Daughter-in-law" {{ old('relation', $calendar->relation) == 'Daughter-in-law' ? 'selected' : '' }}>Daughter-in-law</option>
+                        <option value="Stepfather" {{ old('relation', $calendar->relation) == 'Stepfather' ? 'selected' : '' }}>Stepfather</option>
+                        <option value="Stepmother" {{ old('relation', $calendar->relation) == 'Stepmother' ? 'selected' : '' }}>Stepmother</option>
+                        <option value="Stepbrother" {{ old('relation', $calendar->relation) == 'Stepbrother' ? 'selected' : '' }}>Stepbrother</option>
+                        <option value="Stepsister" {{ old('relation', $calendar->relation) == 'Stepsister' ? 'selected' : '' }}>Stepsister</option>
+                        <option value="Half-brother" {{ old('relation', $calendar->relation) == 'Half-brother' ? 'selected' : '' }}>Half-brother</option>
+                        <option value="Half-sister" {{ old('relation', $calendar->relation) == 'Half-sister' ? 'selected' : '' }}>Half-sister</option>
                     </select>
                 </div>
             </div>
