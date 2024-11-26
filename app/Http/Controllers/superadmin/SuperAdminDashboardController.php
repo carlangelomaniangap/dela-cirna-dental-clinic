@@ -21,10 +21,8 @@ class SuperAdminDashboardController extends Controller
 
         $adminCount = $users->where('usertype', 'admin')->count();
 
-        $patientCount = $users->where('usertype', 'patient')->count();
-
         $dentistrystudentCount = $users->where('usertype', 'dentistrystudent')->count();
         
-        return view('superadmin.dashboard', compact('users', 'usersCount', 'dentalclinicsCount', 'adminCount', 'patientCount', 'dentistrystudentCount'));
+        return view('superadmin.dashboard', compact('users', 'usersCount', 'dentalclinicsCount', 'adminCount', 'dentistrystudentCount'));
     }
 }
