@@ -18,13 +18,11 @@ class AdminDashboardController extends Controller
 
         $dentalclinicId = Auth::user()->dentalclinic_id;
     
-        $clinicUsers = User::where('dentalclinic_id', $dentalclinicId)->whereIn('usertype', ['patient', 'dentistrystudent'])->get();
+        $clinicUsers = User::where('dentalclinic_id', $dentalclinicId)->whereIn('usertype', ['patient'])->get();
         
-        $userCount = $clinicUsers->count();
-
         $patientCount = $clinicUsers->where('usertype', 'patient')->count();
 
-        $dentistrystudentCount = $clinicUsers->where('usertype', 'dentistrystudent')->count();
+        $recentPatientCount = User::where('dentalclinic_id', $dentalclinicId)->where('usertype', 'patient')->whereDay('created_at', now()->day)->count();
 
         $approvedAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->where('approved', 'Approved')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
         
@@ -48,21 +46,7 @@ class AdminDashboardController extends Controller
 
         $schedule = Schedule::where('dentalclinic_id', $dentalclinicId)->first();
     
-        return view('admin.dashboard', compact(
-            'clinicUsers', 
-            'userCount', 
-            'patientCount', 
-            'dentistrystudentCount', 
-            'inventories', 
-            'showUserWelcome', 
-            'pendingAppointments', 
-            'approvedAppointments',
-            'todayAppointments',
-            'treatments',
-            'dentalclinic',
-            'users',
-            'schedule'
-        ));
+        return view('admin.dashboard', compact('clinicUsers', 'patientCount', 'recentPatientCount', 'inventories',  'showUserWelcome', 'pendingAppointments', 'approvedAppointments', 'todayAppointments', 'treatments', 'dentalclinic', 'users', 'schedule'));
     }
     
     public function store(Request $request){

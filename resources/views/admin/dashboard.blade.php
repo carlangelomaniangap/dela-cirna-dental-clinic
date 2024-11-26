@@ -16,30 +16,25 @@
     <div class="p-6 pb-0">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
             <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Total Users in Your Clinic</h2>
-                <div class="flex items-center justify-center mb-4 p-4 bg-blue-200 rounded-lg">
-                    <i class="fas fa-users fa-3x text-blue-600 mr-4"></i>
-                    <p class="text-3xl font-bold text-blue-600">{{ $userCount }}</p>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Total Patients in your Clinic</h2>
+                
+                <div class="bg-blue-200 p-4 rounded-lg shadow flex items-center">
+                    <i class="fas fa-user-friends fa-2x text-blue-600 mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold text-blue-600">Patients</h3>
+                        <p class="text-3xl font-bold text-blue-700">{{ $patientCount }}</p>
+                    </div>
                 </div>
-                <p class="text-gray-500">Keep track of registered users in your clinic.</p>
             </div>
 
             <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Recent Registrations</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-green-200 p-4 rounded-lg shadow flex items-center">
-                        <i class="fas fa-user-friends fa-2x text-green-600 mr-4"></i>
-                        <div>
-                            <h3 class="text-lg font-semibold text-green-600">Patients</h3>
-                            <p class="text-3xl font-bold text-green-700">{{ $patientCount }}</p>
-                        </div>
-                    </div>
-                    <div class="bg-indigo-200 p-4 rounded-lg shadow flex items-center">
-                        <i class="fas fa-user-graduate fa-2x text-indigo-600 mr-4"></i>
-                        <div>
-                            <h3 class="text-lg font-semibold text-indigo-600">Dentistry Students</h3>
-                            <p class="text-3xl font-bold text-indigo-700">{{ $dentistrystudentCount }}</p>
-                        </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Today's Registered Patient</h2>
+                
+                <div class="bg-green-200 p-4 rounded-lg shadow flex items-center">
+                    <i class="fas fa-user-friends fa-2x text-green-600 mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold text-green-600">{{ \Carbon\Carbon::now()->format('M d, Y') }}</h3>
+                        <p class="text-3xl font-bold text-green-700">{{ $recentPatientCount }}</p>
                     </div>
                 </div>
             </div>
