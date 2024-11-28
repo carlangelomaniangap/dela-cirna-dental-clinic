@@ -395,7 +395,7 @@
 
     <footer class="relative bg-gray-800 text-white px-4 sm:px-10 lg:px-16 xl:px-20 2xl:px-40 py-12 lg:py-16">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="block mx-auto">
+            <div class="block mx-auto mb-6">
                 <h3 class="font-bold text-2xl text-center">{{ $dentalclinic->dentalclinicname }}</h3>
                 @if($dentalclinic->logo)
                     <div class="pt-4">
@@ -404,7 +404,7 @@
                 @endif
             </div>
 
-            <div class="block mx-auto">
+            <div class="block mx-auto mb-6">
                 <h5 class="uppercase tracking-wider font-semibold text-2xl text-center">Contact Details</h5>
                 <ul class="mt-4">
                     <li class="flex items-center opacity-75 hover:opacity-100">
@@ -444,7 +444,7 @@
                 </ul>
             </div>
 
-            <div class="block mx-auto">
+            <div class="block mx-auto mb-0 lg:mb-6">
                 <div class="flex justify-start">
                     <h5 class="uppercase tracking-wider font-semibold text-2xl text-center mr-4">Opening Hours</h5>
                     <!-- Trigger Button to Open Modal -->
