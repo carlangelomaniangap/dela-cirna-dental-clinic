@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\patient;
 use App\Http\Controllers\Controller;
+use App\Models\Calendar;
 use App\Models\DentalClinic;
 use App\Models\Schedule;
 use App\Models\Treatment;
@@ -30,7 +31,27 @@ class PatientDashboardController extends Controller
             $request->session()->forget('showUserWelcome');
         }
 
-        return view('patient.dashboard', compact('treatments', 'dentalclinic', 'users', 'schedule', 'showUserWelcome'));
+        $userId = auth()->id();
+
+        // Determine the appointment type filter
+        $filter = $request->get('filter', 'upcoming'); // Default to 'upcoming'
+
+        // Retrieve appointments based on the selected filter
+        if ($filter == 'past') {
+            // Get past appointments
+            $calendars = Calendar::where('user_id', $userId)
+                                 ->where('appointmentdate', '<', now()->toDateString())
+                                 ->orderBy('appointmentdate', 'desc')
+                                 ->get();
+        } else {
+            // Get upcoming appointments
+            $calendars = Calendar::where('user_id', $userId)
+                                 ->where('appointmentdate', '>=', now()->toDateString())
+                                 ->orderBy('appointmentdate')
+                                 ->get();
+        }
+
+        return view('patient.dashboard', compact('treatments', 'dentalclinic', 'users', 'schedule', 'showUserWelcome', 'calendars', 'filter'));
     }
 
 }

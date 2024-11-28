@@ -220,20 +220,33 @@
             </div>
         </div>
 
-        <!-- Patient upcoming appointment -->
+        <!-- Patient upcoming and past appointment -->
         <div class="row-start-2 col-span-1 md:col-span-2 bg-white shadow-md p-5 rounded-xl">
-            <h1 class="text-lg lg:text-xl font-bold">Upcoming Appointment</h1>
-            <div class="space-y-2 mt-5 max-h-32 overflow-y-auto p-2 border border-gray-300 rounded-lg">
+            <!-- Form to toggle between upcoming and past appointments -->
+            <form method="GET" action="{{ route('admin.showRecord', $patientlist->id) }}">
+                @csrf
+                <div class="flex mb-2 bg-gray-200 p-2 rounded-lg">
+                    <button type="submit" name="filter" value="upcoming" class="text-sm sm:text-base px-2 lg:px-4 py-2 bg-white shadow-md text-gray-400 rounded-lg mr-2 focus:outline-none {{ $filter == 'upcoming' ? 'text-gray-800' : '' }}">
+                        <strong>Upcoming Appointments</strong>
+                    </button>
+                    <button type="submit" name="filter" value="past" class="text-sm sm:text-base px-2 lg:px-4 py-2 bg-white shadow-md text-gray-400 rounded-lg focus:outline-none {{ $filter == 'past' ? 'text-gray-800' : '' }}">
+                        <strong>Past Appointments</strong>
+                    </button>
+                </div>
+            </form>
+
+            <div class="space-y-2 max-h-46 overflow-y-auto p-2 bg-gray-200 rounded-lg">
                 @if($calendars->isEmpty())
                     <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                        <p class="text-gray-800">No appointment found.</p>
+                        <p class="text-gray-800">No appointments found.</p>
                     </div>
                 @else
+                    <!-- Appointments Display -->
                     @foreach ($calendars as $calendar)
-                        <div class="border border-gray-200 rounded-lg p-2 flex flex-col sm:flex-row justify-between items-start bg-gray-50 hover:bg-gray-100 transition duration-200">
+                        <div class="rounded-lg p-2 flex flex-col sm:flex-row justify-between items-start bg-white hover:bg-gray-100 transition duration-200">
                             <div class="flex-grow mb-4 sm:mb-0">
                                 <p class="text-base lg:text-lg text-gray-800">
-                                    <strong>{{ date('F j, Y', strtotime($calendar->appointmentdate)) }}</strong> at <strong>{{ date('g:i A', strtotime($calendar->appointmenttime)) }}</strong>
+                                    <strong>{{ \Carbon\Carbon::parse($calendar->appointmentdate)->format('F j, Y') }}</strong> at <strong>{{ \Carbon\Carbon::parse($calendar->appointmenttime)->format('g:i A') }}</strong>
                                 </p>
                                 <p class="text-sm lg:text-base text-gray-600">
                                     <span>{{ $calendar->name }}</span>
@@ -252,7 +265,6 @@
                     @endforeach
                 @endif
             </div>
-
         </div>
 
     </div>

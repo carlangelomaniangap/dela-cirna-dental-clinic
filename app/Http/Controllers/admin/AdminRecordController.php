@@ -11,7 +11,7 @@ use App\Models\Record;
 class AdminRecordController extends Controller
 {
     
-    public function showRecord($patientlistId){
+    public function showRecord(Request $request, $patientlistId){
 
         $patientlist = Patientlist::findOrFail($patientlistId);
         
@@ -24,12 +24,25 @@ class AdminRecordController extends Controller
 
         $userId = $patientlist->users_id; 
         
-        $calendars = Calendar::where('user_id', $userId)
-                            ->where('appointmentdate', '>=', now()->toDateString())
-                            ->orderBy('appointmentdate')
-                            ->get();
+        // Determine the appointment type filter
+        $filter = $request->get('filter', 'upcoming'); // Default to 'upcoming'
+
+        // Retrieve appointments based on the selected filter
+        if ($filter == 'past') {
+            // Get past appointments
+            $calendars = Calendar::where('user_id', $userId)
+                                 ->where('appointmentdate', '<', now()->toDateString())
+                                 ->orderBy('appointmentdate', 'desc')
+                                 ->get();
+        } else {
+            // Get upcoming appointments
+            $calendars = Calendar::where('user_id', $userId)
+                                 ->where('appointmentdate', '>=', now()->toDateString())
+                                 ->orderBy('appointmentdate')
+                                 ->get();
+        }
         
-        return view('admin.patientlist.showRecord', compact('patientlist', 'records', 'notes', 'count', 'calendars'));
+        return view('admin.patientlist.showRecord', compact('patientlist', 'records', 'notes', 'count', 'calendars', 'filter'));
     }
 
     public function createRecord($patientlistId){
