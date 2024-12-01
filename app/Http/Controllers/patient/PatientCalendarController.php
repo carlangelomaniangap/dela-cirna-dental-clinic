@@ -10,36 +10,34 @@ use Illuminate\Support\Facades\Auth;
 
 class PatientCalendarController extends Controller
 {
-    public function getBookedTimes(Request $request)
-{
-    $date = $request->query('date');
+    public function getBookedTimes(Request $request){
 
-    // Fetch appointments for the given date
-    $bookedTimes = Calendar::whereDate('appointmentdate', $date)
-        ->pluck('appointmenttime')
-        ->toArray();
+        $date = $request->query('date');
 
-    return response()->json($bookedTimes);
-}
+        // Fetch appointments for the given date
+        $bookedTimes = Calendar::whereDate('appointmentdate', $date)
+            ->pluck('appointmenttime')
+            ->toArray();
+
+        return response()->json($bookedTimes);
+    }
 
     public function index(){
 
-        // Get the dentalclinic_id from the authenticated user
-        $dentalclinicId = Auth::user()->dentalclinic_id;
+        $user = Auth::user();
 
         // Retrieve calendars related to the specific dental clinic
-        $calendars = Calendar::where('dentalclinic_id', $dentalclinicId)->paginate(10);
+        $calendars = Calendar::where('id', $user->id)->paginate(10);
 
         return view('patient.calendar.calendar', compact('calendars'));
     }
 
     public function createCalendar($userId){
 
-        // Get the dentalclinic_id from the authenticated user
-        $dentalclinicId = Auth::user()->dentalclinic_id;
+        $user = Auth::user();
 
         // Retrieve the user and ensure they belong to the same dental clinic
-        $users = User::where('id', $userId)->where('dentalclinic_id', $dentalclinicId)->firstOrFail();
+        $users = User::where('id', $userId)->where('id', $user->id)->firstOrFail();
 
         return view('patient.appointment.appointment', compact('users'));
     }
@@ -47,7 +45,6 @@ class PatientCalendarController extends Controller
     public function storeCalendar(Request $request){
 
         $request->validate([
-            'dentalclinic_id' => 'required', 'exists:dentalclinics,id',
             'user_id' => 'required|exists:users,id',
             'appointmentdate' => 'required|date',
             'appointmenttime' => 'required',
@@ -69,7 +66,6 @@ class PatientCalendarController extends Controller
 
         // Check for existing appointment
         $existingAppointment = Calendar::where([
-            'dentalclinic_id' => $request->input('dentalclinic_id'),
             'appointmentdate' => $request->input('appointmentdate'),
             'appointmenttime'=> $request->input('appointmenttime')
         ])->first();
@@ -79,7 +75,6 @@ class PatientCalendarController extends Controller
         }
 
         Calendar::create([
-            'dentalclinic_id' => $request->dentalclinic_id,
             'user_id' => $request->input('user_id'),
             'appointmentdate' => $request->input('appointmentdate'),
             'appointmenttime' => $request->input('appointmenttime'),

@@ -5,25 +5,14 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    @php
-                        $dentalclinic = Auth::check() ? Auth::user()->dentalclinic : null;
-                    @endphp
 
                     @auth
-                        @if(Auth::user()->usertype == 'superadmin')
-                            <a href="{{ route('superadmin.dashboard') }}">
-                                <img src="{{ asset('images/logo.png') }}" alt="Clinic Logo" class="h-12 md:h-14 lg:h-16 w-auto" />
-                            </a>
-                        @elseif(Auth::user()->usertype == 'admin')
+                        @if(Auth::user()->usertype == 'admin')
                             <a href="{{ route('admin.dashboard') }}">
-                                <img src="{{ asset('logos/' . $dentalclinic->logo) }}" alt="Clinic Logo" class="h-12 md:h-14 lg:h-16 w-auto" />
+                                <img src="{{ asset('images/logo.png') }}" alt="Clinic Logo" class="h-12 md:h-14 lg:h-16 w-auto" />
                             </a>
                         @elseif(Auth::user()->usertype == 'patient')
                             <a href="{{ route('patient.dashboard') }}">
-                                <img src="{{ asset('logos/' . $dentalclinic->logo) }}" alt="Clinic Logo" class="h-12 md:h-14 lg:h-16 w-auto" />
-                            </a>
-                        @elseif(Auth::user()->usertype == 'dentistrystudent')
-                            <a href="{{ route('dentistrystudent.communityforum') }}">
                                 <img src="{{ asset('images/logo.png') }}" alt="Clinic Logo" class="h-12 md:h-14 lg:h-16 w-auto" />
                             </a>
                         @endif
@@ -33,17 +22,7 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @if(Auth::check())
-                        @if(Auth::user()->usertype == 'superadmin')
-                            <x-nav-link :href="route('superadmin.dashboard')" :active="request()->routeIs('superadmin.dashboard')">
-                                {{ __('Dashboard') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('superadmin.dentalcliniclist')" :active="request()->routeIs('superadmin.dentalcliniclist')">
-                                {{ __('Dental Clinic List') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('superadmin.communityforum')" :active="request()->routeIs('superadmin.communityforum')">
-                                {{ __('Community Forum') }}
-                            </x-nav-link>
-                        @elseif(Auth::user()->usertype == 'admin')
+                        @if(Auth::user()->usertype == 'admin')
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                                 {{ __('Dashboard') }}
                             </x-nav-link>
@@ -58,9 +37,6 @@
                             </x-nav-link>
                             <x-nav-link :href="route('admin.calendar')" :active="request()->routeIs('admin.calendar')">
                                 {{ __('Calendar') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('admin.communityforum')" :active="request()->routeIs('admin.communityforum')">
-                                {{ __('Community Forum') }}
                             </x-nav-link>
                         @elseif(Auth::user()->usertype == 'patient')
                             <x-nav-link :href="route('patient.dashboard')" :active="request()->routeIs('patient.dashboard')">
@@ -77,13 +53,6 @@
                             </x-nav-link>
                             <x-nav-link :href="route('patient.calendar')" :active="request()->routeIs('patient.calendar')">
                                 {{ __('Calendar') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('patient.communityforum')" :active="request()->routeIs('patient.communityforum')">
-                                {{ __('Community Forum') }}
-                            </x-nav-link>
-                        @elseif(Auth::user()->usertype == 'dentistrystudent')
-                            <x-nav-link :href="route('dentistrystudent.communityforum')" :active="request()->routeIs('dentistrystudent.communityforum')">
-                                {{ __('Community Forum') }}
                             </x-nav-link>
                         @endif
                     @endif
@@ -140,17 +109,7 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             @if(Auth::check())
-                @if(Auth::user()->usertype == 'superadmin')
-                    <x-responsive-nav-link :href="route('superadmin.dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('superadmin.dentalcliniclist')" :active="request()->routeIs('dentalcliniclist')">
-                        {{ __('Dental Clinic List') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('superadmin.communityforum')" :active="request()->routeIs('superadmin.communityforum')">
-                        {{ __('Community Forum') }}
-                    </x-responsive-nav-link>
-                @elseif(Auth::user()->usertype == 'admin')
+                @if(Auth::user()->usertype == 'admin')
                     <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-responsive-nav-link>
@@ -165,9 +124,6 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.calendar')" :active="request()->routeIs('admin.calendar')">
                         {{ __('Calendar') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.communityforum')" :active="request()->routeIs('admin.communityforum')">
-                        {{ __('Community Forum') }}
                     </x-responsive-nav-link>
                 @elseif(Auth::user()->usertype == 'patient')
                     <x-responsive-nav-link :href="route('patient.dashboard')" :active="request()->routeIs('patient.dashboard')">
@@ -184,13 +140,6 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('patient.calendar')" :active="request()->routeIs('patient.calendar')">
                         {{ __('Calendar') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('patient.communityforum')" :active="request()->routeIs('patient.communityforum')">
-                        {{ __('Community Forum') }}
-                    </x-responsive-nav-link>
-                @elseif(Auth::user()->usertype == 'dentistrystudent')
-                    <x-responsive-nav-link :href="route('dentistrystudent.communityforum')" :active="request()->routeIs('dentistrystudent.communityforum')">
-                        {{ __('Community Forum') }}
                     </x-responsive-nav-link>
                 @endif
             @endif

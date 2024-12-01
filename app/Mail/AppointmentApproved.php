@@ -15,7 +15,6 @@ class AppointmentApproved extends Mailable
     public $appointment;
     public $appointmentTime;
     public $appointmentDate;
-    public $dentalclinic;
     public $adminEmail;
 
     /**
@@ -33,7 +32,6 @@ class AppointmentApproved extends Mailable
         $this->appointment = $appointment;
         $this->appointmentDate = Carbon::parse($appointment->appointmentdate)->format('F j, Y'); // Example format
         $this->appointmentTime = Carbon::parse($appointment->appointmenttime)->format('g:i A'); // Example format
-        $this->dentalclinic = $dentalclinic;
         $this->adminEmail = $adminEmail;
     }
 
@@ -54,7 +52,6 @@ class AppointmentApproved extends Mailable
                         'patientName' => $this->patientName,
                         'appointmentDate' => $this->appointmentDate,  // Date of the appointment
                         'appointmentTime' => $this->appointmentTime,  // Time of the appointment
-                        'dentalclinicname' => $this->dentalclinic->dentalclinicname,  // Clinic name
                     ]);
     }
 }

@@ -13,11 +13,11 @@ class AdminMessagesController extends Controller
 {
     
     public function index() {
-    // Get the dentalclinic_id from the authenticated user
-    $dentalclinicId = Auth::user()->dentalclinic_id;
+    
+    $user = Auth::user();
 
     // Retrieve users (patients) from the same dental clinic, excluding the logged-in user
-    $users = User::where('dentalclinic_id', $dentalclinicId)
+    $users = User::where('id', $user->id)
         ->where('id', '!=', auth()->id())
         ->where('usertype', 'patient')
         ->get();

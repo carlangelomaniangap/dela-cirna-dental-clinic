@@ -16,21 +16,21 @@ class AdminDashboardController extends Controller
 {
     public function index(Request $request){
 
-        $dentalclinicId = Auth::user()->dentalclinic_id;
+        $user = Auth::user();
     
-        $clinicUsers = User::where('dentalclinic_id', $dentalclinicId)->whereIn('usertype', ['patient'])->get();
+        $clinicUsers = User::where('id', $user->id)->whereIn('usertype', ['patient'])->get();
         
         $patientCount = $clinicUsers->where('usertype', 'patient')->count();
 
-        $recentPatientCount = User::where('dentalclinic_id', $dentalclinicId)->where('usertype', 'patient')->whereDay('created_at', now()->day)->count();
+        $recentPatientCount = User::where('id', $user->id)->where('usertype', 'patient')->whereDay('created_at', now()->day)->count();
 
-        $approvedAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->where('approved', 'Approved')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
+        $approvedAppointments = Calendar::where('id', $user->id)->where('approved', 'Approved')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
         
-        $pendingAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->where('approved', 'Pending')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
+        $pendingAppointments = Calendar::where('id', $user->id)->where('approved', 'Pending')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
         
-        $todayAppointments = Calendar::where('dentalclinic_id', $dentalclinicId)->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->orderBy('appointmenttime')->get();
+        $todayAppointments = Calendar::where('id', $user->id)->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->orderBy('appointmenttime')->get();
         
-        $inventories = Inventory::where('dentalclinic_id', $dentalclinicId)->get();
+        $inventories = Inventory::where('id', $user->id)->get();
     
         $showUserWelcome = $request->session()->get('showUserWelcome', false);
     
@@ -38,28 +38,24 @@ class AdminDashboardController extends Controller
             $request->session()->forget('showUserWelcome');
         }
 
-        $treatments = Treatment::where('dentalclinic_id', $dentalclinicId)->get();
+        $treatments = Treatment::where('id', $user->id)->get();
 
-        $dentalclinic = DentalClinic::find($dentalclinicId);
+        $users = User::where('id', $user->id)->where('usertype', 'admin')->get();
 
-        $users = User::where('dentalclinic_id', $dentalclinicId)->where('usertype', 'admin')->get();
-
-        $schedule = Schedule::where('dentalclinic_id', $dentalclinicId)->first();
+        $schedule = Schedule::where('id', $user->id)->first();
     
-        return view('admin.dashboard', compact('clinicUsers', 'patientCount', 'recentPatientCount', 'inventories',  'showUserWelcome', 'pendingAppointments', 'approvedAppointments', 'todayAppointments', 'treatments', 'dentalclinic', 'users', 'schedule'));
+        return view('admin.dashboard', compact('clinicUsers', 'patientCount', 'recentPatientCount', 'inventories',  'showUserWelcome', 'pendingAppointments', 'approvedAppointments', 'todayAppointments', 'treatments', 'users', 'schedule'));
     }
     
     public function store(Request $request){
 
         $request->validate([
-            'dentalclinic_id' => 'required', 'exists:dentalclinics,id',
             'item_name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:0',
         ]);
 
         // Create the inventory item with the dentalclinic_id
         Inventory::create([
-            'dentalclinic_id' => $request->dentalclinic_id, // Ensure this is included
             'item_name' => $request->item_name,
             'quantity' => $request->quantity,
         ]);

@@ -396,12 +396,10 @@
     <footer class="relative bg-gray-800 text-white px-4 sm:px-10 lg:px-16 xl:px-20 2xl:px-40 py-12 lg:py-16">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="block mx-auto mb-6">
-                <h3 class="font-bold text-2xl text-center">{{ $dentalclinic->dentalclinicname }}</h3>
-                @if($dentalclinic->logo)
-                    <div class="pt-4">
-                        <img src="{{ asset('logos/' . $dentalclinic->logo) }}" alt="Logo" class="bg-white w-16 h-16 rounded-lg block mx-auto">
-                    </div>
-                @endif
+                <h3 class="font-bold text-2xl text-center">Dela Cirna Dental Clinic</h3>
+                <div class="pt-4">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="bg-white w-16 h-16 rounded-lg block mx-auto">
+                </div>
             </div>
 
             <div class="block mx-auto mb-6">

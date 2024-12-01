@@ -11,7 +11,6 @@ class AdminScheduleController extends Controller
         
         // Validate the input data
         $validated = $request->validate([
-            'dentalclinic_id' => 'required', 'exists:dentalclinics,id',
             'startweek' => 'required|string',
             'endweek' => 'required|string',
             'startmorningtime' => 'required',

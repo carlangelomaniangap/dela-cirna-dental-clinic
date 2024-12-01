@@ -2,28 +2,6 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <div class="mt-4">
-            <x-input-label for="dentalclinic_id" :value="__('Dental Clinic (skip if you`re not a patient.)')" />
-            <select name="dentalclinic_id" id="dentalclinic_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option value="" disabled selected>Select a Dental Clinic</option>
-                @foreach($dentalclinics as $dentalclinic)
-                    <option value="{{ $dentalclinic->id }}" {{ old('dentalclinic_id') == $dentalclinic->id ? 'selected' : '' }}>{{ $dentalclinic->dentalclinicname }}</option>
-                @endforeach
-            </select>
-            <x-input-error :messages="$errors->get('dentalclinic_id')" class="mt-2" />
-        </div>
-
-        <!-- User Type -->
-        <div class="mt-4">
-            <x-input-label for="usertype" :value="__('Account User Type')" />
-            <select id="usertype" name="usertype" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                <option value="" disabled selected>Select your User Type</option>
-                <option value="patient" {{ old('usertype') == 'patient' ? 'selected' : '' }}>{{ __('Patient') }}</option>
-                <option value="dentistrystudent" {{ old('usertype') == 'dentistrystudent' ? 'selected' : '' }}>{{ __('Dentistry Student') }}</option>
-            </select>
-            <x-input-error :messages="$errors->get('usertype')" class="mt-2" />
-        </div>
-
         <!-- Name -->
         <div class="mt-4">
             <x-input-label for="name" :value="__('Name')" />

@@ -12,25 +12,20 @@ class AdminPaymentInfoController extends Controller
 {
     public function index(){   
         
-        // Get the dentalclinic_id from the authenticated user
-        $dentalclinicId = Auth::user()->dentalclinic_id;
+        $user = Auth::user();
 
-        // Retrieve payment information related to the specific dental clinic
-        $paymentinfo = PaymentInfo::where('dentalclinic_id', $dentalclinicId)->paginate(10);
+        $paymentinfo = PaymentInfo::where('id', $user->id)->paginate(10);
 
-        // Retrieve users associated with the dental clinic (if needed)
-        $users = User::where('dentalclinic_id', $dentalclinicId)->get();
+        $users = User::where('id', $user->id)->get();
 
         return view('admin.paymentinfo.paymentinfo', compact('paymentinfo', 'users'));
     }
 
     public function createPayment(){
 
-        // Get the dentalclinic_id from the authenticated user's session or user info
-        $dentalclinicId = Auth::user()->dentalclinic_id;
+        $user = Auth::user();
 
-        // Retrieve only users (patients) associated with the specific dental clinic
-        $users = User::where('dentalclinic_id', $dentalclinicId)->whereIn('usertype', ['patient'])->get();
+        $users = User::where('id', $user->id)->whereIn('usertype', ['patient'])->get();
 
         return view('admin.paymentinfo.create', compact('users'));
     }
@@ -38,7 +33,6 @@ class AdminPaymentInfoController extends Controller
     public function storePayment(Request $request){
 
         $request->validate([ 
-            'dentalclinic_id' => 'required', 'exists:dentalclinics,id',
             'users_id' => 'required|exists:users,id',
             'name' => 'required|string',
             'concern' => 'required|string',
@@ -48,7 +42,6 @@ class AdminPaymentInfoController extends Controller
         ]);
 
         PaymentInfo::create([
-            'dentalclinic_id' => $request->dentalclinic_id,
             'users_id' => $request->input('users_id'),
             'name' => $request->input('name'),
             'concern' => $request->input('concern'),

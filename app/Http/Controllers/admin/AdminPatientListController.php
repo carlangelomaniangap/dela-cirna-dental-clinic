@@ -12,23 +12,22 @@ class AdminPatientListController extends Controller
     public function index(){
 
         $patientlist = Patientlist::paginate(10);
-        // Get the dentalclinic_id from the authenticated user's session or user info
-        $dentalclinicId = Auth::user()->dentalclinic_id;
+        
+        $user = Auth::user();
 
         // Retrieve only the patients for the specific dental clinic
-        $patientlist = Patientlist::where('dentalclinic_id', $dentalclinicId)->paginate(10);
-        $users = User::where('dentalclinic_id', $dentalclinicId)->get();
+        $patientlist = Patientlist::where('id', $user->id)->paginate(10);
+        $users = User::where('id', $user->id)->get();
 
         return view('admin.patientlist.patientlist', compact('patientlist', 'users'));
     }
 
     public function createPatient(){
 
-        // Get the dentalclinic_id from the authenticated user's session or user info
-        $dentalclinicId = Auth::user()->dentalclinic_id;
+        $user = Auth::user();
 
         // Retrieve only users (patients) associated with the specific dental clinic
-        $users = User::where('dentalclinic_id', $dentalclinicId)->whereIn('usertype', ['patient'])->get();
+        $users = User::where('id', $user->id)->whereIn('usertype', ['patient'])->get();
 
         return view('admin.patientlist.create', compact('users'));
     }

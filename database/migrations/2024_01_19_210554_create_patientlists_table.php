@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('patientlists', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('dentalclinic_id')->constrained('dentalclinics')->onDelete('cascade');
             $table->unsignedBigInteger('users_id');
             $table->string('name');
             $table->string('gender');

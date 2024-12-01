@@ -54,73 +54,9 @@
                 <div class="flex justify-center items-center">
                     <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-36 h-36 lg:w-56 lg:h-56">
                 </div>
-                <div class="text-center h-28 lg:h-36">
-                    <a href="{{ route('dentalclinics.create') }}" class="text-white font-bold bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-4 text-center me-2 mb-2">Create Clinic</a>
-                </div>
             </div>
 
             
-        </div>
-
-    </section>
-
-    <!-- Community Forum -->
-    <section id="communityforum" class="bg-cover relative overflow-hidden py-20 flex items-center" style="background-image: url('images/background.png')">  
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 w-full gap-6 p-5">
-
-            <div class="p-5 z-10">
-                <h1 class="text-4x1 font-bold leading-tight text-4xl md:text-4xl xl:text-6xl mb-3">WELCOME TO THE COMMUNITY FORUM!</h1>
-                <p class="text-base text-justify mb-5">Join our vibrant community of dental enthusiasts, professionals, and patients! Share your experiences, ask questions, and discover tips for maintaining a healthy smile. Whether you're looking for expert advice or personal stories, you'll find a supportive space here.</p>
-                <a href="{{ route('login') }}" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Explore Now</a>
-            </div>
-
-            <div class="bg-white rounded-lg p-2 shadow-lg bg-opacity-50 h-96 z-10">
-                <div style="background-color: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold rounded-lg mb-5">
-                    <h4><i class="fa-regular fa-comments"></i> Community Forum</h4>
-                </div>
-                <tbody>
-                    @if($communityforums->isEmpty())
-                        <div class="bg-white rounded-lg p-4 mb-5 shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
-                            <p class="text-gray-600">No topic found.</p>
-                        </div>
-                    @else
-                        @foreach ($communityforums as $communityforum)
-                            <div class="bg-white rounded-lg p-4 mb-5 shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div>
-                                        <span class="text-blue-800 font-bold">{{ $communityforum->user->name }}</span>
-                                        <!-- Show user type with icon and badge -->
-                                        @if ($communityforum->user->usertype === 'superadmin')
-                                            <span class="text-xs lg:text-sm text-gray-500">
-                                                <i class="fa-solid fa-user-tie"></i> Superadmin
-                                            </span>
-                                        @elseif ($communityforum->user->usertype === 'admin')
-                                            <span class="text-xs lg:text-sm text-gray-500">
-                                                <i class="fa-solid fa-user-doctor"></i> Admin
-                                            </span>
-                                        @elseif ($communityforum->user->usertype === 'patient')
-                                            <span class="text-xs lg:text-sm text-gray-500">
-                                                <i class="fas fa-tooth"></i> Patient
-                                            </span>
-                                        @elseif ($communityforum->user->usertype === 'dentistrystudent')
-                                            <span class="text-xs lg:text-sm text-gray-500">
-                                                <i class="fas fa-graduation-cap"></i> Dentistry Student
-                                            </span>
-                                        @endif
-                                        <p class="text-sm text-gray-500">{{ $communityforum->created_at->setTimezone('Asia/Manila')->format('F j, Y') }} at {{ $communityforum->created_at->setTimezone('Asia/Manila')->format('g:i A') }}</p>
-                                    </div>
-                                </div>
-                                <div class="mt-2 text-sm leading-relaxed break-words">
-                                    <p>{{ $communityforum->topic }}</p>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
-                </tbody>
-                {{ $communityforums->links() }}
-            </div>
-
         </div>
 
     </section>

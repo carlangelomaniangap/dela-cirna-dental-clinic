@@ -12,7 +12,6 @@ class AdminTreatmentController extends Controller
 
         // Validate the input data
         $validatedData = $request->validate([
-            'dentalclinic_id' => 'required', 'exists:dentalclinics,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'treatment' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
@@ -40,7 +39,6 @@ class AdminTreatmentController extends Controller
 
         // Create a new treatment record in the database
         Treatment::create([
-            'dentalclinic_id' => $request->dentalclinic_id,
             'image' => 'treatments/' . $newImageName, // Store the image path
             'treatment' => $request->treatment,
             'description' => $request->description,

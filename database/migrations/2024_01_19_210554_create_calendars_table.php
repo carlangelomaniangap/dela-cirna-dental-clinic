@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('calendars', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('dentalclinic_id')->constrained('dentalclinics')->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->date('appointmentdate');
             $table->time('appointmenttime');

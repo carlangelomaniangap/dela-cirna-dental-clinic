@@ -14,15 +14,13 @@ class PatientDashboardController extends Controller
 {
     public function index(Request $request){
 
-        $dentalclinicId = Auth::user()->dentalclinic_id;
+        $user = Auth::user();
 
-        $treatments = Treatment::where('dentalclinic_id', $dentalclinicId)->get();
+        $treatments = Treatment::where('id', $user->id)->get();
 
-        $dentalclinic = DentalClinic::find($dentalclinicId);
+        $users = User::where('id', $user->id)->where('usertype', 'admin')->get();
 
-        $users = User::where('dentalclinic_id', $dentalclinicId)->where('usertype', 'admin')->get();
-
-        $schedule = Schedule::where('dentalclinic_id', $dentalclinicId)->first();
+        $schedule = Schedule::where('id', $user->id)->first();
 
         $showUserWelcome = $request->session()->get('showUserWelcome', false);
     
@@ -51,7 +49,7 @@ class PatientDashboardController extends Controller
                                  ->get();
         }
 
-        return view('patient.dashboard', compact('treatments', 'dentalclinic', 'users', 'schedule', 'showUserWelcome', 'calendars', 'filter'));
+        return view('patient.dashboard', compact('treatments', 'users', 'schedule', 'showUserWelcome', 'calendars', 'filter'));
     }
 
 }

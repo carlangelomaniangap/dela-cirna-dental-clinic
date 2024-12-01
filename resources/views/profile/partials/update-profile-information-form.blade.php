@@ -17,32 +17,6 @@
         @csrf
         @method('patch')
 
-        @if(auth()->user()->usertype === 'admin')
-            <div class="border-2 p-4 rounded-lg space-y-4">
-                <h1 class="font-semibold">Dental Clinic Details</h1>
-
-                <!-- Clinic Logo -->
-                <div>
-                    <x-input-label for="logo" :value="__('Logo')" />
-                    <div class="flex items-center">
-                        <!-- Display Existing Logo -->
-                        @if ($user->dentalclinic && $user->dentalclinic->logo)
-                            <img src="{{ asset('logos/' . $user->dentalclinic->logo) }}" alt="Logo" class="mt-1 w-16 h-16 rounded-lg border-2">
-                        @endif
-                        <div>
-                            <input type="file" name="logo" id="logo" accept="image/*" class="ml-2">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dental Clinic Name -->
-                <div>
-                    <x-input-label for="dentalclinicname" :value="__('Dental Clinic Name')" />
-                    <x-text-input type="text" name="dentalclinicname" id="dentalclinicname" class="mt-1 block w-full" :value="old('dentalclinicname', $user->dentalclinic->dentalclinicname)" required />
-                </div>
-            </div>
-        @endif
-
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />

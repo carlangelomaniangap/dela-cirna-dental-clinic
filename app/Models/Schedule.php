@@ -10,7 +10,6 @@ class Schedule extends Model
     use HasFactory;
 
     protected $fillable = [
-        'dentalclinic_id',
         'startweek',
         'endweek',
         'startmorningtime',
@@ -19,8 +18,4 @@ class Schedule extends Model
         'endafternoontime',
         'closedday'
     ];
-
-    public function dentalclinic(){
-        return $this->belongsTo(DentalClinic::class, 'dentalclinic_id');
-    }
 }

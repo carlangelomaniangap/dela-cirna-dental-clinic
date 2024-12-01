@@ -10,14 +10,9 @@ class Treatment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'dentalclinic_id',
         'image',
         'treatment',
         'description',
     ];
-
-    public function dentalclinic(){
-        return $this->belongsTo(DentalClinic::class, 'dentalclinic_id');
-    }
 }
 

@@ -16,22 +16,10 @@ class AuthenticatedSessionController extends Controller
     {
         $request->session()->put('showUserWelcome', true);
 
-        if ($user->usertype === 'admin' && $user->dentalclinic->status === 'pending') {
-            // Log out the admin if their dental clinic is still pending
-            Auth::logout();
-            
-            // Redirect to the pending page
-            return redirect()->route('pending')->with('status', 'account_pending');
-        }
-
-        if ($user->usertype === 'superadmin') {
-            return redirect()->route('superadmin.dashboard');
-        } elseif ($user->usertype === 'admin') {
+        if ($user->usertype === 'admin') {
             return redirect()->route('admin.dashboard');
         } elseif ($user->usertype === 'patient') {
             return redirect()->route('patient.dashboard');
-        } elseif ($user->usertype === 'dentistrystudent') {
-            return redirect()->route('dentistrystudent.communityforum');
         } else {
             return redirect()->route('dashboard'); // Default fallback route if usertype is not recognized
         }

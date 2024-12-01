@@ -3,12 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// super admin
-use App\Http\Controllers\superadmin\SuperAdminDashboardController;
-use App\Http\Controllers\superadmin\SuperAdminDentalClinicListController;
-use App\Http\Controllers\superadmin\SuperAdminCommunityForumController;
-use App\Http\Controllers\superadmin\SuperAdminCommentController;
-
 // admin
 use App\Http\Controllers\admin\AdminDashboardController;
 use App\Http\Controllers\admin\AdminTreatmentController;
@@ -18,8 +12,6 @@ use App\Http\Controllers\admin\AdminRecordController;
 use App\Http\Controllers\admin\AdminMessagesController;
 use App\Http\Controllers\admin\AdminPaymentInfoController;
 use App\Http\Controllers\admin\AdminCalendarController;
-use App\Http\Controllers\admin\AdminCommunityForumController;
-use App\Http\Controllers\admin\AdminCommentController;
 
 // patient
 use App\Http\Controllers\patient\PatientDashboardController;
@@ -27,17 +19,9 @@ use App\Http\Controllers\patient\PatientAppointmentController;
 use App\Http\Controllers\patient\PatientMessagesController;
 use App\Http\Controllers\patient\PatientPaymentInfoController;
 use App\Http\Controllers\patient\PatientCalendarController;
-use App\Http\Controllers\patient\PatientCommunityForumController;
-use App\Http\Controllers\patient\PatientCommentController;
-
-// dentistrystudent
-use App\Http\Controllers\dentistrystudent\DentistryStudentCommunityForumController;
-use App\Http\Controllers\dentistrystudent\DentistryStudentCommentController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WelcomeController;
-use App\Http\Controllers\PendingController;
-use App\Http\Controllers\DentalClinicController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,34 +33,6 @@ use App\Http\Controllers\DentalClinicController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-
-// Create Multiple Clinic
-Route::get('/dentalclinics', [DentalClinicController::class, 'create'])->name('dentalclinics.create');
-Route::post('/dentalclinics/store', [DentalClinicController::class, 'store'])->name('dentalclinics.store');
-
-Route::group(['middleware' => ['auth', 'checkUserType:superadmin']], function () {
-    // dashboard
-    Route::get('/superadmin', [SuperAdminDashboardController::class, 'index'])->name('superadmin.dashboard');
-    
-    // dental clinic list
-    Route::get('/superadmin/dentalcliniclist', [SuperAdminDentalClinicListController::class, 'index'])->name('superadmin.dentalcliniclist');
-    Route::put('/superadmin/dentalcliniclist/dentalclinics/{dentalClinic}/approve', [SuperAdminDentalClinicListController::class, 'approve'])->name('superadmin.Approve');
-
-    // community forum
-    Route::get('/superadmin/communityforum',[SuperAdminCommunityForumController::class,'index'])->name('superadmin.communityforum');
-    Route::get('/superadmin/communityforum/post', [SuperAdminCommunityForumController::class, 'createCommunityforum'])->name('superadmin.communityforum.create');
-    Route::post('/superadmin/communityforum/store', [SuperAdminCommunityForumController::class, 'store'])->name('superadmin.communityforum.store');
-    Route::get('/superadmin/communityforum/edit/{id}', [SuperAdminCommunityForumController::class, 'editCommunityforum'])->name('superadmin.editCommunityforum');
-    Route::put('/superadmin/communityforum/update/{id}', [SuperAdminCommunityForumController::class, 'updateCommunityforum'])->name('superadmin.updatedCommunityforum');
-    Route::delete('/superadmin/communityforum/delete/{id}', [SuperAdminCommunityForumController::class, 'deleteCommunityforum'])->name('superadmin.deleteCommunityforum');
-    Route::get('/communityforum', [SuperAdminCommunityForumController::class, 'comment'])->name('superadmin.communityforum');
-    
-    Route::post('/superadmin/communityforum/{communityforum}/comment', [SuperAdminCommentController::class, 'addComment'])->name('superadmin.addComment');
-    Route::put('/superadmin/communityforum/comment/{comment}', [SuperAdminCommentController::class, 'updateComment'])->name('superadmin.updatedComment');
-    Route::delete('/superadmin/communityforum/comment/{comment}', [SuperAdminCommentController::class, 'deleteComment'])->name('superadmin.deleteComment');
-    Route::get('/superadmin/communityforum/comment/{comment}/edit', [SuperAdminCommentController::class, 'editComment'])->name('superadmin.editComment');
-});
 
 Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     // dashboard
@@ -132,20 +88,7 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::put('/admin/calendar/appointment/{appointmentId}/updated', [AdminCalendarController::class, 'updatedCalendar'])->name('admin.updatedCalendar');
     Route::delete('/admin/calendar/appointment/{appointmentId}/delete', [AdminCalendarController::class, 'deleteCalendar'])->name('admin.deleteCalendar');
     Route::get('/admin/calendar/appointment/{appointmentId}/details', [AdminCalendarController::class, 'viewDetails'])->name('admin.viewDetails');
-    // community forum
-    Route::get('/admin/communityforum',[AdminCommunityForumController::class,'index'])->name('admin.communityforum');
-    Route::get('/admin/communityforum/post', [AdminCommunityForumController::class, 'createCommunityforum'])->name('admin.communityforum.create');
-    Route::post('/admin/communityforum/store', [AdminCommunityForumController::class, 'store'])->name('admin.communityforum.store');
-    Route::get('/admin/communityforum/edit/{id}', [AdminCommunityForumController::class, 'editCommunityforum'])->name('admin.editCommunityforum');
-    Route::put('/admin/communityforum/update/{id}', [AdminCommunityForumController::class, 'updateCommunityforum'])->name('admin.updatedCommunityforum');
-    Route::delete('/admin/communityforum/delete/{id}', [AdminCommunityForumController::class, 'deleteCommunityforum'])->name('admin.deleteCommunityforum');
-    Route::get('/communityforum', [AdminCommunityForumController::class, 'comment'])->name('admin.communityforum');
     
-    Route::post('/communityforum/{communityforum}/comment', [AdminCommentController::class, 'addComment'])->name('admin.addComment');
-    Route::put('/communityforum/comment/{comment}', [AdminCommentController::class, 'updateComment'])->name('admin.updatedComment');
-    Route::delete('/communityforum/comment/{comment}', [AdminCommentController::class, 'deleteComment'])->name('admin.deleteComment');
-    Route::get('/communityforum/comment/{comment}/edit', [AdminCommentController::class, 'editComment'])->name('admin.editComment');
-
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 });
 
@@ -172,38 +115,6 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
     Route::put('/patient/calendar/appointment/{appointmentId}/updated', [PatientCalendarController::class, 'updatedCalendar'])->name('patient.updatedCalendar');
     Route::delete('/patient/calendar/appointment/{appointmentId}/delete', [PatientCalendarController::class, 'deleteCalendar'])->name('patient.deleteCalendar');
     Route::get('/patient/calendar/appointment/{appointmentId}/details', [PatientCalendarController::class, 'viewDetails'])->name('patient.viewDetails');
-    // community forum
-    Route::get('/patient/communityforum',[PatientCommunityForumController::class,'index'])->name('patient.communityforum');
-    Route::get('/patient/communityforum/post', [PatientCommunityForumController::class, 'createCommunityforum'])->name('patient.communityforum.create');
-    Route::post('/patient/communityforum/store', [PatientCommunityForumController::class, 'store'])->name('patient.communityforum.store');
-    Route::get('/patient/communityforum/edit/{id}', [PatientCommunityForumController::class, 'editCommunityforum'])->name('patient.editCommunityforum');
-    Route::put('/patient/communityforum/update/{id}', [PatientCommunityForumController::class, 'updateCommunityforum'])->name('patient.updatedCommunityforum');
-    Route::delete('/patient/communityforum/delete/{id}', [PatientCommunityForumController::class, 'deleteCommunityforum'])->name('patient.deleteCommunityforum');
-    Route::get('/communityforum', [PatientCommunityForumController::class, 'comment'])->name('patient.communityforum');
-    
-    Route::post('/patient/communityforum/{communityforum}/comment', [PatientCommentController::class, 'addComment'])->name('patient.addComment');
-    Route::put('/patient/communityforum/comment/{comment}', [PatientCommentController::class, 'updateComment'])->name('patient.updatedComment');
-    Route::delete('/patient/communityforum/comment/{comment}', [PatientCommentController::class, 'deleteComment'])->name('patient.deleteComment');
-    Route::get('/patient/communityforum/comment/{comment}/edit', [PatientCommentController::class, 'editComment'])->name('patient.editComment');
-
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-});
-
-Route::group(['middleware' => ['auth', 'checkUserType:dentistrystudent']], function () {
-    // community forum
-    Route::get('/dentistrystudent/communityforum',[DentistryStudentCommunityForumController::class,'index'])->name('dentistrystudent.communityforum');
-    Route::get('/dentistrystudent/communityforum/post', [DentistryStudentCommunityForumController::class, 'createCommunityforum'])->name('dentistrystudent.communityforum.create');
-    Route::post('/dentistrystudent/communityforum/store', [DentistryStudentCommunityForumController::class, 'store'])->name('dentistrystudent.communityforum.store');
-    Route::get('/dentistrystudent/communityforum/edit/{id}', [DentistryStudentCommunityForumController::class, 'editCommunityforum'])->name('dentistrystudent.editCommunityforum');
-    Route::put('/dentistrystudent/communityforum/update/{id}', [DentistryStudentCommunityForumController::class, 'updateCommunityforum'])->name('dentistrystudent.updatedCommunityforum');
-    Route::delete('/dentistrystudent/communityforum/delete/{id}', [DentistryStudentCommunityForumController::class, 'deleteCommunityforum'])->name('dentistrystudent.deleteCommunityforum');
-    Route::get('/communityforum', [DentistryStudentCommunityForumController::class, 'comment'])->name('dentistrystudent.communityforum');
-    
-    Route::post('/dentistrystudent/communityforum/{communityforum}/comment', [DentistryStudentCommentController::class, 'addComment'])->name('dentistrystudent.addComment');
-    Route::put('/dentistrystudent/communityforum/comment/{comment}', [DentistryStudentCommentController::class, 'updateComment'])->name('dentistrystudent.updatedComment');
-    Route::delete('/dentistrystudent/communityforum/comment/{comment}', [DentistryStudentCommentController::class, 'deleteComment'])->name('dentistrystudent.deleteComment');
-    Route::get('/dentistrystudent/communityforum/comment/{comment}/edit', [DentistryStudentCommentController::class, 'editComment'])->name('dentistrystudent.editComment');
-
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 });
@@ -212,8 +123,6 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
-
-Route::get('/pending', [PendingController::class, 'index'])->name('pending');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
