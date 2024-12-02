@@ -31,10 +31,6 @@
                 @else
                     <div class="z-10">
                         <a href="{{ route('login') }}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Log in</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Register</a>
-                        @endif
                     </div>
                 @endif
             </div>
@@ -124,6 +120,30 @@
         </div>
 
     </footer>
+    
+    <script>
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+    </script>
+
+    <script>
+        document.addEventListener('keydown', function (e) {
+            // Disable F12 (DevTools)
+            if (e.key === 'F12') {
+                e.preventDefault();
+            }
+            // Disable Ctrl+Shift+I or Ctrl+Shift+C
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C')) {
+                e.preventDefault();
+            }
+            // Disable Ctrl+U (View source)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault(); // Disable Ctrl+U
+            }
+        });
+    </script>
+
     
 </body>
 </html>

@@ -5,14 +5,14 @@
         <!-- Name -->
         <div class="mt-4">
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <input id="name" type="text" name="name" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" value="{{ old('name', session('google_user.name')) }}" required readonly>
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <input id="email" type="email" name="email" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" value="{{ old('email', session('google_user.email')) }}" required readonly>
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
     
@@ -112,6 +112,29 @@
             // Trigger age calculation on page load if birthday is already set
             if (birthdayInput.value) {
                 birthdayInput.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
+    
+    <script>
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+    </script>
+
+    <script>
+        document.addEventListener('keydown', function (e) {
+            // Disable F12 (DevTools)
+            if (e.key === 'F12') {
+                e.preventDefault();
+            }
+            // Disable Ctrl+Shift+I or Ctrl+Shift+C
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C')) {
+                e.preventDefault();
+            }
+            // Disable Ctrl+U (View source)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault(); // Disable Ctrl+U
             }
         });
     </script>

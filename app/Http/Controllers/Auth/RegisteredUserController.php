@@ -30,6 +30,13 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $googleUser = session('google_user');
+
+        if (!$googleUser) {
+            // Redirect back if Google user data is missing
+            return redirect()->route('auth.google.redirect')->with('error', 'Google authentication required.');
+        }
+
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -46,8 +53,9 @@ class RegisteredUserController extends Controller
 
         $user = User::create([
             'usertype' => 'patient',
-            'name' => $request->name,
-            'email' => $request->email,
+            'name' => $googleUser['name'], // From Google
+            'email' => $googleUser['email'], // From Google
+            'email_verified_at' => $googleUser['email_verified_at'],
             'password' => Hash::make($request->password),
             'gender' => $request->gender,
             'birthday' => $request->birthday,

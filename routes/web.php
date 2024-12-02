@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Auth\GoogleController;
 // admin
 use App\Http\Controllers\admin\AdminDashboardController;
 use App\Http\Controllers\admin\AdminTreatmentController;
@@ -133,5 +134,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+Route::get('/auth/google/redirect', [GoogleController::class, 'redirect'])->name('auth.google.redirect');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
+
 
 require __DIR__.'/auth.php';

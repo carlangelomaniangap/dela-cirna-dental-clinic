@@ -1,9 +1,12 @@
 <x-guest-layout>
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
+
+        
 
         <!-- Email Address -->
         <div>
@@ -46,11 +49,35 @@
         </div>
 
         <div class="text-center mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('register') }}">
-                {{ __('Don`t have an account? Register now') }}
+            <a href="{{ route('auth.google.redirect') }}" class="btn btn-primary">
+                <i class="fa-brands fa-google"></i> Continue with Google
             </a>
         </div>
     </form>
+    <script>
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+    </script>
+
+    <script>
+        document.addEventListener('keydown', function (e) {
+            // Disable F12 (DevTools)
+            if (e.key === 'F12') {
+                e.preventDefault();
+            }
+            // Disable Ctrl+Shift+I or Ctrl+Shift+C
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C')) {
+                e.preventDefault();
+            }
+            // Disable Ctrl+U (View source)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault(); // Disable Ctrl+U
+            }
+        });
+    </script>
+
+
 
 @section('title')
     Log In
