@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Patientlist;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -62,6 +63,17 @@ class RegisteredUserController extends Controller
             'age' => $request->age,
             'address' => $request->address,
             'phone' => $request->phone,
+        ]);
+
+        Patientlist::create([
+            'users_id' => $user->id,
+            'name' => $user->name,
+            'gender' => $user->gender,
+            'birthday' => $user->birthday,
+            'age' => $user->age,
+            'address' => $user->address,
+            'phone' => $user->phone,
+            'email' => $user->email,
         ]);
 
         event(new Registered($user));

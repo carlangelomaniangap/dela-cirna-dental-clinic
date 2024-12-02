@@ -10,7 +10,7 @@
 <body class="min-h-screen">
     
     <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
-        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-money-bills"></i> Payment Info / {{ $paymentInfo->name }}</h4>
+        <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-money-bills"></i> Payment Information / {{ $paymentInfo->name }}</h4>
     </div>
     <div class="p-6">    
         <div class="bg-white shadow-md rounded-lg p-6 mb-6">

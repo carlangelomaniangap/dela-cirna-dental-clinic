@@ -87,7 +87,6 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::post('/calendar/approve/{appointmentId}', [AdminCalendarController::class, 'approve'])->name('admin.approveCalendar');
     Route::get('/admin/calendar/appointment/{appointmentId}/update', [AdminCalendarController::class, 'updateCalendar'])->name('admin.updateCalendar');
     Route::put('/admin/calendar/appointment/{appointmentId}/updated', [AdminCalendarController::class, 'updatedCalendar'])->name('admin.updatedCalendar');
-    Route::delete('/admin/calendar/appointment/{appointmentId}/delete', [AdminCalendarController::class, 'deleteCalendar'])->name('admin.deleteCalendar');
     Route::get('/admin/calendar/appointment/{appointmentId}/details', [AdminCalendarController::class, 'viewDetails'])->name('admin.viewDetails');
     
     Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -112,9 +111,6 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
     Route::get('/patient/paymentinfo/{paymentId}/history', [PatientPaymentInfoController::class, 'paymentHistory'])->name('patient.paymentHistory');
     // calendar
     Route::get('/patient/calendar',[PatientCalendarController::class,'index'])->name('patient.calendar');
-    Route::get('/patient/calendar/appointment/{appointmentId}/update', [PatientCalendarController::class, 'updateCalendar'])->name('patient.updateCalendar');
-    Route::put('/patient/calendar/appointment/{appointmentId}/updated', [PatientCalendarController::class, 'updatedCalendar'])->name('patient.updatedCalendar');
-    Route::delete('/patient/calendar/appointment/{appointmentId}/delete', [PatientCalendarController::class, 'deleteCalendar'])->name('patient.deleteCalendar');
     Route::get('/patient/calendar/appointment/{appointmentId}/details', [PatientCalendarController::class, 'viewDetails'])->name('patient.viewDetails');
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');

@@ -5,29 +5,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Patientlist;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class AdminPatientListController extends Controller
 {
     public function index(){
 
-        $patientlist = Patientlist::paginate(10);
-        
-        $user = Auth::user();
+        $patientlist = Patientlist::all();
 
-        // Retrieve only the patients for the specific dental clinic
-        $patientlist = Patientlist::where('id', $user->id)->paginate(10);
-        $users = User::where('id', $user->id)->get();
+        $patientlist = Patientlist::paginate(10);
+
+        $users = User::all();
 
         return view('admin.patientlist.patientlist', compact('patientlist', 'users'));
     }
 
     public function createPatient(){
 
-        $user = Auth::user();
-
-        // Retrieve only users (patients) associated with the specific dental clinic
-        $users = User::where('id', $user->id)->whereIn('usertype', ['patient'])->get();
+        $users = User::where('usertype', 'patient')->get();
 
         return view('admin.patientlist.create', compact('users'));
     }
@@ -35,7 +29,6 @@ class AdminPatientListController extends Controller
     public function storePatient(Request $request){
 
         $request->validate([
-            'dentalclinic_id' => 'required', 'exists:dentalclinics,id',
             'users_id' => 'required|exists:users,id',
             'name' => 'required|string',
             'gender' => 'required|string',
@@ -47,7 +40,6 @@ class AdminPatientListController extends Controller
         ]);
 
         Patientlist::create([
-            'dentalclinic_id' => $request->dentalclinic_id,
             'users_id' => $request->input('users_id'),
             'name' => $request->input('name'),
             'gender' => $request->input('gender'),

@@ -16,7 +16,7 @@ class GoogleController extends Controller
 
     public function callback()
     {
-        $googleUser = Socialite::driver('google')->stateless()->user();
+        $googleUser = Socialite::driver('google')->user();
 
         // Check if the user already exists
         $existingUser = User::where('email', $googleUser->getEmail())->first();

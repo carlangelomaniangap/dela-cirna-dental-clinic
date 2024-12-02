@@ -15,8 +15,6 @@
 
     <div class="p-4">
         <form method="post" action="{{ route('admin.patient.store') }}" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm lg:text-base bg-white rounded-lg shadow-lg p-4">
-            <input type="hidden" name="dentalclinic_id" value="{{ Auth::user()->dentalclinic_id }}">
-            
             @csrf
 
             <div class="flex flex-col space-y-4">
@@ -25,7 +23,7 @@
                     <select class="w-full py-2 px-3 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" id="users_id" name="users_id" required>
                         <option value="" disabled selected>Select</option>
                         @foreach($users as $user)
-                            <option value="{{ $user->id }}" data-name="{{ $user->name }}" data-gender="{{ $user->gender }}" data-birthday="{{ $user->birthday }}" data-age="{{ $user->age }}" data-address="{{ $user->address }}" data-phone="{{ $user->phone }}" data-email="{{ $user->email }}">{{ $user->name }}</option>
+                            <option value="{{ $user->id }}" data-email="{{ $user->email }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -80,14 +78,38 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const birthdayInput = document.getElementById('birthday');
+            const ageInput = document.getElementById('age');
+
+            // Calculate age based on birthday
+            function calculateAge(birthDate) {
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                return age;
+            }
+
+            birthdayInput.addEventListener('change', function() {
+                const birthDate = new Date(this.value);
+                ageInput.value = calculateAge(birthDate);
+            });
+
+            // Trigger age calculation on page load if birthday is already set
+            if (birthdayInput.value) {
+                birthdayInput.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
+
+    <script>
         document.getElementById('users_id').addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
-            document.getElementById('name').value = selectedOption.getAttribute('data-name');
-            document.getElementById('gender').value = selectedOption.getAttribute('data-gender');
-            document.getElementById('birthday').value = selectedOption.getAttribute('data-birthday');
-            document.getElementById('age').value = selectedOption.getAttribute('data-age');
-            document.getElementById('address').value = selectedOption.getAttribute('data-address');
-            document.getElementById('phone').value = selectedOption.getAttribute('data-phone');
             document.getElementById('email').value = selectedOption.getAttribute('data-email');
         });
     </script>

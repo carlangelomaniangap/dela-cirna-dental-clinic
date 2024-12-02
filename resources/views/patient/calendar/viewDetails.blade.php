@@ -117,7 +117,6 @@
                 </div>
 
                 <div class="flex justify-end">
-                    <a href="{{ route('patient.updateCalendar', $calendar->id) }}" class="px-4 py-2 text-xs lg:text-base rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 mr-2" title="Update"><i class="fa-regular fa-calendar-check"></i> Update</a>
                     <a href="{{ route('patient.calendar') }}" class="px-4 py-2 text-xs lg:text-base rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300"><i class="fa-regular fa-rectangle-xmark"></i> Back</a>
                 </div>
             </div>

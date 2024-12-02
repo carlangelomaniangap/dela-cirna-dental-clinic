@@ -7,20 +7,13 @@ use Illuminate\Http\Request;
 
 use App\Models\Message;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class AdminMessagesController extends Controller
 {
     
     public function index() {
-    
-    $user = Auth::user();
 
-    // Retrieve users (patients) from the same dental clinic, excluding the logged-in user
-    $users = User::where('id', $user->id)
-        ->where('id', '!=', auth()->id())
-        ->where('usertype', 'patient')
-        ->get();
+    $users = User::where('id', '!=', auth()->id())->get();
 
     // Get users with their last messages and timestamps
     $usersWithLastMessage = $users->map(function ($user) {

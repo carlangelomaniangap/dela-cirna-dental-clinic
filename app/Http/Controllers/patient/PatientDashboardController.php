@@ -3,24 +3,20 @@
 namespace App\Http\Controllers\patient;
 use App\Http\Controllers\Controller;
 use App\Models\Calendar;
-use App\Models\DentalClinic;
 use App\Models\Schedule;
 use App\Models\Treatment;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class PatientDashboardController extends Controller
 {
     public function index(Request $request){
 
-        $user = Auth::user();
+        $treatments = Treatment::all();
 
-        $treatments = Treatment::where('id', $user->id)->get();
+        $users = User::where('usertype', 'admin')->get();
 
-        $users = User::where('id', $user->id)->where('usertype', 'admin')->get();
-
-        $schedule = Schedule::where('id', $user->id)->first();
+        $schedule = Schedule::first();
 
         $showUserWelcome = $request->session()->get('showUserWelcome', false);
     

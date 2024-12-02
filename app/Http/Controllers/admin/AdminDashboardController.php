@@ -5,7 +5,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Inventory;
 use App\Models\User;
 use App\Models\Calendar;
-use App\Models\DentalClinic;
 use App\Models\Schedule;
 use App\Models\Treatment;
 use Illuminate\Http\Request;
@@ -18,19 +17,19 @@ class AdminDashboardController extends Controller
 
         $user = Auth::user();
     
-        $clinicUsers = User::where('id', $user->id)->whereIn('usertype', ['patient'])->get();
+        $clinicUsers = User::where('usertype', ['patient'])->get();
         
         $patientCount = $clinicUsers->where('usertype', 'patient')->count();
 
-        $recentPatientCount = User::where('id', $user->id)->where('usertype', 'patient')->whereDay('created_at', now()->day)->count();
+        $recentPatientCount = User::where('usertype', 'patient')->whereDay('created_at', now()->day)->count();
 
-        $approvedAppointments = Calendar::where('id', $user->id)->where('approved', 'Approved')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
+        $approvedAppointments = Calendar::where('approved', 'Approved')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
         
-        $pendingAppointments = Calendar::where('id', $user->id)->where('approved', 'Pending')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
+        $pendingAppointments = Calendar::where('approved', 'Pending')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
         
-        $todayAppointments = Calendar::where('id', $user->id)->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->orderBy('appointmenttime')->get();
+        $todayAppointments = Calendar::whereDate('appointmentdate', Carbon::now('Asia/Manila'))->orderBy('appointmenttime')->get();
         
-        $inventories = Inventory::where('id', $user->id)->get();
+        $inventories = Inventory::all();
     
         $showUserWelcome = $request->session()->get('showUserWelcome', false);
     
@@ -38,7 +37,7 @@ class AdminDashboardController extends Controller
             $request->session()->forget('showUserWelcome');
         }
 
-        $treatments = Treatment::where('id', $user->id)->get();
+        $treatments = Treatment::all();
 
         $users = User::where('id', $user->id)->where('usertype', 'admin')->get();
 

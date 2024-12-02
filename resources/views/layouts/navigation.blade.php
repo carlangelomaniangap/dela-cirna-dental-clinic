@@ -33,7 +33,7 @@
                                 {{ __('Messages') }}
                             </x-nav-link>
                             <x-nav-link :href="route('admin.paymentinfo')" :active="request()->routeIs('admin.paymentinfo')">
-                                {{ __('Payment Info') }}
+                                {{ __('Payment Information') }}
                             </x-nav-link>
                             <x-nav-link :href="route('admin.calendar')" :active="request()->routeIs('admin.calendar')">
                                 {{ __('Calendar') }}
@@ -49,7 +49,7 @@
                                 {{ __('Messages') }}
                             </x-nav-link>
                             <x-nav-link :href="route('patient.paymentinfo')" :active="request()->routeIs('patient.paymentinfo')">
-                                {{ __('Payment Info') }}
+                                {{ __('Payment Information') }}
                             </x-nav-link>
                             <x-nav-link :href="route('patient.calendar')" :active="request()->routeIs('patient.calendar')">
                                 {{ __('Calendar') }}
@@ -120,7 +120,7 @@
                         {{ __('Messages') }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.paymentinfo')" :active="request()->routeIs('admin.paymentinfo')">
-                        {{ __('Payment Info') }}
+                        {{ __('Payment Information') }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.calendar')" :active="request()->routeIs('admin.calendar')">
                         {{ __('Calendar') }}
@@ -136,7 +136,7 @@
                         {{ __('Messages') }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('patient.paymentinfo')" :active="request()->routeIs('patient.paymentinfo')">
-                        {{ __('Payment Info') }}
+                        {{ __('Payment Information') }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('patient.calendar')" :active="request()->routeIs('patient.calendar')">
                         {{ __('Calendar') }}

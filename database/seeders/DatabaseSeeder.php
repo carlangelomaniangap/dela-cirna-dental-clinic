@@ -26,16 +26,16 @@ class DatabaseSeeder extends Seeder
             'phone' => '09486593662',
         ]);
 
-        User::create([
-            'usertype' => 'admin',
-            'name' => 'Assistant',
-            'email' => 'assistant@example.com',
-            'password' => Hash::make('#Bataandental2024'),
-            'gender' => null,
-            'birthday' => null,
-            'age' => null,
-            'address' => null,
-            'phone' => null,
-        ]);
+        // User::create([
+        //     'usertype' => 'admin',
+        //     'name' => 'Assistant',
+        //     'email' => 'assistant@example.com',
+        //     'password' => Hash::make('#Bataandental2024'),
+        //     'gender' => null,
+        //     'birthday' => null,
+        //     'age' => null,
+        //     'address' => null,
+        //     'phone' => null,
+        // ]);
     }
 }

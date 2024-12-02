@@ -6,26 +6,21 @@ use App\Models\Payment;
 use App\Models\User;
 use App\Models\PaymentInfo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class AdminPaymentInfoController extends Controller
 {
     public function index(){   
-        
-        $user = Auth::user();
 
-        $paymentinfo = PaymentInfo::where('id', $user->id)->paginate(10);
-
-        $users = User::where('id', $user->id)->get();
+        $paymentinfo = PaymentInfo::all();
+        $paymentinfo = PaymentInfo::paginate(10);
+        $users = User::all();
 
         return view('admin.paymentinfo.paymentinfo', compact('paymentinfo', 'users'));
     }
 
     public function createPayment(){
 
-        $user = Auth::user();
-
-        $users = User::where('id', $user->id)->whereIn('usertype', ['patient'])->get();
+        $users = User::where('usertype', 'patient')->get();
 
         return view('admin.paymentinfo.create', compact('users'));
     }

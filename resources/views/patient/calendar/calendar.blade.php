@@ -129,11 +129,6 @@
                                                             {{ $calendar->approved }}
                                                         </span>
                                                         <a href="{{ route('patient.viewDetails', $calendar->id) }}" class="py-1 px-2 rounded bg-white hover:bg-gray-300 text-gray-800 transition duration-300 text-sm" title="View"><i class="fa-solid fa-eye"></i></a>
-                                                        <form method="post" action="{{ route('patient.deleteCalendar', $calendar->id) }}">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="py-1 px-2 rounded bg-white text-red-800 hover:bg-red-200 transition duration-300 text-sm" title="Delete" onclick="return confirm('Are you sure you want to delete this appointment?')"><i class="fa-solid fa-trash"></i></button>
-                                                        </form>
                                                     </div>
                                                 </div>
                                                 @php $hasAppointment = true; @endphp

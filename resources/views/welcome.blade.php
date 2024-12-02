@@ -10,11 +10,13 @@
 </head>
 <body class="min-h-screen">
 
-    <header class="bg-white border-gray-200 border-b">
+    <header class="bg-white sticky top-0 z-50 bg-opacity-80">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
-            <div class="flex ml-6 text-2xl">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-14 h-14">
-            </div>
+            <a href="/">
+                <div class="flex ml-6 text-2xl">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-14 h-14">
+                </div>
+            </a>
             <div class="p-4 flex justify-end z-10">
                 @if (Auth::check())
                     <div class="z-10">
@@ -37,7 +39,7 @@
         </div>
     </header>
 
-    <section id="createclinic" class="bg-cover relative min-h-screen overflow-hidden flex items-center" style="background-image: url('images/background.png')">  
+    <section class="bg-cover relative min-h-screen overflow-hidden flex items-center" style="background-image: url('images/background.png')">  
         
         <div class="grid grid-cols-1 md:grid-cols-2 w-full gap-6 p-5">
 
@@ -58,7 +60,7 @@
     </section>
     
     <!-- About us -->
-    <section id="about" class="bg-cover relative bg-gray-100 px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64 py-11" style="background-image: url('images/background2.png')">
+    <section class="bg-cover relative bg-gray-100 px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64 py-11" style="background-image: url('images/background2.png')">
         <div class="flex flex-col md:flex-row lg:-mx-8">
             <div class="w-full lg:w-1/2 lg:px-8">
                 <img class="" src="{{ asset('images/people.png')}}">
@@ -76,45 +78,19 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-10">
+    <footer class="bg-white text-gray-800 py-5">
 
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            
-                <!-- Clinic Info -->
-                <div>
-                    <h3 class="text-xl font-semibold mb-4">Bataan Dental</h3>
-                    <div class="flex items-center space-x-4"> <!-- Flexbox container to align img and p side by side -->
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="bg-white rounded-lg p-2 h-16 w-auto">
-                        <p class="text-justify text-sm">
-                            Connecting you to trusted dental clinics and a vibrant community forum for all your dental health needs and questions.
-                        </p>
-                    </div>
+        <div class="container mx-auto">
+            <a href="/">
+                <div class="flex justify-center items-center space-x-2">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-auto">
+                    <h3 class="text-2xl font-semibold">Bataan Dental</h3>
                 </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
-                    <ul class="text-sm">
-                        <li><a href="#createclinic" class="hover:underline">Create Clinic</a></li>
-                        <li><a href="#communityforum" class="hover:underline">Community Forum</a></li>
-                        <li><a href="#about" class="hover:underline">About Us</a></li>
-                    </ul>
-                </div>
-
-                <!-- Contact Info -->
-                <div>
-                    <h3 class="text-xl font-semibold mb-4">Contact Us</h3>
-                    <ul class="text-sm">
-                        <li><span class="font-bold">Email:</span> <a href="mailto:info@bataandental.com" class="hover:underline">info@bataandental.com</a></li>
-                    </ul>
-                </div>
-
-            </div>
+            </a>
             
             <!-- Copyright -->
-            <div class="mt-10 text-center text-sm text-gray-400">
-                <p>&copy; 2024 Bataan Dental. All rights reserved.</p>
+            <div class="mt-10 text-center text-sm">
+                <p>&copy; 2024 <a href="/" class="hover:underline">Bataan Dental</a>. All rights reserved.</p>
             </div>
             
         </div>
