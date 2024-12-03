@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('emergencycontactphone');
             $table->string('relationname')->nullable();
             $table->string('relation')->nullable();
-            $table->string('approved')->default('Pending');
+            $table->enum('approved', ['Pending', 'PendingCancelled', 'Approved', 'Completed', 'ApprovedCancelled'])->default('Pending');
             $table->timestamps();
         });
     }

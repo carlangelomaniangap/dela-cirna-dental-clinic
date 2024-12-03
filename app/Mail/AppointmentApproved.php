@@ -26,7 +26,7 @@ class AppointmentApproved extends Mailable
      * @param  $adminEmail
      * @return void
      */
-    public function __construct($patientName, $appointment, $dentalclinic, $adminEmail)
+    public function __construct($patientName, $appointment, $adminEmail)
     {
         $this->patientName = $patientName;
         $this->appointment = $appointment;

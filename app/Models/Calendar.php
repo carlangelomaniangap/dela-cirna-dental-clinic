@@ -29,10 +29,7 @@ class Calendar extends Model
         'approved',
     ];
 
-    // Accessor for appointment status
-    public function getStatusAttribute(){
-        return $this->approved;
-    }
+    public static $approvedStatuses = ['Pending', 'Completed', 'Cancelled'];
 
     public function user(){
         return $this->belongsTo(User::class);

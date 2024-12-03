@@ -3,26 +3,28 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Auth\GoogleController;
 // admin
 use App\Http\Controllers\admin\AdminDashboardController;
 use App\Http\Controllers\admin\AdminTreatmentController;
 use App\Http\Controllers\admin\AdminScheduleController;
+use App\Http\Controllers\admin\AdminInventoryController;
 use App\Http\Controllers\admin\AdminPatientListController;
 use App\Http\Controllers\admin\AdminRecordController;
 use App\Http\Controllers\admin\AdminMessagesController;
 use App\Http\Controllers\admin\AdminPaymentInfoController;
 use App\Http\Controllers\admin\AdminCalendarController;
-
+use App\Http\Controllers\admin\AdminNotificationController;
 // patient
 use App\Http\Controllers\patient\PatientDashboardController;
 use App\Http\Controllers\patient\PatientAppointmentController;
 use App\Http\Controllers\patient\PatientMessagesController;
 use App\Http\Controllers\patient\PatientPaymentInfoController;
 use App\Http\Controllers\patient\PatientCalendarController;
+use App\Http\Controllers\patient\PatientNotificationController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\Auth\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,9 +40,15 @@ use App\Http\Controllers\WelcomeController;
 Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     // dashboard
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    Route::resource('/admin/inventory', AdminDashboardController::class);
-    Route::resource('admin/treatments', AdminTreatmentController::class);
-    Route::resource('admin/schedules', AdminScheduleController::class);
+    Route::resource('/admin/treatments', AdminTreatmentController::class);
+    Route::resource('/admin/schedules', AdminScheduleController::class);
+
+    // inventory
+    Route::get('/admin/inventory', [AdminInventoryController::class, 'index'])->name('admin.inventory');
+    Route::post('/admin/inventory', [AdminInventoryController::class, 'store'])->name('admin.inventory.store');
+    Route::get('/admin/inventory/{inventory}', [AdminInventoryController::class, 'show'])->name('admin.inventory.show');
+    Route::put('/admin/inventory/{inventory}', [AdminInventoryController::class, 'update'])->name('admin.inventory.update');
+    Route::delete('/admin/inventory/{inventory}', [AdminInventoryController::class, 'destroy'])->name('admin.inventory.destroy');
     
     // paitent list
     Route::get('/admin/patientlist',[AdminPatientListController::class,'index'])->name('admin.patientlist');
@@ -82,14 +90,17 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::get('/admin/paymentinfo/search', [AdminPaymentInfoController::class, 'search'])->name('admin.paymentinfo.search');
     Route::post('/admin/paymentinfo/addpayment/{paymentId}', [AdminPaymentInfoController::class, 'addPayment'])->name('admin.addPayment');
     Route::get('/admin/paymentinfo/{paymentId}/history', [AdminPaymentInfoController::class, 'paymentHistory'])->name('admin.paymentHistory');
+    
     // calendar
     Route::get('/admin/calendar',[AdminCalendarController::class,'index'])->name('admin.calendar');
-    Route::post('/calendar/approve/{appointmentId}', [AdminCalendarController::class, 'approve'])->name('admin.approveCalendar');
+    Route::post('/admin/calendar/approve/{appointmentId}/{status}', [AdminCalendarController::class, 'approve'])->name('admin.approveCalendar');
     Route::get('/admin/calendar/appointment/{appointmentId}/update', [AdminCalendarController::class, 'updateCalendar'])->name('admin.updateCalendar');
     Route::put('/admin/calendar/appointment/{appointmentId}/updated', [AdminCalendarController::class, 'updatedCalendar'])->name('admin.updatedCalendar');
     Route::get('/admin/calendar/appointment/{appointmentId}/details', [AdminCalendarController::class, 'viewDetails'])->name('admin.viewDetails');
     
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    // notification
+    Route::get('admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
+    Route::get('admin/notifications/{notification}', [AdminNotificationController::class, 'markAsRead'])->name('admin.markAsRead');
 });
 
 Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
@@ -113,7 +124,9 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
     Route::get('/patient/calendar',[PatientCalendarController::class,'index'])->name('patient.calendar');
     Route::get('/patient/calendar/appointment/{appointmentId}/details', [PatientCalendarController::class, 'viewDetails'])->name('patient.viewDetails');
 
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    // notification
+    Route::get('patient/notifications', [PatientNotificationController::class, 'index'])->name('patient.notifications');
+    Route::get('patient/notifications/{notification}', [PatientNotificationController::class, 'markAsRead'])->name('patient.markAsRead');
 });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');

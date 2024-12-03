@@ -4,6 +4,8 @@ namespace App\Http\Controllers\patient;
 use App\Http\Controllers\Controller;
 use App\Models\Calendar;
 use App\Models\User;
+use App\Notifications\AppointmentNotifications;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -67,7 +69,7 @@ class PatientCalendarController extends Controller
             return redirect()->back()->withErrors(['appointmenttime' => 'This time is already booked. Could you please select a different time?']);
         }
 
-        Calendar::create([
+        $calendar = Calendar::create([
             'user_id' => $request->input('user_id'),
             'appointmentdate' => $request->input('appointmentdate'),
             'appointmenttime' => $request->input('appointmenttime'),
@@ -86,6 +88,17 @@ class PatientCalendarController extends Controller
             'relationname' => $request->input('relationname'),
             'relation' => $request->input('relation'),
         ]);
+
+        // Ensure that the date and time are Carbon instances
+        $appointmentDate = Carbon::parse($calendar->appointmentdate)->format('F j, Y');  // e.g., 'December 3, 2024'
+        $appointmentTime = Carbon::parse($calendar->appointmenttime)->format('h:i A');  // e.g., '02:30 PM'
+
+        // Create custom message for the notification
+        $message = "{$calendar->name} has scheduled a new appointment for {$appointmentDate} at {$appointmentTime}.";
+
+        // Send the notification to the admin
+        $admin = User::where('usertype', 'admin')->first(); // You can add logic if you want to send notifications to multiple admins
+        $admin->notify(new AppointmentNotifications($calendar, $message));
 
         return redirect()->route('patient.appointment')->with('success', 'Appointment added successfully!');
     }

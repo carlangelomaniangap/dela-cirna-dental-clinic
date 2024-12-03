@@ -5,9 +5,12 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Calendar;
 use App\Mail\AppointmentApproved;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\StatusAppointmentNotifications;
+use Carbon\Carbon;
 
 class AdminCalendarController extends Controller
 {
@@ -16,35 +19,6 @@ class AdminCalendarController extends Controller
         $calendars = Calendar::all();
 
         return view('admin.calendar.calendar', compact('calendars'));
-    }
-    
-    public function approve($id) {
-        // Find the appointment
-        $calendar = Calendar::findOrFail($id);
-    
-        // Update the appointment status
-        $calendar->approved = 'Approved';
-        $calendar->save();
-    
-        $user = $calendar->user; // Assuming the Calendar model has a 'user' relationship
-    
-        if ($user) {
-            $adminEmail = Auth::user()->email;
-            $patientEmail = $user->email;
-            $patientName = $user->name;
-            
-            try {
-                // Get the dental clinic associated with the appointment
-                $dentalClinic = $calendar->dentalClinic; // Assuming a relationship exists
-
-                // Send the approval email to the patient
-                Mail::mailer('notification')->to($patientEmail)->queue(new AppointmentApproved($patientName, $calendar, $dentalClinic, $adminEmail));
-            } catch (\Exception $e) {
-                return redirect()->back()->with('error', 'Failed to send email: ' . $e->getMessage());
-            }
-        }
-    
-        return redirect()->back()->with('success', 'Appointment approved! and Email sent!');
     }
 
     public function updateCalendar($id){
@@ -106,5 +80,58 @@ class AdminCalendarController extends Controller
         $calendar = Calendar::where('id', $Id)->first();
 
         return view('admin.calendar.viewDetails', compact('calendar'));
+    }
+
+    public function approve($appointmentId, $status) {
+        // Find the appointment
+        $calendar = Calendar::findOrFail($appointmentId);
+
+        // Ensure that the date and time are Carbon instances
+        $appointmentDate = Carbon::parse($calendar->appointmentdate)->format('F j, Y');  // e.g., 'December 3, 2024'
+        $appointmentTime = Carbon::parse($calendar->appointmenttime)->format('h:i A');  // e.g., '02:30 PM'
+
+        // Check the status and update accordingly
+        if ($status == 'approve') {
+            $calendar->approved = 'Approved'; // Set to Approved
+            $this->sendApprovalEmail($calendar);  // Send approval email
+            $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been approved and an email has been sent!";
+        } elseif ($status == 'complete') {
+            $calendar->approved = 'Completed'; // Set to Completed
+            $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been completed!";
+        } elseif ($status == 'approvecancel') {
+            $calendar->approved = 'ApprovedCancelled'; // Set to Cancelled
+            $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been cancelled!";
+        } elseif ($status == 'pendingcancel') {
+            $calendar->approved = 'PendingCancelled'; // Keep the status as 'Pending'
+            $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been cancelled!";
+        }
+
+        // Save the status update
+        $calendar->save();
+
+        // Send notification to the patient
+        $patient = User::where('usertype', 'patient')->first();  // Assuming you have a 'patient' relationship on the Calendar model
+        $patient->notify(new StatusAppointmentNotifications($calendar, $message));
+
+        return redirect()->back()->with('success', $message);
+    }
+
+    private function sendApprovalEmail($calendar){
+
+        // Assuming the Calendar model has a 'user' relationship
+        $user = $calendar->user;
+        if ($user) {
+            $adminEmail = Auth::user()->email;
+            $patientEmail = $user->email;
+            $patientName = $user->name;
+
+            try {
+                // Send the approval email to the patient
+                Mail::mailer('notification')->to($patientEmail)->queue(new AppointmentApproved($patientName, $calendar, $adminEmail));
+            } catch (\Exception $e) {
+                // Handle any email sending failures
+                return redirect()->back()->with('error', 'Failed to send email: ' . $e->getMessage());
+            }
+        }
     }
 }

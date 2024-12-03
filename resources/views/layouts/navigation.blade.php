@@ -26,6 +26,9 @@
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                                 {{ __('Dashboard') }}
                             </x-nav-link>
+                            <x-nav-link :href="route('admin.inventory')" :active="request()->routeIs('admin.inventory')">
+                                {{ __('Inventory') }}
+                            </x-nav-link>
                             <x-nav-link :href="route('admin.patientlist')" :active="request()->routeIs('admin.patientlist')">
                                 {{ __('Patient List') }}
                             </x-nav-link>
@@ -37,6 +40,9 @@
                             </x-nav-link>
                             <x-nav-link :href="route('admin.calendar')" :active="request()->routeIs('admin.calendar')">
                                 {{ __('Calendar') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.notifications')" :active="request()->routeIs('admin.notifications')">
+                                {{ __('Notifications') }}
                             </x-nav-link>
                         @elseif(Auth::user()->usertype == 'patient')
                             <x-nav-link :href="route('patient.dashboard')" :active="request()->routeIs('patient.dashboard')">
@@ -53,6 +59,9 @@
                             </x-nav-link>
                             <x-nav-link :href="route('patient.calendar')" :active="request()->routeIs('patient.calendar')">
                                 {{ __('Calendar') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('patient.notifications')" :active="request()->routeIs('patient.notifications')">
+                                {{ __('Notifications') }}
                             </x-nav-link>
                         @endif
                     @endif
@@ -113,6 +122,9 @@
                     <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.inventory')" :active="request()->routeIs('admin.inventory')">
+                        {{ __('Inventory') }}
+                    </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.patientlist')" :active="request()->routeIs('admin.patientlist')">
                         {{ __('Patient List') }}
                     </x-responsive-nav-link>
@@ -124,6 +136,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.calendar')" :active="request()->routeIs('admin.calendar')">
                         {{ __('Calendar') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.notifications')" :active="request()->routeIs('admin.notifications')">
+                        {{ __('Notifications') }}
                     </x-responsive-nav-link>
                 @elseif(Auth::user()->usertype == 'patient')
                     <x-responsive-nav-link :href="route('patient.dashboard')" :active="request()->routeIs('patient.dashboard')">
@@ -140,6 +155,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('patient.calendar')" :active="request()->routeIs('patient.calendar')">
                         {{ __('Calendar') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('patient.notifications')" :active="request()->routeIs('patient.notifications')">
+                        {{ __('Notifications') }}
                     </x-responsive-nav-link>
                 @endif
             @endif
