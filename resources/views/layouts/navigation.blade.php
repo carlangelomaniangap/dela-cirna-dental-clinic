@@ -73,16 +73,49 @@
                 <!-- Notifications Dropdown -->
                 <x-dropdown align="right" width="56">
                     <x-slot name="trigger">
-                        <button class="shadow inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-900 focus:outline-none transition ease-in-out duration-150 mr-2">
+                        <button class="shadow inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-900 focus:outline-none transition ease-in-out duration-150 mr-4">
                             <!-- Notifications Button -->
-                            <div><i class="fas fa-bell"></i></div>
+                            <div>
+                                <i class="fas fa-bell"></i>
+                                @if($unreadCount > 0)
+                                    <span class="mr-2 bg-red-500 text-white rounded-full px-2 py-1 text-xs absolute top-0 right-0 translate-x-1/2 translate-y-1/2">
+                                        {{ $unreadCount }}
+                                    </span>
+                                @endif
+                            </div>
                         </button>
                     </x-slot>
 
                     <x-slot name="content">
                         <!-- Notifications List -->
-                        <div class="w-64 p-4">
-                            <p>Notifications</p>
+                        <div class="w-64 p-2">
+                            <h1 class="text-lg font-semibold ml-4 mt-2">Notifications</h1>
+
+                            <!-- Filter Buttons (Don't close the dropdown on click) -->
+                            <div class="filter-buttons flex space-x-4">
+                                <a href="{{ url()->current() . '?filter=all' }}" class="text-sm font-semibold px-4 py-2 rounded-lg {{ $filter == 'all' ? 'text-blue-800' : 'text-gray-400' }}">
+                                    All
+                                </a>
+
+                                <a href="{{ url()->current() . '?filter=unread' }}" class="text-sm font-semibold px-4 py-2 rounded-lg {{ $filter == 'unread' ? 'text-blue-800' : 'text-gray-400' }}">
+                                    Unread
+                                </a>
+
+                                <a href="{{ url()->current() . '?filter=read' }}" class="text-sm font-semibold px-4 py-2 rounded-lg {{ $filter == 'read' ? 'text-blue-800' : 'text-gray-400' }}">
+                                    Read
+                                </a>
+                            </div>
+                            
+                            <div class="max-h-96 overflow-y-auto">
+                                @foreach ($notifications as $notification)
+                                    <div class="shadow border rounded-lg p-4 hover:bg-gray-50 text-justify mt-2 {{ $notification->read_at ? 'bg-white' : 'bg-gray-200' }}">
+                                        <a href="{{ route('admin.markAsRead', $notification->id) }}" class="flex-1 text-gray-800 hover:text-blue-600">
+                                            <span class="text-xs">{{ $notification->data['message'] }}</span>
+                                            <span class="text-xs text-gray-500 block mt-1">{{ $notification->created_at->diffForHumans() }}</span>
+                                        </a>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </x-slot>
                 </x-dropdown>
@@ -121,6 +154,40 @@
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
+                <!-- Notifications Dropdown -->
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger">
+                        <button class="shadow inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-900 focus:outline-none transition ease-in-out duration-150 mr-4">
+                            <!-- Notifications Button -->
+                            <div>
+                                <i class="fas fa-bell"></i>
+                                @if($unreadCount > 0)
+                                    <span class="mr-2 bg-red-500 text-white rounded-full px-2 py-1 text-xs absolute top-0 right-0 translate-x-1/2 translate-y-1/2">
+                                        {{ $unreadCount }}
+                                    </span>
+                                @endif
+                            </div>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <!-- Notifications List -->
+                        <div class="w-64 p-2">
+                            <h1 class="text-lg font-semibold ml-4 mt-2">Notifications</h1>
+                            <div class="max-h-96 overflow-y-auto">
+                                @foreach ($notifications as $notification)
+                                    <div class="shadow rounded-lg p-4 hover:bg-gray-50 text-justify mt-2 {{ $notification->read_at ? 'bg-white' : 'bg-gray-200' }}">
+                                        <a href="{{ route('admin.markAsRead', $notification->id) }}" class="flex-1 text-gray-800 hover:text-blue-600">
+                                            <span class="text-xs">{{ $notification->data['message'] }}</span>
+                                            <span class="text-xs text-gray-500 block mt-1">{{ $notification->created_at->diffForHumans() }}</span>
+                                        </a>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </x-slot>
+                </x-dropdown>
+                
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
