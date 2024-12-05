@@ -9,11 +9,11 @@
 </head>
 <body class="min-h-screen">
         
-    <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
+    <!-- <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
         <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-money-bills"></i> Payment Information</h4>
-    </div>
+    </div> -->
 
-    <div class="px-6 py-4 flex justify-between items-center">
+    <div class="p-6 flex justify-between items-center">
         <a href="{{ route('admin.payment.create') }}" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 text-xs sm:text-sm lg:text-base font-semibold"><i class="fa-solid fa-cash-register"></i> New</a>
 
         <form action="{{ route('admin.paymentinfo.search') }}" method="GET">

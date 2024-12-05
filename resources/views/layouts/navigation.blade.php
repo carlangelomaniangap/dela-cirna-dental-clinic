@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-white bg-opacity-50 shadow" style="position: sticky; top: 0; z-index: 50; backdrop-filter: blur(5px);">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -9,11 +9,11 @@
                     @auth
                         @if(Auth::user()->usertype == 'admin')
                             <a href="{{ route('admin.dashboard') }}">
-                                <img src="{{ asset('images/logo.png') }}" alt="Clinic Logo" class="h-12 md:h-14 lg:h-16 w-auto" />
+                                <img src="{{ asset('images/logo.png') }}" alt="Clinic Logo" class="h-12 w-auto" />
                             </a>
                         @elseif(Auth::user()->usertype == 'patient')
                             <a href="{{ route('patient.dashboard') }}">
-                                <img src="{{ asset('images/logo.png') }}" alt="Clinic Logo" class="h-12 md:h-14 lg:h-16 w-auto" />
+                                <img src="{{ asset('images/logo.png') }}" alt="Clinic Logo" class="h-12 w-auto" />
                             </a>
                         @endif
                     @endauth
@@ -70,10 +70,27 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <!-- Notifications Dropdown -->
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger">
+                        <button class="shadow inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-900 focus:outline-none transition ease-in-out duration-150 mr-2">
+                            <!-- Notifications Button -->
+                            <div><i class="fas fa-bell"></i></div>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <!-- Notifications List -->
+                        <div class="w-64 p-4">
+                            <p>Notifications</p>
+                        </div>
+                    </x-slot>
+                </x-dropdown>
+
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+                        <button class="shadow inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            <div><i class="fa-solid fa-user"></i></div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -85,7 +102,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            <i class="fa-solid fa-user mr-2 bg-gray-300 rounded-full px-2 py-1.5"></i>{{ Auth::user()->name }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -95,7 +112,7 @@
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                <i class="fas fa-sign-out-alt px-2"></i>{{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -188,3 +205,4 @@
         </div>
     </div>
 </nav>
+<link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">

@@ -9,9 +9,9 @@
 </head>
 <body class="min-h-screen">
 
-    <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
+    <!-- <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
         <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-users"></i> Patient List / {{ $patientlist->name }}</h4>
-    </div>
+    </div> -->
 
     @if(session('success') || $errors->any())
         <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -44,10 +44,10 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-5 min-h-screen">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6 min-h-screen">
         
         <!-- Patient details -->
-        <div class="bg-white shadow-md p-5 rounded-xl">
+        <div class="bg-white shadow-md p-6 rounded-xl">
             <h1 class="text-lg lg:text-xl font-bold">Patient Details</h1>
             <div class="mt-5">
                 <ul class="text-sm sm:text-base text-gray-700 list-disc pl-5">
@@ -77,7 +77,7 @@
         </div>
 
         <!-- Patient notes -->
-        <div class="bg-white shadow-md p-5 rounded-xl">
+        <div class="bg-white shadow-md p-6 rounded-xl">
             
             <div class="flex justify-between">
                 <h1 class="text-lg lg:text-xl font-bold">Notes</h1>
@@ -132,7 +132,7 @@
         </div>
         
         <!-- Patient records -->
-        <div class="col-span-1 lg:col-start-3 lg:row-span-2 bg-white shadow-md p-5 rounded-xl">
+        <div class="col-span-1 lg:col-start-3 lg:row-span-2 bg-white shadow-md p-6 rounded-xl">
             
             <div class="flex justify-between mb-4">
                 <h1 class="text-lg lg:text-xl font-bold"><i class="fa-regular fa-folder-open"></i> List of Records</h1>
@@ -221,7 +221,7 @@
         </div>
 
         <!-- Patient upcoming and past appointment -->
-        <div class="row-start-2 col-span-1 md:col-span-2 bg-white shadow-md p-5 rounded-xl">
+        <div class="row-start-2 col-span-1 md:col-span-2 bg-white shadow-md p-6 rounded-xl">
             <!-- Form to toggle between upcoming and past appointments -->
             <form method="GET" action="{{ route('admin.showRecord', $patientlist->id) }}">
                 @csrf
@@ -235,7 +235,7 @@
                 </div>
             </form>
 
-            <div class="space-y-2 max-h-46 overflow-y-auto p-2 bg-gray-200 rounded-lg">
+            <div class="space-y-2 max-h-32 overflow-y-auto p-2 bg-gray-200 rounded-lg">
                 @if($calendars->isEmpty())
                     <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
                         <p class="text-gray-800">No appointments found.</p>

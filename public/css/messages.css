@@ -24,7 +24,6 @@ h1 {
 .chat-container {
     display: flex;
     height: calc(100vh - 70px);
-    margin-top: 3px;
     position: relative;
 }
 

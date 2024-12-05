@@ -34,12 +34,8 @@ class AdminDashboardController extends Controller
             $request->session()->forget('showUserWelcome');
         }
 
-        $treatments = Treatment::all();
-
         $users = User::where('id', $user->id)->where('usertype', 'admin')->get();
 
-        $schedule = Schedule::where('id', $user->id)->first();
-
-        return view('admin.dashboard', compact('clinicUsers', 'patientCount', 'recentPatientCount',  'showUserWelcome', 'pendingAppointments', 'approvedAppointments', 'todayAppointments', 'treatments', 'users', 'schedule'));
+        return view('admin.dashboard', compact('clinicUsers', 'patientCount', 'recentPatientCount',  'showUserWelcome', 'pendingAppointments', 'approvedAppointments', 'todayAppointments', 'users'));
     }
 }

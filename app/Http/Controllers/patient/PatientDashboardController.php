@@ -12,11 +12,7 @@ class PatientDashboardController extends Controller
 {
     public function index(Request $request){
 
-        $treatments = Treatment::all();
-
         $users = User::where('usertype', 'admin')->get();
-
-        $schedule = Schedule::first();
 
         $showUserWelcome = $request->session()->get('showUserWelcome', false);
     
@@ -45,7 +41,7 @@ class PatientDashboardController extends Controller
                                  ->get();
         }
 
-        return view('patient.dashboard', compact('treatments', 'users', 'schedule', 'showUserWelcome', 'calendars', 'filter'));
+        return view('patient.dashboard', compact('users', 'showUserWelcome', 'calendars', 'filter'));
     }
 
 }

@@ -9,9 +9,9 @@
 </head>
 <body class="min-h-screen">
 
-    <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
+    <!-- <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
         <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold">{{ __('Inventory') }}</h4>
-    </div>
+    </div> -->
 
     @if(session('success') || $errors->any())
         <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

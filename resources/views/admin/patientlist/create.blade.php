@@ -9,12 +9,12 @@
 </head>
 <body class="min-h-screen">
 
-    <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
+    <!-- <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
         <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-user-plus"></i> Add Patient</h4>
-    </div>
+    </div> -->
 
-    <div class="p-4">
-        <form method="post" action="{{ route('admin.patient.store') }}" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm lg:text-base bg-white rounded-lg shadow-lg p-4">
+    <div class="p-6">
+        <form method="post" action="{{ route('admin.patient.store') }}" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm lg:text-base bg-white rounded-lg shadow-lg p-6">
             @csrf
 
             <div class="flex flex-col space-y-4">

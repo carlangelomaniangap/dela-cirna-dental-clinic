@@ -9,12 +9,12 @@
 </head>
 <body class="min-h-screen">
 
-    <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
+    <!-- <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
         <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-money-bill"></i> Update Payment</h4>
-    </div>
+    </div> -->
     
-    <div class="p-4">
-        <form method="post" action="{{ route('admin.updatedPayment', $payment->id) }}" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm lg:text-base bg-white rounded-lg shadow-md p-4">
+    <div class="p-6">
+        <form method="post" action="{{ route('admin.updatedPayment', $payment->id) }}" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm lg:text-base bg-white rounded-lg shadow-md p-6">
             
             @csrf
             
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="flex justify-end">
-                    <button type="submit" class="px-4 py-2 text-xs lg:text-base rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 mr-2"><i class="fa-solid fa-pen-to-square"></i> Save</button>
+                    <button type="submit" class="px-4 py-2 text-xs lg:text-base rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 mr-2"><i class="fa-solid fa-pen-to-square"></i> Update</button>
                     <a href="{{ route('admin.paymentinfo') }}" class="px-4 py-2 text-xs lg:text-base rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300"><i class="fa-regular fa-rectangle-xmark"></i> Cancel</a>
                 </div>
             </div>
