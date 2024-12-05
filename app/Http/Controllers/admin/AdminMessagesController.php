@@ -5,13 +5,14 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Notifications\NewMessageNotification;
 use App\Models\Message;
 use App\Models\User;
 
 class AdminMessagesController extends Controller
 {
     
-    public function index() {
+    public function index(){
 
     $users = User::where('id', '!=', auth()->id())->get();
 
@@ -39,26 +40,40 @@ class AdminMessagesController extends Controller
     $messages = Message::all();
 
     return view('admin.messages.messages', compact('users', 'messages', 'usersWithLastMessage'));
-}
+    }
 
-
-    public function storeMessage(Request $request){
-
+    public function storeMessage(Request $request)
+    {
         $request->validate([
             'recipient_id' => 'required|exists:users,id', // Ensure recipient exists in users table
             'message' => 'required|string',
         ]);
 
         // Create the message
-        Message::create([
+        $message = Message::create([
             'sender_id' => auth()->id(), // Assuming sender is the authenticated user
             'recipient_id' => $request->input('recipient_id'),
             'message' => $request->input('message'),
         ]);
 
-        return redirect()->route('admin.messages')>with('success', 'Message sent successfully!');
+        // Send notification to the recipient
+        $recipient = User::find($request->input('recipient_id'));
+        $sender = auth()->user();
+
+        // Check if there's an unread notification from this sender
+        $existingNotification = $recipient->unreadNotifications()
+            ->where('type', NewMessageNotification::class)
+            ->where('data->sender_id', $sender->id)
+            ->first();
+
+        if (!$existingNotification) {
+            // If no unread notification exists, create a new one
+            $recipient->notify(new NewMessageNotification($message, $sender));
+        }
+
+        return redirect()->route('admin.messages')->with('success', 'Message sent successfully!');
     }
-    
+
     public function search(Request $request){
 
         $query = $request->input('query');
@@ -73,5 +88,13 @@ class AdminMessagesController extends Controller
         $messages = Message::whereIn('sender_id', $userIds)->orWhereIn('recipient_id', $userIds)->get();
 
         return view('admin.messages.messages', compact('users', 'messages'));
+    }
+
+    public function markNotificationAsRead($id)
+    {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+
+        return redirect()->back()->with('success', 'Notification marked as read.');
     }
 }

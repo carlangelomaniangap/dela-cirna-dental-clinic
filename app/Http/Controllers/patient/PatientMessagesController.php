@@ -4,6 +4,7 @@ namespace App\Http\Controllers\patient;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Notifications\NewMessageNotification;
 use App\Models\Message;
 use App\Models\User;
 
@@ -38,19 +39,34 @@ class PatientMessagesController extends Controller
         return view('patient.messages.messages', compact('users', 'messages', 'usersWithLastMessage'));
     }
 
-    public function storeMessage(Request $request){
-
+    public function storeMessage(Request $request)
+    {
         $request->validate([
             'recipient_id' => 'required|exists:users,id', // Ensure recipient exists in users table
             'message' => 'required|string',
         ]);
 
         // Create the message
-        Message::create([
+        $message = Message::create([
             'sender_id' => auth()->id(), // Assuming sender is the authenticated user
             'recipient_id' => $request->input('recipient_id'),
             'message' => $request->input('message'),
         ]);
+
+        // Send notification to the recipient
+        $recipient = User::find($request->input('recipient_id'));
+        $sender = auth()->user();
+
+        // Check if there's an unread notification from this sender
+        $existingNotification = $recipient->unreadNotifications()
+            ->where('type', NewMessageNotification::class)
+            ->where('data->sender_id', $sender->id)
+            ->first();
+
+        if (!$existingNotification) {
+            // If no unread notification exists, create a new one
+            $recipient->notify(new NewMessageNotification($message, $sender));
+        }
 
         return redirect()->route('patient.messages')->with('success', 'Message sent successfully!');
     }

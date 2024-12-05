@@ -79,6 +79,10 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::get('/admin/messages',[AdminMessagesController::class,'index'])->name('admin.messages');
     Route::post('/admin/messages', [AdminMessagesController::class, 'storeMessage'])->name('admin.messages.store');
     Route::get('/admin/messages/search', [AdminMessagesController::class, 'search'])->name('admin.messages.search');
+    Route::post('/admin/notifications/{id}/mark-as-read', [AdminMessagesController::class, 'markNotificationAsRead'])->name('admin.notifications.markAsRead');
+    Route::get('admin/messages/{user_id}', [AdminMessagesController::class, 'index'])->name('admin.messages.messages');
+
+
     
     // payment info
     Route::get('/admin/paymentinfo',[AdminPaymentInfoController::class,'index'])->name('admin.paymentinfo');
@@ -116,6 +120,9 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
     Route::get('/patient/messages',[PatientMessagesController::class,'index'])->name('patient.messages');
     Route::post('/patient/messages', [PatientMessagesController::class, 'storeMessage'])->name('patient.messages.store');
     Route::get('/patient/messages/search', [PatientMessagesController::class, 'search'])->name('patient.messages.search');
+    Route::post('/patient/notifications/{id}/mark-as-read', [PatientMessagesController::class, 'markNotificationAsRead'])->name('patient.notifications.markAsRead');
+    Route::get('/patient/messages/{sender_id}', [PatientMessagesController::class, 'index'])->name('patient.messages.messages');
+
     // payment info
     Route::get('/patient/paymentinfo',[PatientPaymentInfoController::class,'index'])->name('patient.paymentinfo');
     Route::get('/patient/payment/search', [PatientPaymentInfoController::class, 'search'])->name('patient.paymentinfo.search');

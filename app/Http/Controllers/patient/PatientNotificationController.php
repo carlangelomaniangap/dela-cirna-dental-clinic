@@ -34,11 +34,37 @@ class PatientNotificationController extends Controller
         return view('patient.notifications.notifications', compact('notifications', 'filter'));
     }
 
-    public function markAsRead($notificationId){
+    
+    public function markAsRead($notificationId)
+    {
+        // Retrieve the specific notification
         $notification = auth()->user()->notifications->find($notificationId);
-        $notification->markAsRead(); // Mark as read when clicked
 
-        // Redirect to the appointment details page
-        return redirect()->route('patient.viewDetails', $notification->data['appointment_id']);
+        // Check if the notification exists
+        if (!$notification) {
+            return redirect()->back()->with('error', 'Notification not found.');
+        }
+
+        // Mark the notification as read
+        $notification->markAsRead();
+
+        // Redirect based on the type of notification
+        if (isset($notification->data['appointment_id'])) {
+            // Redirect to the appointment details page
+            return redirect()->route('patient.viewDetails', $notification->data['appointment_id']);
+        } elseif (isset($notification->data['message'])) {
+            // Redirect to the messages page, focusing on the sender's conversation
+            return redirect()->route('patient.messages', $notification->data['sender_id']);
+        }
+
+        // Default redirect if no specific type is identified
+        return redirect()->back()->with('info', 'Notification marked as read.');
+    }
+    public function markNotificationAsRead($id)
+    {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+
+        return redirect()->back()->with('success', 'Notification marked as read.');
     }
 }
