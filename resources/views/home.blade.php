@@ -1,25 +1,34 @@
 <x-guest-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Access Denied') }}
-        </h2>
-    </x-slot>
+    
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
+        <div>
+            <a href="/">
+                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+            </a>
+        </div>
+        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <x-slot name="header">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    {{ __('Access Denied') }}
+                </h2>
+            </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <p class="text-lg text-center text-red-600 font-bold">
-                        {{ __('Access Denied') }}
-                    </p>
-                    <p class="text-sm text-gray-500 mt-4">
-                        {{ __('You do not have permission to view this page.') }}
-                    </p>
+            <div class="py-12">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6 bg-white border-b border-gray-200">
+                            <p class="text-lg text-center text-red-600 font-bold">
+                                {{ __('Access Denied') }}
+                            </p>
+                            <p class="text-sm text-gray-500 mt-4">
+                                {{ __('You do not have permission to view this page.') }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             Swal.fire({
