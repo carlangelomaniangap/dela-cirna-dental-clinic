@@ -1,29 +1,28 @@
+<x-guest-layout>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bataan Dental</title>
-    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="min-h-screen">
 
-    <header class="bg-white sticky top-0 z-50 bg-opacity-50" style="backdrop-filter: blur(5px);">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
+    <header class="bg-white bg-opacity-50 shadow" style="position: sticky; top: 0; z-index: 50; backdrop-filter: blur(5px);">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
             <a href="/">
-                <div class="flex ml-6 text-2xl">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-14 h-14">
+                <div class="p-2 px-8">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-12 h-12">
                 </div>
             </a>
             <div class="p-4 flex justify-end z-10">
                 @if (Auth::check())
                     <div class="z-10">
                         @if(Auth::user()->usertype == 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"><i class="fa-solid fa-user mr-2 bg-gray-300 rounded-full px-2 py-1.5"></i>{{ Auth::user()->name }}</a>
+                            <a href="{{ route('admin.dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900"><i class="fa-solid fa-user mr-2 bg-gray-300 rounded-full px-2 py-1.5"></i>{{ Auth::user()->name }}</a>
                         @elseif(Auth::user()->usertype == 'patient')
-                            <a href="{{ route('patient.dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"><i class="fa-solid fa-user mr-2 bg-gray-300 rounded-full px-2 py-1.5"></i>{{ Auth::user()->name }}</a>
+                            <a href="{{ route('patient.dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900"><i class="fa-solid fa-user mr-2 bg-gray-300 rounded-full px-2 py-1.5"></i>{{ Auth::user()->name }}</a>
                         @endif
                     </div>
                 @else
@@ -34,39 +33,129 @@
             </div>
         </div>
     </header>
+    
+    <!-- Welcome -->
+    <section class="py-12 mb-6">
+        <!-- Background Image (with img tag) -->
+        <div class="absolute inset-0">
+            <img src="{{ asset('images/background.png') }}" alt="Background Image" class="w-full h-full">
+        </div>
 
-    <section class="bg-cover relative min-h-screen overflow-hidden flex items-center" style="background-image: url('images/background.png')">  
-        <div class="grid grid-cols-1 w-full gap-6 p-5">
-                <div class="flex justify-center items-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-36 h-36 lg:w-56 lg:h-56">
+        <!-- Content Wrapper -->
+        <div class="px-6 relative z-10">
+            <div class="grid grid-cols-1 gap-6 p-6">
+                <div class="text-center px-8">
+                    <!-- Logo -->
+                    <div class="flex justify-center mb-6">
+                        <img src="{{ asset('images/logo.png') }}" alt="Dental Clinic Logo" class="w-36 h-36 lg:w-56 lg:h-56">
+                    </div>
+                    <!-- Main Heading -->
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+                        Welcome to Dela Cirna Dental Clinic
+                    </h1>
+                    <!-- Subheading -->
+                    <p class="text-lg sm:text-xl lg:text-2xl px-8">
+                        Your trusted partner, transforming dental care with innovative solutions. We offer a wide range of services to ensure your smile stays healthy, bright, and beautiful.
+                    </p>
                 </div>
-            <div class="px-12 text-center">
-                <h1 class="text-4x1 font-bold leading-tight text-4xl md:text-4xl xl:text-6xl mb-3">WELCOME TO BATAAN DENTAL</h1>
-                <p>Your trusted platform, transforming dental clinics worldwide with innovative digital solutions. We offer a wide range of professional services to ensure every patient achieves a healthy, beautiful smile.</p>
             </div>
         </div>
+    </section>
+
+    <!-- Treatment Services -->
+    <section class="relative px-6 lg:px-8 py-12">
+        
+        <h1 class="text-center font-bold text-3xl py-12 mt-6">Treatment Services</h1>
+        
+        <!-- <div class="overflow-x-auto flex gap-6 p-6"> -->
+
+            <div class="flex justify-center gap-6 p-2">
+                <!-- First Div with 3 cards -->
+                <div class="flex justify-center gap-6">
+                    <!-- First Card -->
+                    <div class="relative w-64 h-64 bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 group">
+                        <img src="{{ asset('images/picture1.jpg')}}" alt="Dentures" class="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                        <div class="absolute inset-0 text-center text-gray-700 pt-1 transition-opacity duration-300 group-hover:opacity-0">
+                            <h2 class="text-lg font-bold">Dentures</h2>
+                        </div>
+                        <!-- Description text that shows on hover -->
+                        <div class="absolute inset-0 bg-white p-4 rounded-lg opacity-0 transform translate-y-full transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                            <h2 class="text-lg font-bold">Dentures</h2>
+                            <p class="text-justify text-gray-700 text-sm">
+                                Dental appliances designed to replace missing teeth and restore both functionality and aesthetics to the mouth.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Second Card -->
+                    <div class="relative w-64 h-64 bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 group">
+                        <img src="{{ asset('images/picture2.jpg')}}" alt="Dentures" class="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                        <div class="absolute inset-0 text-center text-gray-700 pt-1 transition-opacity duration-300 group-hover:opacity-0">
+                            <h2 class="text-lg font-bold">Crown and Bridges</h2>
+                        </div>
+                        <div class="absolute inset-0 bg-white p-4 rounded-lg opacity-0 transform translate-y-full transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                            <h2 class="text-lg font-bold">Crown and Bridges</h2>
+                            <p class="text-justify text-gray-700 text-sm">
+                                Crowns restore damaged teeth, while bridges replace missing teeth by anchoring to adjacent healthy teeth.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Third Card -->
+                    <div class="relative w-64 h-64 bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 group">
+                        <img src="{{ asset('images/picture3.jpg')}}" alt="Dentures" class="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                        <div class="absolute inset-0 text-center text-gray-700 pt-1 transition-opacity duration-300 group-hover:opacity-0">
+                            <h2 class="text-lg font-bold">Oral Prophylaxis</h2>
+                        </div>
+                        <div class="absolute inset-0 bg-white p-4 rounded-lg opacity-0 transform translate-y-full transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                            <h2 class="text-lg font-bold">Oral Prophylaxis</h2>
+                            <p class="text-justify text-gray-700 text-sm">
+                                Cleaning of teeth and gums by a dental professional, is essential for preventing cavities, gum disease, and maintaining overall oral hygiene.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-center gap-6 p-2">
+                <!-- First Div with 3 cards -->
+                <div class="flex justify-center gap-6">
+                    <!-- Fourth Card -->
+                    <div class="relative w-64 h-64 bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 group">
+                        <img src="{{ asset('images/picture4.jpg')}}" alt="Dentures" class="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                        <div class="absolute inset-0 text-center text-gray-700 pt-1 transition-opacity duration-300 group-hover:opacity-0">
+                            <h2 class="text-lg font-bold">Aesthetic Restoration</h2>
+                        </div>
+                        <div class="absolute inset-0 bg-white p-4 rounded-lg opacity-0 transform translate-y-full transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                            <h2 class="text-lg font-bold">Aesthetic Restoration</h2>
+                            <p class="text-justify text-gray-700 text-sm">
+                                Improves the appearance of teeth through procedures like veneers, bonding, and whitening, achieving a natural and attractive smile.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Fifth Card -->
+                    <div class="relative w-64 h-64 bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 group">
+                        <img src="{{ asset('images/picture5.jpg')}}" alt="Dentures" class="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                        <div class="absolute inset-0 text-center text-gray-700 pt-1 transition-opacity duration-300 group-hover:opacity-0">
+                            <h2 class="text-lg font-bold">Tooth Restoration</h2>
+                        </div>
+                        <div class="absolute inset-0 bg-white p-4 rounded-lg opacity-0 transform translate-y-full transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                            <h2 class="text-lg font-bold">Tooth Restoration</h2>
+                            <div class="text-justify text-gray-700 text-sm">
+                                Dental procedures, such as fillings aimed at repairing damaged teeth to restore their function, appearance, and overall oral health.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- </div> -->
+        
     </section>
     
-    <!-- About us -->
-    <section class="bg-cover relative bg-gray-100 px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64 py-11" style="background-image: url('images/background2.png')">
-        <h2 class="text-center text-xl lg:text-3xl mt-4">About</h2>
-        <div class="flex flex-col md:flex-row lg:-mx-8">
-            <div class="w-full lg:w-1/2 lg:px-8">
-                <img class="" src="{{ asset('images/people.png')}}">
-            </div>
-            <div class="w-full lg:w-1/2 lg:p-14">
-                
-                <p class="text-justify mt-2">We created this website to provide a supportive space where patients, 
-                    students and dental professionals can connect, share experiences, and access valuable insights on oral health. 
-                    Dental care can be intimidating and confusing, so our goal is to simplify it by building a community where patients can ask questions, 
-                    share their stories, and get advice from experts. For professionals, it's a platform to exchange ideas, discuss industry advancements, 
-                    and collaborate on cases. Ultimately, we aim to bridge the gap between dental knowledge and practice, 
-                    empowering everyone to take charge of their dental health with confidence.</p>
-            </div>
-        </div>
-    </section>
-
-    <div class="p-6">
+    <!-- Address and Contacts -->
+    <section class="p-6">
         <a href="/" class="flex justify-center items-center py-6">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-12 h-12">
             <h3 class="text-xl lg:text-3xl ml-2">Dela Cirna Dental Clinic</h3>
@@ -120,80 +209,106 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+    
+    <!-- About us -->
+    <section class="relative py-6">
+        <!-- Background Image (with img tag) -->
+        <div class="absolute inset-0 w-full h-full">
+            <img src="{{ asset('images/background2.png') }}" alt="Background Image" class="w-full h-full object-cover object-repeat">
+        </div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white pt-12 pb-6">
+        <!-- Content Wrapper -->
+        <div class="px-6 relative z-10">
+
+            <!-- Content Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-8">
+                <!-- Image Section -->
+                <div>
+                    <img src="{{ asset('images/people.png') }}" alt="People" class="w-full h-auto">
+                </div>
+
+                <!-- Text Section -->
+                <div class="flex flex-col justify-center">
+                    <!-- Heading -->
+                    <h2 class="text-3xl font-semibold pb-4">About Us</h2>
+
+                    <p class="text-justify">We created this website to provide a supportive space where patients, students and dental professionals can connect, share experiences, and access valuable insights on oral health. Dental care can be intimidating and confusing, so our goal is to simplify it by building a community where patients can ask questions, share their stories, and get advice from experts. For professionals, it's a platform to exchange ideas, discuss industry advancements, and collaborate on cases. Ultimately, we aim to bridge the gap between dental knowledge and practice, empowering everyone to take charge of their dental health with confidence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-white pt-8 pb-4">
         <div class="text-center">
             <h3 class="text-xl lg:text-3xl">Developers</h3>
         </div>
-        
-        <div class="flex justify-center items-center">
-            <div class="grid grid-cos-1 md:grid-cols-4 py-12 gap-6">
-            
+
+        <div class="grid grid-cols-1 md:grid-cols-4">
+            <div class="flex justify-center items-center py-12 gap-6">
                 <!-- Carl -->
-                <div class="space-y-4">
+                <div class="space-y-2">
                     <h3 class="text-base lg:text-xl">Carl Angelo Maniangap</h3>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fas fa-envelope mr-2"></i>
                         <a style="text-decoration: none; color: inherit;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'" href="mailto:carlangelomaniangap@gmail.com">carlangelomaniangap@gmail.com</a>
                     </p>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fab fa-facebook-square mr-2"></i>
                         <a href="https://facebook.com/carlangelomaniangap" class="hover:text-gray-400">Facebook</a>
                     </p>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fab fa-github-square mr-2"></i>
                         <a href="https://github.com/carlangelomaniangap" class="hover:text-gray-400">GitHub</a>
                     </p>
                 </div>
 
                 <!-- Aldrin -->
-                <div class="space-y-4">
+                <div class="space-y-2">
                     <h3 class="text-base lg:text-xl">John Aldrin Portugal</h3>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fas fa-envelope mr-2"></i>
                         <a style="text-decoration: none; color: inherit;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'" href="mailto:johnaldrinportugal@example.com">johnaldrinportugal@example.com</a>
                     </p>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fab fa-facebook-square mr-2"></i>
                         <a href="https://facebook.com/" class="hover:text-gray-400">Facebook</a>
                     </p>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fab fa-github-square mr-2"></i>
                         <a href="https://github.com/" class="hover:text-gray-400">GitHub</a>
                     </p>
                 </div>
                 
                 <!-- Lexter -->
-                <div class="space-y-4">
+                <div class="space-y-2">
                     <h3 class="text-base lg:text-xl">Lexter Dave Dumas</h3>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fas fa-envelope mr-2"></i>
                         <a style="text-decoration: none; color: inherit;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'" href="mailto:lexterdavedumas@example.com">lexterdavedumas@example.com</a>
                     </p>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fab fa-facebook-square mr-2"></i>
                         <a href="https://facebook.com/" class="hover:text-gray-400">Facebook</a>
                     </p>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fab fa-github-square mr-2"></i>
                         <a href="https://github.com/" class="hover:text-gray-400">GitHub</a>
                     </p>
                 </div>
                 
                 <!-- Chris -->
-                <div class="space-y-4">
+                <div class="space-y-2">
                     <h3 class="text-base lg:text-xl">Chris Pangilinan</h3>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fas fa-envelope mr-2"></i>
                         <a style="text-decoration: none; color: inherit;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'" href="mailto:chrispangilinan@example.com">chrispangilinan@example.com</a>
                     </p>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fab fa-facebook-square mr-2"></i>
                         <a href="https://facebook.com/" class="hover:text-gray-400">Facebook</a>
                     </p>
-                    <p class="flex items-center text-gray-300">
+                    <p class="text-gray-300">
                         <i class="fab fa-github-square mr-2"></i>
                         <a href="https://github.com/" class="hover:text-gray-400">GitHub</a>
                     </p>
@@ -230,3 +345,9 @@
 
 </body>
 </html>
+
+@section('title')
+    Bataan Dental
+@endsection
+
+</x-guest-app>
