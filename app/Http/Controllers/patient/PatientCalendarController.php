@@ -59,6 +59,29 @@ class PatientCalendarController extends Controller
             'relation' => 'nullable|string',
         ]);
 
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek = Carbon::now()->endOfWeek();
+
+        $pendingAppointmentsCount = Calendar::where('user_id', $request->input('user_id'))
+            ->where('approved', 'Pending')
+            ->whereBetween('appointmentdate', [$startOfWeek, $endOfWeek])
+            ->count();
+
+        if ($pendingAppointmentsCount >= 3) {
+            $latestPendingAppointment = Calendar::where('user_id', $request->input('user_id'))
+                ->where('approved', 'Pending')
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $cooldownEndDate = Carbon::parse($latestPendingAppointment->created_at)->addWeek();
+
+            if (Carbon::now()->lessThan($cooldownEndDate)) {
+                return redirect()->back()->withErrors([
+                    'appointment_limit' => 'You have reached the limit of 3 pending appointments. Please wait until ' . $cooldownEndDate->format('l, F j, Y') . ' before booking another appointment.',
+                ]);
+            }
+        }
+
         // Check for existing appointment
         $existingAppointment = Calendar::where([
             'appointmentdate' => $request->input('appointmentdate'),
