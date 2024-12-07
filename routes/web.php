@@ -115,6 +115,7 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
     Route::get('/patient/appointment',[PatientAppointmentController::class,'index'])->name('patient.appointment');
     Route::get('/patient/appointment/add', [PatientCalendarController::class, 'createCalendar'])->name('patient.calendar.create');
     Route::post('/patient/appointment/store', [PatientCalendarController::class, 'storeCalendar'])->name('patient.calendar.store');
+    Route::get('/patient/getBookedTimes', [PatientCalendarController::class, 'getBookedTimes']);
 
     // messages
     Route::get('/patient/messages',[PatientMessagesController::class,'index'])->name('patient.messages');

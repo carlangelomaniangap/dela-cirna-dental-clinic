@@ -251,27 +251,29 @@
 
             // Update available time slots based on selected date
             function updateTimeSlots() {
-                const selectedDate = new Date(appointmentDateInput.value);
-                const currentDate = new Date();
-                const currentTime = currentDate.getHours() * 60 + currentDate.getMinutes();
+                const selectedDate = appointmentDateInput.value;
+                if (!selectedDate) return;
 
-                const timeOptions = appointmentTimeSelect.options;
-                
-                for (let i = 1; i < timeOptions.length; i++) {
-                    const [hours, minutes] = timeOptions[i].value.split(':');
-                    const optionTime = parseInt(hours) * 60 + parseInt(minutes);
+                fetch(`/patient/getBookedTimes?date=${selectedDate}`)
+                    .then(response => response.json())
+                    .then(bookedTimes => {
+                        const timeOptions = appointmentTimeSelect.options;
+                        
+                        for (let i = 1; i < timeOptions.length; i++) {
+                            const optionTime = timeOptions[i].value;
+                            if (bookedTimes.includes(optionTime)) {
+                                timeOptions[i].disabled = true;
+                            } else {
+                                timeOptions[i].disabled = false;
+                            }
+                        }
 
-                    if (selectedDate.toDateString() === currentDate.toDateString() && optionTime <= currentTime) {
-                        timeOptions[i].disabled = true;
-                    } else {
-                        timeOptions[i].disabled = false;
-                    }
-                }
-
-                // Reset selection if the currently selected option is now disabled
-                if (appointmentTimeSelect.selectedOptions[0].disabled) {
-                    appointmentTimeSelect.value = '';
-                }
+                        // Reset selection if the currently selected option is now disabled
+                        if (appointmentTimeSelect.selectedOptions[0].disabled) {
+                            appointmentTimeSelect.value = '';
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             }
 
             appointmentDateInput.addEventListener('change', updateTimeSlots);

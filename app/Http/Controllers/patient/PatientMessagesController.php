@@ -13,7 +13,7 @@ class PatientMessagesController extends Controller
     
     public function index(){
 
-        $users = User::where('id', '!=', auth()->id())->get();
+        $users = User::where('id', '!=', auth()->id())->where('usertype', 'admin')->get();
         
         $usersWithLastMessage = $users->map(function ($user) {
             $lastMessage = Message::where(function ($query) use ($user) {
