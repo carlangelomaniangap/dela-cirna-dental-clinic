@@ -5,8 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 // admin
 use App\Http\Controllers\admin\AdminDashboardController;
-use App\Http\Controllers\admin\AdminTreatmentController;
-use App\Http\Controllers\admin\AdminScheduleController;
 use App\Http\Controllers\admin\AdminInventoryController;
 use App\Http\Controllers\admin\AdminPatientListController;
 use App\Http\Controllers\admin\AdminRecordController;
@@ -40,15 +38,11 @@ use App\Http\Controllers\Auth\GoogleController;
 Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     // dashboard
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    Route::resource('/admin/treatments', AdminTreatmentController::class);
-    Route::resource('/admin/schedules', AdminScheduleController::class);
 
     // inventory
     Route::get('/admin/inventory', [AdminInventoryController::class, 'index'])->name('admin.inventory');
     Route::post('/admin/inventory', [AdminInventoryController::class, 'store'])->name('admin.inventory.store');
-    Route::get('/admin/inventory/{inventory}', [AdminInventoryController::class, 'show'])->name('admin.inventory.show');
-    Route::put('/admin/inventory/{inventory}', [AdminInventoryController::class, 'update'])->name('admin.inventory.update');
-    Route::delete('/admin/inventory/{inventory}', [AdminInventoryController::class, 'destroy'])->name('admin.inventory.destroy');
+    Route::put('/admin/inventory/{id}/update', [AdminInventoryController::class, 'update'])->name('admin.inventory.update');
     
     // paitent list
     Route::get('/admin/patientlist',[AdminPatientListController::class,'index'])->name('admin.patientlist');
@@ -81,8 +75,6 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::get('/admin/messages/search', [AdminMessagesController::class, 'search'])->name('admin.messages.search');
     Route::post('/admin/notifications/{id}/mark-as-read', [AdminMessagesController::class, 'markNotificationAsRead'])->name('admin.notifications.markAsRead');
     Route::get('admin/messages/{user_id}', [AdminMessagesController::class, 'index'])->name('admin.messages.messages');
-
-
     
     // payment info
     Route::get('/admin/paymentinfo',[AdminPaymentInfoController::class,'index'])->name('admin.paymentinfo');
@@ -116,7 +108,7 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
     Route::get('/patient/appointment/add', [PatientCalendarController::class, 'createCalendar'])->name('patient.calendar.create');
     Route::post('/patient/appointment/store', [PatientCalendarController::class, 'storeCalendar'])->name('patient.calendar.store');
     Route::get('/patient/getBookedTimes', [PatientCalendarController::class, 'getBookedTimes']);
-
+    
     // messages
     Route::get('/patient/messages',[PatientMessagesController::class,'index'])->name('patient.messages');
     Route::post('/patient/messages', [PatientMessagesController::class, 'storeMessage'])->name('patient.messages.store');
@@ -128,6 +120,7 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
     Route::get('/patient/paymentinfo',[PatientPaymentInfoController::class,'index'])->name('patient.paymentinfo');
     Route::get('/patient/payment/search', [PatientPaymentInfoController::class, 'search'])->name('patient.paymentinfo.search');
     Route::get('/patient/paymentinfo/{paymentId}/history', [PatientPaymentInfoController::class, 'paymentHistory'])->name('patient.paymentHistory');
+    
     // calendar
     Route::get('/patient/calendar',[PatientCalendarController::class,'index'])->name('patient.calendar');
     Route::get('/patient/calendar/appointment/{appointmentId}/details', [PatientCalendarController::class, 'viewDetails'])->name('patient.viewDetails');

@@ -3,79 +3,73 @@
 namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AdminInventoryController extends Controller
 {
     public function index(Request $request){
         
-        $inventories = Inventory::all();
+        $items = Inventory::all();
 
-        return view('admin.inventory.inventory', compact('inventories'));
+        return view('admin.inventory.inventory', compact('items'));
     }
     
     public function store(Request $request){
 
         $request->validate([
             'item_name' => 'required|string|max:255',
-            'quantity' => 'required|integer|min:0',
+            'item_type' => 'required|in:Equipment,Consumable',
+            'total_quantity' => 'required|integer',
+            'expiration_date' => $request->item_type == 'Consumable' ? 'required|date' : 'nullable',
         ]);
 
-        // Create the inventory item with the dentalclinic_id
+        // Set available_quantity equal to total_quantity by default
+        $available_quantity = $request->total_quantity;
+
         Inventory::create([
             'item_name' => $request->item_name,
-            'quantity' => $request->quantity,
+            'item_type' => $request->item_type,
+            'total_quantity' => $request->total_quantity,
+            'available_quantity' => $available_quantity,
+            'expiration_date' => $request->item_type == 'Consumable' ? $request->expiration_date : null,
+            'last_updated' => Carbon::now(),
         ]);
 
-        return redirect()->back()->with('success', 'Inventory created successfully.');
+        return redirect()->back()->with('success', 'Item added!');
     }
 
-    public function update(Request $request, Inventory $inventory){
+    public function update(Request $request, $id){
 
-        $request->validate([
-            'item_name' => 'required|string|max:255',
-        ]);
+        $item = Inventory::findOrFail($id);
 
-        // Update the item name
-        $inventory->item_name = $request->input('item_name');
-
-        // Check if quantity and action are provided
-        if ($request->filled('quantity') && $request->filled('action')) {
-            // Determine the new quantity based on the action
-            if ($request->action === 'add') {
-                $inventory->quantity += $request->quantity;
-            } else if ($request->action === 'subtract') {
-                if ($inventory->quantity < $request->quantity) {
-                    return redirect()->back()->withErrors(['quantity' => 'Not enough quantity to subtract.']);
+        // Check if the item is of type "equipment"
+        if ($item->item_type == 'Equipment') {
+            // If it's equipment, we directly add to both total and available quantities
+            $item->total_quantity += $request->quantity;
+            $item->available_quantity += $request->quantity;
+        } 
+        // If it's consumable, we handle it based on the action (add or used)
+        elseif ($item->item_type == 'Consumable') {
+            // Add to total and available quantities
+            if ($request->action == 'add') {
+                // Add quantity to available stock
+                $item->total_quantity += $request->quantity;
+                $item->available_quantity += $request->quantity;
+            } elseif ($request->action == 'used') {
+                if ($item->available_quantity >= $request->quantity) {
+                    // Reduce available quantity and increase quantity used
+                    $item->available_quantity -= $request->quantity;
+                    $item->quantity_used += $request->quantity;
+                } else {
+                    // If available quantity is less than the quantity to be used, prevent the update
+                    return redirect()->back()->with('error', 'Insufficient available quantity to use.');
                 }
-                $inventory->quantity -= $request->quantity;
             }
-
-            // Log the action in history
-            $inventory->histories()->create([
-                'inventory_id' => $inventory->id, // Store the inventory ID
-                'quantity' => $request->quantity,
-                'action' => $request->action,
-            ]);
         }
 
-        // Save the inventory changes
-        $inventory->save();
+        $item->save();
 
-        return redirect()->back()->with('success', 'Inventory updated successfully.');
-    }
-
-    public function destroy($inventoryId){
-
-        $inventory = Inventory::findOrFail($inventoryId);
-        $inventory->delete();
-        return redirect()->back()->with('success', 'Inventory deleted successfully.');
-    }
-
-    public function show(Inventory $inventory){
-
-        $histories = $inventory->histories()->get();
-        
-        return view('admin.inventory.history', compact('inventory', 'histories'));
+        return redirect()->back()->with('success', 'Item quantity updated!');
     }
 }

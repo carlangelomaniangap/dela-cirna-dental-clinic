@@ -13,7 +13,7 @@
         <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold">{{ __('Inventory') }}</h4>
     </div> -->
 
-    @if(session('success') || $errors->any())
+    @if(session('success') || $errors->any() || session('error'))
         <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div class="relative p-4 w-full max-w-md">
                 <div class="relative p-5 text-center bg-white rounded-lg shadow">
@@ -23,253 +23,237 @@
                     </button>
 
                     @if(session('success'))
+                        <!-- Success icon and message -->
                         <div class="w-12 h-12 rounded-full bg-green-100 p-2 flex items-center justify-center mx-auto mb-3.5">
                             <i class="fa-solid fa-check text-green-500 text-2xl"></i>
                             <span class="sr-only">Success</span>
                         </div>
-                    @else
+                        <p class="mb-4 text-lg font-semibold text-gray-900">{{ session('success') }}</p>
+                    @elseif(session('error'))
+                        <!-- Error icon and message -->
                         <div class="w-12 h-12 rounded-full bg-red-100 p-2 flex items-center justify-center mx-auto mb-3.5">
                             <i class="fa-solid fa-xmark text-red-500 text-2xl"></i>
                             <span class="sr-only">Error</span>
                         </div>
-                    @endif
-
-                    @if(session('success'))
-                        <p class="mb-4 text-lg font-semibold text-gray-900">{{ session('success') }}</p>
-                    @endif
-
-                    @if ($errors->any())
+                        <p class="mb-4 text-lg font-semibold text-red-600">{{ session('error') }}</p>
+                    @elseif($errors->any())
+                        <!-- Validation errors -->
+                        <div class="w-12 h-12 rounded-full bg-red-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                            <i class="fa-solid fa-xmark text-red-500 text-2xl"></i>
+                            <span class="sr-only">Error</span>
+                        </div>
                         @foreach ($errors->all() as $error)
                             <p class="mb-4 text-lg font-semibold text-red-600">{{ $error }}</p>
                         @endforeach
                     @endif
 
-                    @if(session('success'))
-                        <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300" onclick="this.closest('.fixed').style.display='none'">
-                            Continue
-                        </button>
-                    @else
-                        <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300" onclick="this.closest('.fixed').style.display='none'">
-                            Continue
-                        </button>
-                    @endif
-                    
+                    <!-- Continue button -->
+                    <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300" onclick="this.closest('.fixed').style.display='none'">
+                        Continue
+                    </button>
                 </div>
             </div>
         </div>
     @endif
 
     <div class="p-6">
-        <div class="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-6">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
 
-            <div class="flex flex-col sm:flex-row items-center justify-between mb-4">
-                <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold">Inventory</h1>
-                <button id="createInventoryButton" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-4 py-2 rounded max-w-xs font-semibold">Add Item</button>
+            <!-- Button to Open Add New Item Modal -->
+            <div class="p-6">
+                <div class="flex flex-col sm:flex-row items-center justify-between mb-4">
+                    <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold">Inventory</h1>
+                    <button type="button" id="AddOpenModalBtn" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-4 py-2 rounded max-w-xs font-semibold">Add Item</button>
+                </div>
             </div>
 
-            <div class="">
-                <table id="inventoryTable" class="display" cellspacing="0" width="100%">
+            <!-- Modal for Adding New Item -->
+            <div id="AddItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+            
+                <div class="bg-white p-4 rounded-lg shadow-md z-10">
+                    <div style="background-color: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
+                        <h4 class="text-lg font-bold">Add Item</h4>
+                    </div>
+                    <form id="AddItemForm" action="{{ route('admin.inventory.store') }}" method="POST">
+                        @csrf
+
+                        <!-- Item Name -->
+                        <div class="mb-4">
+                            <label for="item_name" class="block text-sm font-medium text-gray-900 dark:text-white">Item Name</label>
+                            <input type="text" name="item_name" id="item_name" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
+                        </div>
+
+                        <!-- Item Type Selection -->
+                        <div class="mb-4">
+                            <label for="item_type" class="block text-sm font-medium text-gray-900 dark:text-white">Item Type</label>
+                            <select name="item_type" id="item_type" class="mt-2 block w-full px-4 py-2 border rounded-md" required onchange="toggleFields()">
+                                <option value="" selected disabled>Select Item Type</option>
+                                <option value="Equipment">Equipment</option>
+                                <option value="Consumable">Consumable</option>
+                            </select>
+                        </div>
+
+                        <!-- Total Quantity (Initially hidden) -->
+                        <div class="mb-4 hidden" id="total_quantity_container">
+                            <label for="total_quantity" class="block text-sm font-medium text-gray-900 dark:text-white">Total Quantity</label>
+                            <input type="number" name="total_quantity" id="total_quantity" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
+                        </div>
+
+                        <!-- Expiration Date (Initially hidden) -->
+                        <div class="mb-4 hidden" id="expiration_date_container">
+                            <label for="expiration_date" class="block text-sm font-medium text-gray-900 dark:text-white">Expiration Date</label>
+                            <input type="date" name="expiration_date" id="expiration_date" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
+                        </div>
+
+                        <div class="mt-4 text-right">
+                            <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300" id="modalSubmitBtn">Add</button>
+                            <button type="button" id="AddCloseModalBtn" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Inventory List -->
+            <div class="mt-4">
+                <table class="min-w-full bg-white border border-gray-300">
                     <thead>
                         <tr>
-                            <th>Item Name</th>
-                            <th>Quantity</th>
-                            <th>Actions</th>
+                            <th class="px-4 py-2 border">Item Name</th>
+                            <th class="px-4 py-2 border">Item Type</th>
+                            <th class="px-4 py-2 border">Total Quantity</th>
+                            <th class="px-4 py-2 border">Available Quantity</th>
+                            <th class="px-4 py-2 border">Expiration Date</th>
+                            <th class="px-4 py-2 border">Quantity Used</th>
+                            <th class="px-4 py-2 border">Last Updated</th>
+                            <th class="px-4 py-2 border">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @if($inventories->isEmpty())
-                            <tr>
-                                <td colspan="3" class="text-center">No items found.</td>
-                            </tr>
-                        @else
-                            @foreach ($inventories as $inventory)
-                                <tr>
-                                    <td>{{ $inventory->item_name }}</td>
-                                    <td>{{ $inventory->quantity }}</td>
-                                    <td>
-                                        <div class="relative inline-block text-left">
-                                            <button type="button" class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none dropdown-button" aria-haspopup="true" aria-expanded="false" data-dropdown-id="dropdown-{{ $inventory->id }}">
-                                                <span class="text-gray-600"><i class="fa-solid fa-ellipsis"></i></span>
-                                            </button>
+                        @foreach ($items as $item)
+                        <tr>
+                            <td class="px-4 py-2 border">{{ $item->item_name }}</td>
+                            <td class="px-4 py-2 border">{{ $item->item_type }}</td>
+                            <td class="px-4 py-2 border">{{ $item->total_quantity }}</td>
+                            <td class="px-4 py-2 border">{{ $item->available_quantity }}</td>
+                            <td class="px-4 py-2 border">{{ $item->expiration_date ? date('F j, Y', strtotime($item->expiration_date)) : 'N/A' }}</td>
+                            <td class="px-4 py-2 border">{{ $item->quantity_used }}</td>
+                            <td class="px-4 py-2 border">{{ $item->updated_at ? date('F j, Y', strtotime($item->updated_at)) : 'N/A' }}</td>
+                            <td class="px-4 py-2 border">
+                                <button type="button" data-item-id="{{ $item->id }}" data-item-type="{{ $item->item_type }}" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-4 py-2 rounded max-w-xs font-semibold">Update Item</button>
+                            </td>
+                        </tr>
 
-                                            <div class="absolute right-0 z-10 mt-2 w-28 lg:w-48 px-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden dropdown-menu" id="dropdown-{{ $inventory->id }}" role="menu" aria-orientation="vertical">
-                                                <div class="py-1" role="none">
-                                                    <a href="{{ route('admin.inventory.show', $inventory->id) }}" class="block px-4 py-2 text-sm sm:text-base text-gray-700 hover:bg-gray-100 hover:rounded-lg" role="menuitem"><i class="fas fa-history"></i> History</a>
-                                                    <button class="editItemButton block w-full text-left px-4 py-2 text-sm sm:text-base text-blue-700 hover:bg-blue-100 hover:rounded-lg" data-id="{{ $inventory->id }}" data-item_name="{{ $inventory->item_name }}" data-quantity="{{ $inventory->quantity }}" role="menuitem"><i class="fa-solid fa-pen"></i> Edit</button>
-                                                    <div class="h-px bg-gray-300 my-1"></div>
-                                                    <form method="post" action="{{ route('admin.inventory.destroy', $inventory->id) }}">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm sm:text-base text-red-700 hover:bg-red-100 hover:rounded-lg" onclick="return confirm('Are you sure you want to delete this item?');" role="menuitem"><i class="fa-regular fa-trash-can"></i> Delete</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @endif
+                        <!-- Modal for Updating New Item -->
+                        <div id="UpdateItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+                        
+                            <div class="bg-white p-4 rounded-lg shadow-md z-10">
+                                <div style="background-color: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
+                                    <h4 class="text-lg font-bold">Update Item</h4>
+                                </div>
+                                <form id="UpdateItemForm" action="{{ route('admin.inventory.update', $item->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <!-- Item Type Selection -->
+                                    <div class="mb-4 hidden" id="action_container">
+                                        <label for="action" class="block text-sm font-medium text-gray-900 dark:text-white">Action</label>
+                                        <select name="action" id="action" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
+                                            <option value="" selected disabled>Select Action</option>
+                                            <option value="add">Add</option>
+                                            <option value="used">Used</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Quantity (Initially hidden) -->
+                                    <div class="mb-4" id="quantity_container">
+                                        <label for="quantity" class="block text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
+                                        <input type="number" name="quantity" id="quantity" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
+                                    </div>
+
+                                    <div class="mt-4 text-right">
+                                        <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300" id="modalSubmitBtn">Add</button>
+                                        <button type="button" id="UpdateCloseModalBtn" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-<!-- Include jQuery and DataTables CSS/JS -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
-<script>
-    $(document).ready(function() {
-        $('#inventoryTable').DataTable({
-            "paging": true,          // Enable pagination
-            "lengthChange": true,    // Allow changing number of rows per page
-            "searching": true,       // Enable search box
-            "ordering": true,        // Enable column sorting
-            "info": true,            // Display table information
-            "autoWidth": false,      // Auto adjust column widths
-            "responsive": true,      // Make the table responsive on smaller screens
-            "language": {
-                "search": "Search:",      // Customize search box placeholder text
-                "lengthMenu": "Show _MENU_ entries", // Customize "Show entries" text
-                "paginate": {
-                    "first": "«",    // First page button text
-                    "previous": "‹", // Previous page button text
-                    "next": "›",     // Next page button text
-                    "last": "»"      // Last page button text
-                },
-                "zeroRecords": "No items found",   // Custom text when no records match search
-                "info": "Showing _START_ to _END_ of _TOTAL_ entries"  // Info text for pagination
-            }
+    <script>
+        // ADD ITEM
+        // Show the modal when the button is clicked
+        document.getElementById("AddOpenModalBtn").addEventListener("click", function() {
+            const modal = document.getElementById("AddItemModal");
+            modal.classList.remove("hidden");
         });
-    });
-</script>
 
+        // Close modal
+        document.getElementById("AddCloseModalBtn").addEventListener("click", function() {
+            document.getElementById("AddItemModal").classList.add("hidden");
+        });
 
-    <!-- Modal for Create/Edit Item -->
-    <div id="inventoryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-        
-        <div class="bg-white p-4 rounded-lg shadow-md z-10">
-            <div style="background-color: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
-                <h4 class="text-lg font-bold" id="modalTitle">Add Item</h4>
-            </div>
-            <form id="inventoryForm" action="{{ route('admin.inventory.store') }}" method="POST">
-                    
-                @csrf
-                    
-                <input type="hidden" name="_method" id="methodInput" value="POST">
+        // Toggle fields based on item type selection
+        function toggleFields() {
+            const itemType = document.getElementById("item_type").value;
+            const totalQuantityContainer = document.getElementById("total_quantity_container");
+            const expirationDateContainer = document.getElementById("expiration_date_container");
+            const expirationDateInput = document.getElementById("expiration_date");
 
-                <div>
-                    <label for="item_name" class="block">Item Name</label>
-                    <input type="text" name="item_name" id="item_name" class="w-full rounded-lg focus:ring-2 shadow-sm" required>
-                </div>
-                <div id="quantityContainer" class="mt-2">
-                    <label for="quantity" class="block">Quantity</label>
-                    <input type="number" name="quantity" id="quantity" class="w-full rounded-lg focus:ring-2 shadow-sm">
-                </div>
-                <div id="actionContainer" class="mt-2 hidden">
-                    <label for="action" class="block">Action</label>
-                    <select name="action" id="action" class="w-full py-2 px-3 rounded-lg focus:ring-2 shadow-sm">
-                        <option value="" disabled selected>Select here</option>
-                        <option value="add">Add</option>
-                        <option value="subtract">Subtract</option>
-                    </select>
-                </div>
-                <div class="mt-4 text-right">
-                    <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Save</button>
-                    <button type="button" id="closeModal" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
+            if (itemType === "Equipment") {
+                totalQuantityContainer.classList.remove("hidden");
+                expirationDateContainer.classList.add("hidden");
+                expirationDateInput.removeAttribute("required");
+            } else if (itemType === "Consumable") {
+                totalQuantityContainer.classList.remove("hidden");
+                expirationDateContainer.classList.remove("hidden");
+                expirationDateInput.setAttribute("required", "true");
+            } else  {
+                totalQuantityContainer.classList.add("hidden");
+                expirationDateContainer.classList.add("hidden");
+            }
+        }
+    </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const dropdownButtons = document.querySelectorAll('.dropdown-button');
-            const dropdownHeight = 155; // Set your fixed dropdown height here
+        // UPDATE ITEM
+        // Open the modal when any button is clicked
+        document.querySelectorAll('[data-item-id]').forEach(function(button) {
+            button.addEventListener("click", function() {
+                // Get the item ID from the clicked button's data-item-id
+                const itemId = this.getAttribute("data-item-id");
+                const itemType = this.getAttribute("data-item-type");
+                
+                // Show the modal
+                const modal = document.getElementById("UpdateItemModal");
+                modal.classList.remove("hidden");
 
-            dropdownButtons.forEach(button => {
-                button.addEventListener('click', function (event) {
-                    event.stopPropagation(); // Prevents event from bubbling up to the window
+                // Dynamically update the form action URL with the correct item ID
+                const form = document.getElementById("UpdateItemForm");
+                form.action = `/admin/inventory/${itemId}/update`; // Update the form action dynamically for this specific item
 
-                    const dropdownId = this.getAttribute('data-dropdown-id');
-                    const dropdownMenu = document.getElementById(dropdownId);
-                    const rect = this.getBoundingClientRect(); // Get button position
-                    const spaceBelow = window.innerHeight - rect.bottom; // Space below button
-                    const spaceAbove = rect.top; // Space above button
+                // Get the item type from the form (or from a hidden field)
+                const actioncontainer = document.getElementById("action_container");
+                const actionInput = document.getElementById("action");
 
-                    // Close all other dropdowns
-                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
-                        if (menu !== dropdownMenu) {
-                            menu.classList.add('hidden');
-                        }
-                    });
-
-                    // Toggle the clicked dropdown
-                    const isHidden = dropdownMenu.classList.contains('hidden');
-                    dropdownMenu.classList.toggle('hidden', !isHidden);
-
-                    // Position the dropdown
-                    if (isHidden) {
-                        if (spaceBelow >= dropdownHeight) {
-                            // Show below if there's enough space
-                            dropdownMenu.style.top = '100%'; // Default position
-                        } else if (spaceAbove >= dropdownHeight) {
-                            // Show above if there's not enough space below
-                            dropdownMenu.style.top = `-${dropdownHeight}px`; // Adjust for spacing
-                        } else {
-                            // If there's not enough space above or below, keep it hidden or handle accordingly
-                            dropdownMenu.classList.add('hidden'); // Or keep it open
-                        }
-                    }
-                });
-            });
-
-            // Close dropdowns if clicked outside
-            window.addEventListener('click', function () {
-                document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
-                    dropdown.classList.add('hidden');
-                });
+                if (itemType === "Equipment") {
+                    actioncontainer.classList.add("hidden");
+                    actionInput.removeAttribute("required");
+                } else if (itemType === "Consumable") {
+                    actioncontainer.classList.remove("hidden");
+                    actionInput.setAttribute("required", "true");
+                }
             });
         });
 
-        const createInventoryButton = document.getElementById('createInventoryButton');
-        const editInventoryButton = document.querySelectorAll('.editItemButton');
-        const inventoryModal = document.getElementById('inventoryModal');
-        const closeModalButton = document.getElementById('closeModal');
-        const inventoryForm = document.getElementById('inventoryForm');
-        const methodInput = document.getElementById('methodInput');
-
-        createInventoryButton.addEventListener('click', () => {
-            inventoryModal.classList.remove('hidden');
-            document.getElementById('modalTitle').innerText = 'Add Item';
-            methodInput.value = 'POST';
-            inventoryForm.action = "{{ route('admin.inventory.store') }}";
-            inventoryForm.reset();
-
-            document.getElementById('actionContainer').classList.add('hidden');
-        });
-
-        editInventoryButton.forEach(button => {
-            button.addEventListener('click', () => {
-                const id = button.dataset.id;
-                const item_name = button.dataset.item_name;
-                const quantity = button.dataset.quantity;
-
-                inventoryModal.classList.remove('hidden');
-                document.getElementById('modalTitle').innerText = 'Edit Inventory';
-                methodInput.value = 'PUT';
-                inventoryForm.action = `{{ url('admin/inventory') }}/${id}`;
-                document.getElementById('item_name').value = item_name;
-                document.getElementById('quantity').value = '';
-
-                document.getElementById('actionContainer').classList.remove('hidden');
-            });
-        });
-
-        closeModalButton.addEventListener('click', () => {
-            inventoryModal.classList.add('hidden');
+        // Close the modal when the cancel button is clicked
+        document.getElementById("UpdateCloseModalBtn").addEventListener("click", function() {
+            const modal = document.getElementById("UpdateItemModal");
+            modal.classList.add("hidden");  // Hide the modal
         });
     </script>
     

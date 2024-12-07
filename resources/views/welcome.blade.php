@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css" />
 </head>
 <body class="min-h-screen">
 
@@ -46,15 +48,15 @@
             <div class="grid grid-cols-1 gap-6 p-6">
                 <div class="text-center px-8">
                     <!-- Logo -->
-                    <div class="flex justify-center mb-6">
+                    <div class="flex justify-center mb-6" data-aos="fade-up" data-aos-duration="1000">
                         <img src="{{ asset('images/logo.png') }}" alt="Dental Clinic Logo" class="w-36 h-36 lg:w-56 lg:h-56">
                     </div>
                     <!-- Main Heading -->
-                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4" data-aos="fade-up" data-aos-duration="1000">
                         Welcome to Dela Cirna Dental Clinic
                     </h1>
                     <!-- Subheading -->
-                    <p class="text-lg sm:text-xl lg:text-2xl px-8">
+                    <p class="text-base sm:text-lg lg:text-xl px-8" data-aos="fade-up" data-aos-duration="1000">
                         Your trusted partner, transforming dental care with innovative solutions. We offer a wide range of services to ensure your smile stays healthy, bright, and beautiful.
                     </p>
                 </div>
@@ -65,11 +67,11 @@
     <!-- Treatment Services -->
     <section class="relative px-6 lg:px-8 py-12">
         
-        <h1 class="text-center font-bold text-3xl py-12 mt-6">Treatment Services</h1>
+        <h1 class="text-center font-bold text-3xl py-12 mt-6" data-aos="fade-up" data-aos-duration="1000">Treatment Services</h1>
         
         <!-- <div class="overflow-x-auto flex gap-6 p-6"> -->
 
-            <div class="flex justify-center gap-6 p-2">
+            <div class="flex justify-center gap-6 p-2" data-aos="fade-up" data-aos-duration="1000">
                 <!-- First Div with 3 cards -->
                 <div class="flex justify-center gap-6">
                     <!-- First Card -->
@@ -117,7 +119,7 @@
                 </div>
             </div>
             
-            <div class="flex justify-center gap-6 p-2">
+            <div class="flex justify-center gap-6 p-2" data-aos="fade-up" data-aos-duration="1000">
                 <!-- First Div with 3 cards -->
                 <div class="flex justify-center gap-6">
                     <!-- Fourth Card -->
@@ -156,12 +158,12 @@
     
     <!-- Address and Contacts -->
     <section class="p-6">
-        <a href="/" class="flex justify-center items-center py-6">
+        <a href="/" class="flex justify-center items-center py-6" data-aos="fade-up" data-aos-duration="1000">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-12 h-12">
             <h3 class="text-xl lg:text-3xl ml-2">Dela Cirna Dental Clinic</h3>
         </a>
 
-        <div class="flex justify-center items-center">
+        <div class="flex justify-center items-center" data-aos="fade-up" data-aos-duration="1000">
             <div class="grid grid-cols-1 md:grid-cols-3 py-12 gap-6">
 
                 <!-- Our Address -->
@@ -224,16 +226,16 @@
             <!-- Content Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-8">
                 <!-- Image Section -->
-                <div>
+                <div data-aos="fade-up" data-aos-duration="1000">
                     <img src="{{ asset('images/people.png') }}" alt="People" class="w-full h-auto">
                 </div>
 
                 <!-- Text Section -->
                 <div class="flex flex-col justify-center">
                     <!-- Heading -->
-                    <h2 class="text-3xl font-semibold pb-4">About Us</h2>
+                    <h2 class="text-3xl font-semibold pb-4" data-aos="fade-up" data-aos-duration="1000">About Us</h2>
 
-                    <p class="text-justify">We created this website to provide a supportive space where patients, students and dental professionals can connect, share experiences, and access valuable insights on oral health. Dental care can be intimidating and confusing, so our goal is to simplify it by building a community where patients can ask questions, share their stories, and get advice from experts. For professionals, it's a platform to exchange ideas, discuss industry advancements, and collaborate on cases. Ultimately, we aim to bridge the gap between dental knowledge and practice, empowering everyone to take charge of their dental health with confidence.</p>
+                    <p class="text-justify" data-aos="fade-up" data-aos-duration="1000">We created this website to provide a supportive space where patients, students and dental professionals can connect, share experiences, and access valuable insights on oral health. Dental care can be intimidating and confusing, so our goal is to simplify it by building a community where patients can ask questions, share their stories, and get advice from experts. For professionals, it's a platform to exchange ideas, discuss industry advancements, and collaborate on cases. Ultimately, we aim to bridge the gap between dental knowledge and practice, empowering everyone to take charge of their dental health with confidence.</p>
                 </div>
             </div>
         </div>
@@ -241,10 +243,10 @@
 
     <footer class="bg-gray-800 text-white pt-8 pb-4">
         <div class="text-center">
-            <h3 class="text-xl lg:text-3xl">Developers</h3>
+            <h3 class="text-xl lg:text-3xl" data-aos="fade-up" data-aos-duration="1000">Developers</h3>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4">
+        <div class="grid grid-cols-1 md:grid-cols-4" data-aos="fade-up" data-aos-duration="1000">
             <div class="flex justify-center items-center py-12 gap-6">
                 <!-- Carl -->
                 <div class="space-y-2">
@@ -317,7 +319,7 @@
         </div>
 
         <!-- Copyright -->
-        <div class="mt-10 text-center text-sm text-gray-400">
+        <div class="mt-10 text-center text-sm text-gray-400" data-aos="fade-up" data-aos-duration="1000">
             <p>&copy; 2024 <a href="/" class="hover:underline">Bataan Dental</a>. All rights reserved.</p>
         </div>
     </footer>
@@ -341,6 +343,14 @@
                 e.preventDefault(); // Disable Ctrl+U
             }
         });
+    </script>
+
+    <!-- AOS JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.js"></script>
+
+    <!-- Initialize AOS -->
+    <script>
+        AOS.init();
     </script>
 
 </body>
