@@ -43,7 +43,8 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::get('/admin/inventory', [AdminInventoryController::class, 'index'])->name('admin.inventory');
     Route::post('/admin/inventory', [AdminInventoryController::class, 'store'])->name('admin.inventory.store');
     Route::put('/admin/inventory/{id}/update', [AdminInventoryController::class, 'update'])->name('admin.inventory.update');
-    
+    Route::get('/admin/inventory/print', [AdminInventoryController::class, 'print'])->name('admin.inventory.print');
+
     // paitent list
     Route::get('/admin/patientlist',[AdminPatientListController::class,'index'])->name('admin.patientlist');
     Route::get('/admin/patientlist/add', [AdminPatientListController::class, 'createPatient'])->name('admin.patient.create');

@@ -107,14 +107,20 @@
                             </div>
                             
                             <div class="max-h-96 overflow-y-auto">
-                                @foreach ($notifications as $notification)
-                                    <div class="shadow border rounded-lg p-4 hover:bg-gray-50 text-justify mt-2 {{ $notification->read_at ? 'bg-white' : 'bg-gray-200' }}">
-                                        <a href="{{ route('admin.markAsRead', $notification->id) }}" class="flex-1 text-gray-800 hover:text-blue-600">
-                                            <span class="text-xs">{{ $notification->data['message'] }}</span>
-                                            <span class="text-xs text-gray-500 block mt-1">{{ $notification->created_at->diffForHumans() }}</span>
-                                        </a>
+                                @if($notifications->isEmpty())
+                                    <div class="col-span-1 shadow border rounded-lg p-4 hover:bg-gray-50 text-justify mt-2 text-xs">
+                                        <p class="text-gray-600">You have no new notifications at the moment.</p>
                                     </div>
-                                @endforeach
+                                @else
+                                    @foreach ($notifications as $notification)
+                                        <div class="shadow border rounded-lg p-4 hover:bg-gray-50 text-justify mt-2 {{ $notification->read_at ? 'bg-white' : 'bg-gray-200' }}">
+                                            <a href="{{ route('admin.markAsRead', $notification->id) }}" class="flex-1 text-gray-800 hover:text-blue-600">
+                                                <span class="text-xs">{{ $notification->data['message'] }}</span>
+                                                <span class="text-xs text-gray-500 block mt-1">{{ $notification->created_at->diffForHumans() }}</span>
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     </x-slot>
@@ -174,15 +180,37 @@
                         <!-- Notifications List -->
                         <div class="w-64 p-2">
                             <h1 class="text-lg font-semibold ml-4 mt-2">Notifications</h1>
+
+                            <!-- Filter Buttons (Don't close the dropdown on click) -->
+                            <div class="filter-buttons flex space-x-4">
+                                <a href="{{ url()->current() . '?filter=all' }}" class="text-sm font-semibold px-4 py-2 rounded-lg {{ $filter == 'all' ? 'text-blue-800' : 'text-gray-400' }}">
+                                    All
+                                </a>
+
+                                <a href="{{ url()->current() . '?filter=unread' }}" class="text-sm font-semibold px-4 py-2 rounded-lg {{ $filter == 'unread' ? 'text-blue-800' : 'text-gray-400' }}">
+                                    Unread
+                                </a>
+
+                                <a href="{{ url()->current() . '?filter=read' }}" class="text-sm font-semibold px-4 py-2 rounded-lg {{ $filter == 'read' ? 'text-blue-800' : 'text-gray-400' }}">
+                                    Read
+                                </a>
+                            </div>
+                            
                             <div class="max-h-96 overflow-y-auto">
-                                @foreach ($notifications as $notification)
-                                    <div class="shadow rounded-lg p-4 hover:bg-gray-50 text-justify mt-2 {{ $notification->read_at ? 'bg-white' : 'bg-gray-200' }}">
-                                        <a href="{{ route('admin.markAsRead', $notification->id) }}" class="flex-1 text-gray-800 hover:text-blue-600">
-                                            <span class="text-xs">{{ $notification->data['message'] }}</span>
-                                            <span class="text-xs text-gray-500 block mt-1">{{ $notification->created_at->diffForHumans() }}</span>
-                                        </a>
+                                @if($notifications->isEmpty())
+                                    <div class="col-span-1 shadow border rounded-lg p-4 hover:bg-gray-50 text-justify mt-2 text-xs">
+                                        <p class="text-gray-600">You have no new notifications at the moment.</p>
                                     </div>
-                                @endforeach
+                                @else
+                                    @foreach ($notifications as $notification)
+                                        <div class="shadow border rounded-lg p-4 hover:bg-gray-50 text-justify mt-2 {{ $notification->read_at ? 'bg-white' : 'bg-gray-200' }}">
+                                            <a href="{{ route('admin.markAsRead', $notification->id) }}" class="flex-1 text-gray-800 hover:text-blue-600">
+                                                <span class="text-xs">{{ $notification->data['message'] }}</span>
+                                                <span class="text-xs text-gray-500 block mt-1">{{ $notification->created_at->diffForHumans() }}</span>
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     </x-slot>

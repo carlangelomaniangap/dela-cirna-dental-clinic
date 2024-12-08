@@ -72,4 +72,13 @@ class AdminInventoryController extends Controller
 
         return redirect()->back()->with('success', 'Item quantity updated!');
     }
+
+    public function print()
+    {
+        // Get all inventory data or filter as needed
+        $items = Inventory::all();
+
+        // Return a view with the data
+        return view('admin.inventory.inventory', compact('items'));
+    }
 }

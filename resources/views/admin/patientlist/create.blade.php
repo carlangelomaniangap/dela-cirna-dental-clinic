@@ -23,7 +23,7 @@
                     <select class="w-full py-2 px-3 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" id="users_id" name="users_id" required>
                         <option value="" disabled selected>Select</option>
                         @foreach($users as $user)
-                            <option value="{{ $user->id }}" data-name="{{ $user->name }}" data-gender="{{ $user->gender }}" data-birthday="{{ $user->birthday }}" data-age="{{ $user->age }}" data-address="{{ $user->address }}" data-phone="{{ $user->phone }}"data-email="{{ $user->email }}">{{ $user->name }}</option>
+                            <option value="{{ $user->id }}" data-email="{{ $user->email }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -61,7 +61,7 @@
 
                 <div>
                     <label for="phone" class="font-semibold text-gray-700">Phone No.</label>
-                    <input type="tel" id="phone" name="phone" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" required>
+                    <input type="tel" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')" id="phone" name="phone" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" required>
                 </div>
 
                 <div>
@@ -110,12 +110,6 @@
     <script>
         document.getElementById('users_id').addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
-            document.getElementById('name').value = selectedOption.getAttribute('data-name');
-            document.getElementById('gender').value = selectedOption.getAttribute('data-gender');
-            document.getElementById('birthday').value = selectedOption.getAttribute('data-birthday');
-            document.getElementById('age').value = selectedOption.getAttribute('data-age');
-            document.getElementById('address').value = selectedOption.getAttribute('data-address');
-            document.getElementById('phone').value = selectedOption.getAttribute('data-phone');
             document.getElementById('email').value = selectedOption.getAttribute('data-email');
         });
     </script>

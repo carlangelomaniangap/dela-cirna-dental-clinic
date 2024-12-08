@@ -60,10 +60,10 @@
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
 
             <!-- Button to Open Add New Item Modal -->
-            <div class="p-6">
+            <div class="p-6 print:hidden">
                 <div class="flex flex-col sm:flex-row items-center justify-between mb-4">
                     <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold">Inventory</h1>
-                    <button type="button" id="AddOpenModalBtn" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-4 py-2 rounded max-w-xs font-semibold">Add Item</button>
+                    <button type="button" id="AddOpenModalBtn" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-4 py-2 rounded font-semibold">Add Item</button>
                 </div>
             </div>
 
@@ -114,8 +114,8 @@
             </div>
 
             <!-- Inventory List -->
-            <div class="mt-4">
-                <table class="min-w-full bg-white border border-gray-300">
+            <div  class="p-6">
+                <table id="inventory-content" class="min-w-full bg-white border border-gray-300">
                     <thead>
                         <tr>
                             <th class="px-4 py-2 border">Item Name</th>
@@ -125,61 +125,70 @@
                             <th class="px-4 py-2 border">Expiration Date</th>
                             <th class="px-4 py-2 border">Quantity Used</th>
                             <th class="px-4 py-2 border">Last Updated</th>
-                            <th class="px-4 py-2 border">Actions</th>
+                            <th class="action px-4 py-2 border">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($items as $item)
-                        <tr>
-                            <td class="px-4 py-2 border">{{ $item->item_name }}</td>
-                            <td class="px-4 py-2 border">{{ $item->item_type }}</td>
-                            <td class="px-4 py-2 border">{{ $item->total_quantity }}</td>
-                            <td class="px-4 py-2 border">{{ $item->available_quantity }}</td>
-                            <td class="px-4 py-2 border">{{ $item->expiration_date ? date('F j, Y', strtotime($item->expiration_date)) : 'N/A' }}</td>
-                            <td class="px-4 py-2 border">{{ $item->quantity_used }}</td>
-                            <td class="px-4 py-2 border">{{ $item->updated_at ? date('F j, Y', strtotime($item->updated_at)) : 'N/A' }}</td>
-                            <td class="px-4 py-2 border">
-                                <button type="button" data-item-id="{{ $item->id }}" data-item-type="{{ $item->item_type }}" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-4 py-2 rounded max-w-xs font-semibold">Update Item</button>
-                            </td>
-                        </tr>
+                    <tbody class="text-sm">
+                        @if($items->isEmpty())
+                            <tr>
+                                <td colspan="8" class="px-4 py-2 border text-gray-600 text-center">No items found.</td>
+                            </tr>
+                        @else
+                            @foreach ($items as $item)
+                                <tr>
+                                    <td class="px-4 py-2 border">{{ $item->item_name }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->item_type }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->total_quantity }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->available_quantity }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->expiration_date ? date('F j, Y', strtotime($item->expiration_date)) : 'N/A' }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->quantity_used }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->updated_at ? date('F j, Y', strtotime($item->updated_at)) : 'N/A' }}</td>
+                                    <td class="action px-4 py-2 border">
+                                        <button type="button" data-item-id="{{ $item->id }}" data-item-type="{{ $item->item_type }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-3 py-2 rounded">Update Item</button>
+                                    </td>
+                                </tr>
 
-                        <!-- Modal for Updating New Item -->
-                        <div id="UpdateItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-                        
-                            <div class="bg-white p-4 rounded-lg shadow-md z-10">
-                                <div style="background-color: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
-                                    <h4 class="text-lg font-bold">Update Item</h4>
+                                <!-- Modal for Updating New Item -->
+                                <div id="UpdateItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+                                
+                                    <div class="bg-white p-4 rounded-lg shadow-md z-10">
+                                        <div style="background-color: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
+                                            <h4 class="text-lg font-bold">Update Item</h4>
+                                        </div>
+                                        <form id="UpdateItemForm" action="{{ route('admin.inventory.update', $item->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+
+                                            <!-- Item Type Selection -->
+                                            <div class="mb-4 hidden" id="action_container">
+                                                <label for="action" class="block text-sm font-medium text-gray-900 dark:text-white">Action</label>
+                                                <select name="action" id="action" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
+                                                    <option value="" selected disabled>Select Action</option>
+                                                    <option value="add">Add</option>
+                                                    <option value="used">Used</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Quantity (Initially hidden) -->
+                                            <div class="mb-4" id="quantity_container">
+                                                <label for="quantity" class="block text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
+                                                <input type="number" name="quantity" id="quantity" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
+                                            </div>
+
+                                            <div class="mt-4 text-right">
+                                                <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300" id="modalSubmitBtn">Add</button>
+                                                <button type="button" id="UpdateCloseModalBtn" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                                <form id="UpdateItemForm" action="{{ route('admin.inventory.update', $item->id) }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-
-                                    <!-- Item Type Selection -->
-                                    <div class="mb-4 hidden" id="action_container">
-                                        <label for="action" class="block text-sm font-medium text-gray-900 dark:text-white">Action</label>
-                                        <select name="action" id="action" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
-                                            <option value="" selected disabled>Select Action</option>
-                                            <option value="add">Add</option>
-                                            <option value="used">Used</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Quantity (Initially hidden) -->
-                                    <div class="mb-4" id="quantity_container">
-                                        <label for="quantity" class="block text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
-                                        <input type="number" name="quantity" id="quantity" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
-                                    </div>
-
-                                    <div class="mt-4 text-right">
-                                        <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300" id="modalSubmitBtn">Add</button>
-                                        <button type="button" id="UpdateCloseModalBtn" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        @endforeach
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
+                <div class="flex justify-end mt-6">
+                    <button onclick="openPrintView();" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-2 py-1.5 rounded transition duration-300">Print a copy</button>
+                </div>
             </div>
         </div>
     </div>
@@ -255,6 +264,46 @@
             const modal = document.getElementById("UpdateItemModal");
             modal.classList.add("hidden");  // Hide the modal
         });
+    </script>
+
+    <script>
+        // Function to open the print-friendly view in a new tab
+        function openPrintView() {
+            var printWindow = window.open('', '_blank'); // Open a new tab
+            printWindow.document.write('<html><head><title>Dela Cirna Dental Clinic</title>');
+
+            // Add some basic styles for printing
+            printWindow.document.write('<style>body { font-family: Arial, sans-serif; padding: 20px; }');
+            printWindow.document.write('.print-content { width: 100%; border-collapse: collapse; margin-top: 20px; }');
+            printWindow.document.write('.print-content th, .print-content td { border: 1px solid #ccc; padding: 10px; font-size: 14px; }');
+            printWindow.document.write('.print-content th { background-color: #f4f4f4; }');
+            printWindow.document.write('.no-print { display: block; }'); // Show the Print button
+            printWindow.document.write('  .action { display: none !important; }'); // Hide update button column during print
+            printWindow.document.write('{ pointer-events: none; opacity: 0.5; }'); // Disable content initially
+            printWindow.document.write('@media print { .no-print { display: none; } }'); // Hide print button on print
+            printWindow.document.write('</style>');
+
+            // Add the content from the inventory page to the new tab
+            var content = document.getElementById('inventory-content').innerHTML;
+            printWindow.document.write('<body>');
+            printWindow.document.write('<h2>Inventory</h2>');
+            printWindow.document.write('<table class="print-content inactive">' + content + '</table>'); // Disable content initially
+            printWindow.document.write('<div class="no-print" style="margin-top: 20px;">');
+            printWindow.document.write('<button onclick="enableContentAndPrint();" style="background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; border: none;;">Print</button>');
+            printWindow.document.write('</div>');  // Print button
+            printWindow.document.write('</body></html>');
+
+            // Function to enable content and open print dialog
+            printWindow.document.write('<script>');
+            printWindow.document.write('function enableContentAndPrint() {');
+            printWindow.document.write('    var content = document.querySelector(".print-content");');
+            printWindow.document.write('    content.classList.remove("inactive");'); // Enable content
+            printWindow.document.write('    window.print();'); // Open the print dialog
+            printWindow.document.write('}');
+            printWindow.document.write('</' + 'script>');
+
+            printWindow.document.close();
+        }
     </script>
     
 </body>
