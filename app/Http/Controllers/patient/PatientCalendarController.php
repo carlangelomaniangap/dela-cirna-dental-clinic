@@ -12,10 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class PatientCalendarController extends Controller
 {
     public function getBookedTimes(Request $request){
-
         $date = $request->query('date');
-
-        // Fetch appointments for the given date
         $bookedTimes = Calendar::whereDate('appointmentdate', $date)
             ->pluck('appointmenttime')
             ->toArray();
@@ -24,21 +21,16 @@ class PatientCalendarController extends Controller
     }
 
     public function index(){
-
         $calendars = Calendar::all();
-
         return view('patient.calendar.calendar', compact('calendars'));
     }
 
     public function createCalendar($userId){
-
         $users = User::findOrFail($userId);
-
         return view('patient.appointment.appointment', compact('users'));
     }
-    
-    public function storeCalendar(Request $request){
 
+    public function storeCalendar(Request $request){
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'appointmentdate' => 'required|date',
@@ -59,37 +51,23 @@ class PatientCalendarController extends Controller
             'relation' => 'nullable|string',
         ]);
 
-        $startOfWeek = Carbon::now()->startOfWeek();
-        $endOfWeek = Carbon::now()->endOfWeek();
-
         $pendingAppointmentsCount = Calendar::where('user_id', $request->input('user_id'))
             ->where('approved', 'Pending')
-            ->whereBetween('appointmentdate', [$startOfWeek, $endOfWeek])
             ->count();
 
         if ($pendingAppointmentsCount >= 3) {
-            $latestPendingAppointment = Calendar::where('user_id', $request->input('user_id'))
-                ->where('approved', 'Pending')
-                ->orderBy('created_at', 'desc')
-                ->first();
-
-            $cooldownEndDate = Carbon::parse($latestPendingAppointment->created_at)->addWeek();
-
-            if (Carbon::now()->lessThan($cooldownEndDate)) {
-                return redirect()->back()->withErrors([
-                    'appointment_limit' => 'You have reached the limit of 3 pending appointments. Please wait until ' . $cooldownEndDate->format('l, F j, Y') . ' before booking another appointment.',
-                ]);
-            }
+            return redirect()->back()->withErrors([
+                'appointment_limit' => 'You have reached the limit of 3 pending appointments. Please wait until one is approved or canceled before booking another.',
+            ]);
         }
 
-        // Check for existing appointment
         $existingAppointment = Calendar::where([
             'appointmentdate' => $request->input('appointmentdate'),
-            'appointmenttime'=> $request->input('appointmenttime')
+            'appointmenttime' => $request->input('appointmenttime'),
         ])->first();
 
         if ($existingAppointment) {
-            return redirect()->back()->withErrors(['appointmenttime' => 'This time is already booked. Could you please select a different time?']);
+            return redirect()->back()->withErrors(['appointmenttime' => 'This time is already booked. Please select a different time.']);
         }
 
         $calendar = Calendar::create([
@@ -110,28 +88,26 @@ class PatientCalendarController extends Controller
             'emergencycontactphone' => $request->input('emergencycontactphone'),
             'relationname' => $request->input('relationname'),
             'relation' => $request->input('relation'),
+            'approved' => 'Pending',
         ]);
 
-        // Ensure that the date and time are Carbon instances
-        $appointmentDate = Carbon::parse($calendar->appointmentdate)->format('F j, Y');  // e.g., 'December 3, 2024'
-        $appointmentTime = Carbon::parse($calendar->appointmenttime)->format('h:i A');  // e.g., '02:30 PM'
-
-        // Create custom message for the notification
+        $appointmentDate = Carbon::parse($calendar->appointmentdate)->format('F j, Y');
+        $appointmentTime = Carbon::parse($calendar->appointmenttime)->format('h:i A');
         $message = "{$calendar->name} has scheduled a new appointment for {$appointmentDate} at {$appointmentTime}.";
 
-        // Send the notification to the admin
-        $admin = User::where('usertype', 'admin')->first(); // You can add logic if you want to send notifications to multiple admins
-        $admin->notify(new AppointmentNotifications($calendar, $message));
+        $admin = User::where('usertype', 'admin')->first();
+        if ($admin) {
+            $admin->notify(new AppointmentNotifications($calendar, $message));
+        }
 
         return redirect()->route('patient.appointment')->with('success', 'Appointment added successfully!');
     }
 
-    public function viewDetails($Id){
-        
-        $calendar = Calendar::where('id', $Id)->first();
+    public function viewDetails($id){
+        $calendar = Calendar::findOrFail($id);
 
         if (Auth::user()->usertype !== 'admin' && Auth::id() !== $calendar->user_id) {
-            return view('home');
+            return redirect()->route('home');
         }
 
         return view('patient.calendar.viewDetails', compact('calendar'));
