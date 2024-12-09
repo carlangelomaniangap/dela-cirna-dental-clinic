@@ -119,53 +119,26 @@
                                     @endphp
                                     <div class="hourly-slot mb-1 p-1 text-center border-2 border-gray-200 rounded shadow-md">
                                         <strong>{{ $startHour12 }}:00{{ $startPeriod }} - {{ $endHour12 }}:00{{ $endPeriod }}</strong>
-                                        @php $hasAppointment = false; @endphp
+                                        @php $hasActiveAppointment = false; @endphp
                                         @foreach ($calendars as $calendar)
-                                            <a href="{{ route('patient.viewDetails', $calendar->id) }}">
-                                                @if ($calendar->appointmentdate == $day->format('Y-m-d') && date('G', strtotime($calendar->appointmenttime)) == $hour)
-                                                    <div class="appointment bg-gray-200 p-2 mt-1 rounded text-center w-full box-border">
-                                                        <div>{{ $calendar->name }}</div>
-                                                        <div class="appointment-buttons mt-2 flex justify-between">
+                                            @if ($calendar->appointmentdate == $day->format('Y-m-d') && date('G', strtotime($calendar->appointmenttime)) == $hour && !in_array($calendar->approved, ['ApprovedCancelled', 'PendingCancelled']))
+                                                <div class="appointment bg-gray-200 p-2 mt-1 rounded text-center w-full box-border">
+                                                    <div>{{ $calendar->name }}</div>
+                                                    <div class="appointment-status mt-2">
                                                         @if ($calendar->approved === 'Pending')
-                                                                <div class="flex justify-center items-center space-x-2">
-                                                                    <!-- If the status is Pending, show a Pending button and Cancel button -->
-                                                                    <span class="py-1 px-2 rounded text-yellow-500 text-sm">Pending</span>
-                                                                </div>
-                                                            @elseif ($calendar->approved === 'Approved')
-                                                                <div class="flex">
-                                                                    <!-- If the status is Approved, show Approved status and buttons for Complete or Cancel -->
-                                                                    <div class="mb-2">
-                                                                        <span class="py-1 px-2 rounded text-green-500 text-sm">Approved</span> <!--bg-green-500 text-white-->
-                                                                    </div>
-                                                                </div>
-                                                            @elseif ($calendar->approved === 'Completed')
-                                                                <!-- If the status is Completed, show Approved and Completed -->
-                                                                <div class="flex justify-center items-center space-x-2">
-                                                                    <span class="py-1 px-2 rounded text-green-500 text-sm">Approved</span> <!--bg-green-500 text-white-->
-                                                                    <span class="py-1 px-2 rounded text-green-500 text-sm">Completed</span> <!--bg-green-500 text-white-->
-                                                                </div>
-
-                                                            @elseif ($calendar->approved === 'ApprovedCancelled')
-                                                                <!-- If the status is Cancelled, show Approved and Cancelled -->
-                                                                <div class="flex justify-center items-center space-x-2">
-                                                                    <span class="py-1 px-2 rounded text-green-500 text-sm">Approved</span> <!--bg-green-500 text-white-->
-                                                                    <span class="py-1 px-2 rounded text-red-500 text-sm">Cancelled</span> <!--bg-red-500 text-white-->
-                                                                </div>
-                                                            @elseif ($calendar->approved === 'PendingCancelled')
-                                                                <!-- If the status is Cancelled, show Approved and Cancelled -->
-                                                                <div class="flex justify-center items-center space-x-2">
-                                                                    <span class="py-1 px-2 rounded text-yellow-500 text-sm">Pending</span> <!--bg-yellow-500 text-white-->
-                                                                    <span class="py-1 px-2 rounded text-red-500 text-sm">Cancelled</span> <!--bg-red-500 text-white-->
-                                                                </div>
-                                                            @endif
-                                                        </div>
+                                                            <span class="py-1 px-2 rounded text-yellow-500 text-sm">Pending</span>
+                                                        @elseif ($calendar->approved === 'Approved')
+                                                            <span class="py-1 px-2 rounded text-green-500 text-sm">Approved</span>
+                                                        @elseif ($calendar->approved === 'Completed')
+                                                            <span class="py-1 px-2 rounded text-green-500 text-sm">Completed</span>
+                                                        @endif
                                                     </div>
-                                                    @php $hasAppointment = true; @endphp
-                                                @endif
-                                            </a>
+                                                </div>
+                                                @php $hasActiveAppointment = true; @endphp
+                                            @endif
                                         @endforeach
-                                        @if (!$hasAppointment)
-                                            <div class="text-gray-400 text-xs">No Appointments</div>
+                                        @if (!$hasActiveAppointment)
+                                            <div class="text-gray-400 text-xs">No Appointment</div>
                                         @endif
                                     </div>
                                 @endif

@@ -12,9 +12,13 @@ use Illuminate\Support\Facades\Auth;
 class PatientCalendarController extends Controller
 {
     public function getBookedTimes(Request $request){
-        $date = $request->query('date');
-        $bookedTimes = Calendar::whereDate('appointmentdate', $date)
+        $date = $request->input('date');
+        $bookedTimes = Calendar::where('appointmentdate', $date)
+            ->whereNotIn('approved', ['ApprovedCancelled', 'PendingCancelled'])
             ->pluck('appointmenttime')
+            ->map(function ($time) {
+                return Carbon::parse($time)->format('H:i:s');
+            })
             ->toArray();
 
         return response()->json($bookedTimes);
@@ -64,7 +68,9 @@ class PatientCalendarController extends Controller
         $existingAppointment = Calendar::where([
             'appointmentdate' => $request->input('appointmentdate'),
             'appointmenttime' => $request->input('appointmenttime'),
-        ])->first();
+        ])
+        ->whereNotIn('approved', ['ApprovedCancelled', 'PendingCancelled'])
+        ->first();
 
         if ($existingAppointment) {
             return redirect()->back()->withErrors(['appointmenttime' => 'This time is already booked. Please select a different time.']);
