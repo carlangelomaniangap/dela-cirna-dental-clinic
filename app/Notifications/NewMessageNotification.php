@@ -29,7 +29,7 @@ class NewMessageNotification extends Notification
 
     public function toArray($notifiable)
     {
-        $limitedMessage = \Str::limit($this->message->message, 60);
+        $limitedMessage = \Str::limit($this->message->message, 25);
         return [
             'message' => "{$this->sender->name} sent you a new message : {$limitedMessage}",
             'sender_id' => $this->sender->id,

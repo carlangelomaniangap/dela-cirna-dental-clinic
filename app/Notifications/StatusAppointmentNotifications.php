@@ -13,10 +13,11 @@ class StatusAppointmentNotifications extends Notification
     protected $message;
 
     // Pass the appointment object and the message to the notification
-    public function __construct($calendar, $message)
+    public function __construct($calendar, $message, $cancelReason = null)
     {
         $this->calendar = $calendar;
         $this->message = $message; // Store the message
+        $this->cancelReason = $cancelReason;
     }
 
     // Specify the notification channels (we'll use 'database' here)
@@ -28,6 +29,10 @@ class StatusAppointmentNotifications extends Notification
     // Define the data to store in the database notifications table
     public function toDatabase($notifiable)
     {
+        if ($this->cancelReason) {
+            $this->message .= " Reason: {$this->cancelReason}";
+        }
+
         return [
             'message' => $this->message,  // Use the dynamic message here
             'appointment_id' => $this->calendar->id,

@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 <body class="min-h-screen">
     
@@ -135,38 +136,34 @@
                                             @if ($calendar->appointmentdate == $day->format('Y-m-d') && date('G', strtotime($calendar->appointmenttime)) == $hour)
                                                 @if (!in_array($calendar->status, ['ApprovedCancelled', 'PendingCancelled']))
                                                     @php $hasActiveAppointment = true; @endphp
-                                                    <a href="{{ route('admin.viewDetails', $calendar->id) }}">
-                                                        <div class="appointment bg-gray-200 p-2 mt-1 rounded text-center w-full box-border">
-                                                            <div>{{ $calendar->user->name }}</div>
-                                                            <div class="appointment-buttons mt-2">
-                                                                @if ($calendar->status === 'Pending')
-                                                                    <div class="flex justify-center items-center space-x-2">
-                                                                        <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'approve']) }}">
-                                                                            @csrf
-                                                                            <button type="submit" class="py-1 px-2 rounded bg-yellow-500 text-white text-sm">Pending</button>
-                                                                        </form>
-                                                                        <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'pendingcancel']) }}">
-                                                                            @csrf
-                                                                            <button type="submit" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
-                                                                        </form>
-                                                                    </div>
-                                                                @elseif ($calendar->status === 'Approved')
-                                                                    <div class="flex justify-center items-center space-x-2">
-                                                                        <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'complete']) }}">
-                                                                            @csrf
-                                                                            <button type="submit" class="py-1 px-2 rounded bg-blue-500 text-white text-sm">Complete</button>
-                                                                        </form>
-                                                                        <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'approvecancel']) }}">
-                                                                            @csrf
-                                                                            <button type="submit" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
-                                                                        </form>
-                                                                    </div>
-                                                                @elseif ($calendar->status === 'Completed')
-                                                                    <p>Status: <span class="text-blue-700 text-sm">Completed</span></p>
-                                                                @endif
-                                                            </div>
+                                                    <div class="appointment bg-gray-200 p-2 mt-1 rounded text-center w-full box-border">
+                                                        <div>{{ $calendar->user->name }}</div>
+                                                        <div class="appointment-buttons mt-2">
+                                                            @if ($calendar->status === 'Pending')
+                                                                <div class="flex justify-center items-center space-x-2">
+                                                                    <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'approve']) }}">
+                                                                        @csrf
+                                                                        <button type="submit" class="py-1 px-2 rounded bg-yellow-500 text-white text-sm">Pending</button>
+                                                                    </form>
+                                                                    <button onclick="openCancelModal({{ $calendar->id }}, 'pendingcancel')" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
+                                                                </div>
+                                                            @elseif ($calendar->status === 'Approved')
+                                                                <div class="flex justify-center items-center space-x-2">
+                                                                    <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'complete']) }}">
+                                                                        @csrf
+                                                                        <button type="submit" class="py-1 px-2 rounded bg-blue-500 text-white text-sm">Complete</button>
+                                                                    </form>
+                                                                    <button onclick="openCancelModal({{ $calendar->id }}, 'approvecancel')" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
+                                                                </div>
+                                                            @elseif ($calendar->status === 'Completed')
+                                                                <p>Status: <span class="text-blue-700 text-sm">Completed</span></p>
+                                                            @endif
+                                                            <a href="{{ route('admin.viewDetails', $calendar->id) }}" class="inline-flex items-center justify-center py-1 px-2 mt-2 rounded bg-gray-500 text-white text-sm hover:bg-gray-600">
+                                                            <i class="fa-solid fa-eye mr-2"></i>
+                                                                View Details
+                                                            </a>
                                                         </div>
-                                                    </a>
+                                                    </div>
                                                 @endif
                                             @endif
                                         @endforeach
@@ -180,9 +177,45 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Cancellation Reason Modal -->
+            <div id="cancelModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                <div class="bg-white shadow-lg rounded-lg p-6 w-96">
+                    <h2 class="text-xl font-semibold mb-4">Cancel Appointment</h2>
+                    <form id="cancelForm" method="post" action="">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="cancel_reason" class="block text-sm font-medium text-gray-700">Reason for Cancellation</label>
+                            <textarea id="cancel_reason" name="cancel_reason" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required></textarea>
+                        </div>
+                        <div class="flex justify-end space-x-2">
+                            <button type="button" onclick="closeCancelModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Close</button>
+                            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Confirm Cancellation</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         @endfor
     </div>
+    <script>
+            function toggleAppointments(element) {
+                const appointmentsDiv = element.querySelector('.hourly-appointments');
+                appointmentsDiv.classList.toggle('hidden');
+            }
 
+            function openCancelModal(appointmentId, status) {
+                const modal = document.getElementById('cancelModal');
+                const form = document.getElementById('cancelForm');
+                form.action = `{{ route('admin.approveCalendar', ['appointmentId' => ':appointmentId', 'status' => ':status']) }}`
+                    .replace(':appointmentId', appointmentId)
+                    .replace(':status', status);
+                modal.classList.remove('hidden');
+            }
+
+            function closeCancelModal() {
+                document.getElementById('cancelModal').classList.add('hidden');
+            }
+    </script>
     <script>
         function toggleAppointments(dayElement) {
             // Close other open appointments

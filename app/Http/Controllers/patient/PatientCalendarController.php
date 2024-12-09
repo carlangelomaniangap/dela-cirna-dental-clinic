@@ -14,7 +14,7 @@ class PatientCalendarController extends Controller
     public function getBookedTimes(Request $request){
         $date = $request->input('date');
         $bookedTimes = Calendar::where('appointmentdate', $date)
-            ->whereNotIn('approved', ['ApprovedCancelled', 'PendingCancelled'])
+            ->whereNotIn('status', ['ApprovedCancelled', 'PendingCancelled'])
             ->pluck('appointmenttime')
             ->map(function ($time) {
                 return Carbon::parse($time)->format('H:i:s');
