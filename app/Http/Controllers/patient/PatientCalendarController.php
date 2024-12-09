@@ -56,7 +56,7 @@ class PatientCalendarController extends Controller
         ]);
 
         $pendingAppointmentsCount = Calendar::where('user_id', $request->input('user_id'))
-            ->where('approved', 'Pending')
+            ->where('status', 'Pending')
             ->count();
 
         if ($pendingAppointmentsCount >= 3) {
@@ -69,7 +69,7 @@ class PatientCalendarController extends Controller
             'appointmentdate' => $request->input('appointmentdate'),
             'appointmenttime' => $request->input('appointmenttime'),
         ])
-        ->whereNotIn('approved', ['ApprovedCancelled', 'PendingCancelled'])
+        ->whereNotIn('status', ['ApprovedCancelled', 'PendingCancelled'])
         ->first();
 
         if ($existingAppointment) {
@@ -94,7 +94,7 @@ class PatientCalendarController extends Controller
             'emergencycontactphone' => $request->input('emergencycontactphone'),
             'relationname' => $request->input('relationname'),
             'relation' => $request->input('relation'),
-            'approved' => 'Pending',
+            'status' => 'Pending',
         ]);
 
         $appointmentDate = Carbon::parse($calendar->appointmentdate)->format('F j, Y');

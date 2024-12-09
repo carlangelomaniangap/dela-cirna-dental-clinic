@@ -90,30 +90,36 @@ class AdminCalendarController extends Controller
         $appointmentDate = Carbon::parse($calendar->appointmentdate)->format('F j, Y');  // e.g., 'December 3, 2024'
         $appointmentTime = Carbon::parse($calendar->appointmenttime)->format('h:i A');  // e.g., '02:30 PM'
 
+        $PatientName = $calendar->user->name;
+
         // Check the status and update accordingly
         if ($status == 'approve') {
-            $calendar->approved = 'Approved'; // Set to Approved
+            $calendar->status = 'Approved'; // Set to Approved
             $this->sendApprovalEmail($calendar);  // Send approval email
             $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been approved and an email has been sent!";
+            $AdminMessage = "{$PatientName} appointment for {$appointmentDate} at {$appointmentTime} has been approved and an email has been sent!";
         } elseif ($status == 'complete') {
-            $calendar->approved = 'Completed'; // Set to Completed
+            $calendar->status = 'Completed'; // Set to Completed
             $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been completed!";
+            $AdminMessage = "{$PatientName} appointment for {$appointmentDate} at {$appointmentTime} has been completed!";
         } elseif ($status == 'approvecancel') {
-            $calendar->approved = 'ApprovedCancelled'; // Set to Cancelled
+            $calendar->status = 'ApprovedCancelled'; // Set to Cancelled
             $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been cancelled!";
+            $AdminMessage = "{$PatientName} appointment for {$appointmentDate} at {$appointmentTime} has been cancelled!";
         } elseif ($status == 'pendingcancel') {
-            $calendar->approved = 'PendingCancelled'; // Keep the status as 'Pending'
+            $calendar->status = 'PendingCancelled'; // Keep the status as 'Pending'
             $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been cancelled!";
+            $AdminMessage = "{$PatientName} appointment for {$appointmentDate} at {$appointmentTime} has been cancelled!";
         }
 
         // Save the status update
         $calendar->save();
 
         // Send notification to the patient
-        $patient = $calendar->user;  // Assuming you have a 'patient' relationship on the Calendar model
+        $patient = User::where('usertype', 'patient')->first();  // Assuming you have a 'patient' relationship on the Calendar model
         $patient->notify(new StatusAppointmentNotifications($calendar, $message));
 
-        return redirect()->back()->with('success', $message);
+        return redirect()->back()->with('success', $AdminMessage);
     }
 
     private function sendApprovalEmail($calendar){

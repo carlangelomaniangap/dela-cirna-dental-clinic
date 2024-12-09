@@ -14,12 +14,11 @@ return new class extends Migration
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
             $table->string('item_name');
-            $table->enum('item_type', ['Equipment', 'Consumable']);
-            $table->integer('total_quantity');
-            $table->integer('available_quantity');
+            $table->enum('type', ['Equipment', 'Consumable']);
+            $table->integer('stocks');
+            $table->integer('disposed')->default(0);
+            $table->integer('remaining_stocks');
             $table->date('expiration_date')->nullable();
-            $table->integer('quantity_used')->default(0);
-            $table->timestamp('last_updated');
             $table->timestamps();
         });
     }

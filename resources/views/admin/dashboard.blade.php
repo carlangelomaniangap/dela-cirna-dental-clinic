@@ -88,21 +88,30 @@
 
                 @if($todayAppointments->count() > 0)
                     <div class="mt-4 space-y-4 overflow-y-auto max-h-64">
-                        @foreach($todayAppointments as $appointment)
+                        @foreach($todayAppointments as $calendar)
                             <div class="border border-gray-200 rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start bg-gray-50 hover:bg-gray-100 transition duration-200">
                                 <div class="flex-grow mb-2 sm:mb-0">
                                     <p class="text-base lg:text-lg font-semibold text-gray-800">
-                                        <strong>{{ \Carbon\Carbon::parse($appointment->appointmenttime)->format('g:i A') }}</strong> - 
-                                        <span class="text-gray-600">{{ $appointment->user->name }}</span>
+                                        <strong>{{ \Carbon\Carbon::parse($calendar->appointmenttime)->format('g:i A') }}</strong> - 
+                                        <span class="text-gray-600">{{ $calendar->user->name }}</span>
                                     </p>
                                     <p class="text-sm sm:text-base lg:text-lg text-gray-500">
-                                        Reason for visit: <em>{{ $appointment->concern }}</em>
+                                        Reason for visit: <em>{{ $calendar->concern }}</em>
                                     </p>
                                 </div>
                                 <div class="text-sm sm:text-base lg:text-lg text-right">
                                     <span class="text-gray-500 font-medium">Status:</span>
-                                    <span class="font-semibold {{ $appointment->status == 'Approved' ? 'text-green-600' : ($appointment->status == 'Pending' ? 'text-yellow-600' : 'text-red-600') }}">
-                                        {{ $appointment->status }}
+                                    <span class="font-semibold 
+                                        {{ 
+                                            $calendar->status == 'Approved' || $calendar->status == 'ApprovedCompleted' ? 'text-green-600' : 
+                                            ($calendar->status == 'Pending' ? 'text-yellow-600' : 
+                                            ($calendar->status == 'Completed' ? 'text-blue-700' : 
+                                            ($calendar->status == 'Cancelled' || $calendar->status == 'PendingCancelled' || $calendar->status == 'ApprovedCancelled' ? 'text-red-600' : 'text-gray-600')
+                                            )
+                                        )}}">
+                                        {{ 
+                                            $calendar->status == 'PendingCancelled' || $calendar->status == 'ApprovedCancelled' ? 'Cancelled' : $calendar->status 
+                                        }}
                                     </span>
                                 </div>
                             </div>

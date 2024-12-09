@@ -22,9 +22,9 @@ class AdminDashboardController extends Controller
 
         $recentPatientCount = User::where('usertype', 'patient')->whereDay('created_at', now()->day)->count();
 
-        $approvedAppointments = Calendar::where('approved', 'Approved')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
+        $approvedAppointments = Calendar::where('status', 'Approved')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
         
-        $pendingAppointments = Calendar::where('approved', 'Pending')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
+        $pendingAppointments = Calendar::where('status', 'Pending')->whereDate('appointmentdate', Carbon::now('Asia/Manila'))->count();
         
         $todayAppointments = Calendar::whereDate('appointmentdate', Carbon::now('Asia/Manila'))->orderBy('appointmenttime')->get();
         

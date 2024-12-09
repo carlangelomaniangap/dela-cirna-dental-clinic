@@ -53,8 +53,17 @@
                                     Concern: <span>{{ $calendar->concern }}</span>
                                 </p>
                                 <span class="text-gray-500">Status:</span>
-                                <span class="font-semibold {{ $calendar->status == 'Approved' ? 'text-green-600' : ($calendar->status == 'Pending' ? 'text-yellow-600' : 'text-red-600') }}">
-                                    {{ $calendar->status }}
+                                <span class="font-semibold 
+                                    {{ 
+                                        $calendar->status == 'Approved' || $calendar->status == 'ApprovedCompleted' ? 'text-green-600' : 
+                                        ($calendar->status == 'Pending' ? 'text-yellow-600' : 
+                                        ($calendar->status == 'Completed' ? 'text-blue-700' : 
+                                        ($calendar->status == 'Cancelled' || $calendar->status == 'PendingCancelled' || $calendar->status == 'ApprovedCancelled' ? 'text-red-600' : 'text-gray-600')
+                                        )
+                                    )}}">
+                                    {{ 
+                                        $calendar->status == 'PendingCancelled' || $calendar->status == 'ApprovedCancelled' ? 'Cancelled' : $calendar->status 
+                                    }}
                                 </span>
                             </div>
                         </div>

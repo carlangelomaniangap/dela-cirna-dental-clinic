@@ -64,6 +64,16 @@
     @endphp
 
     <div class="grid grid-cols-7 p-6">
+
+        <div class="bg-white p-6 shadow-lg mb-4 flex justify-end" style="grid-column: 1 / -1;">
+            <p>
+                <strong class="text-gray-600">Colors Indicator:</strong> 
+                <span class="bg-yellow-500 text-white p-2 rounded">Pending</span>
+                <span class="bg-green-500 text-white p-2 rounded">Approved</span>
+                <span class="bg-blue-500 text-white p-2 rounded">Completed</span>
+            </p>
+        </div>
+
         <!-- Month navigation and display -->
         <div class="w-full text-center flex justify-between items-center py-3.5 px-5 text-white shadow-md" style="background-color: #4b9cd3; grid-column: 1 / -1;">
             <button onclick="changeMonth('prev')" class="text-xs sm:text-base lg:text-xl font-semibold"><i class="fa-solid fa-backward"></i></button>
@@ -97,11 +107,12 @@
         @for ($day = clone $startDay; $day <= $endDay; $day->modify('+1 day'))
             @php
                 $isCurrentMonth = $day->format('m') == $currentMonth->format('m');
-                $hasApprovedAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Approved');
-                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->approved === 'Pending');
+                $hasApprovedAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->status === 'Approved');
+                $hasPendingAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->status === 'Pending');
+                $hasCompletedAppointment = $calendars->contains(fn($calendar) => $calendar->appointmentdate == $day->format('Y-m-d') && $calendar->status === 'Completed');
             @endphp
 
-            <div class="day py-6 flex flex-col items-center justify-center p-2.5 border border-gray-300 relative cursor-pointer {{ !$isCurrentMonth ? 'text-gray-400' : '' }} {{ $hasApprovedAppointment ? 'bg-green-500' : ($hasPendingAppointment ? 'bg-yellow-500' : 'bg-white') }}" onclick="toggleAppointments(this)">
+            <div class="day py-6 flex flex-col items-center justify-center p-2.5 border border-gray-300 relative cursor-pointer {{ $hasPendingAppointment ? 'bg-yellow-500' : ($hasApprovedAppointment ? 'bg-green-500' : ($hasCompletedAppointment ? 'bg-blue-500' : 'bg-white')) }}" onclick="toggleAppointments(this)">
                 <div>{{ $day->format('j') }}</div>
                 <div class="hourly-appointments hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
                     <div class="bg-white shadow-lg rounded-lg h-64 w-64 overflow-y-auto p-6">
@@ -122,13 +133,13 @@
                                         @php $hasActiveAppointment = false; @endphp
                                         @foreach ($calendars as $calendar)
                                             @if ($calendar->appointmentdate == $day->format('Y-m-d') && date('G', strtotime($calendar->appointmenttime)) == $hour)
-                                                @if (!in_array($calendar->approved, ['ApprovedCancelled', 'PendingCancelled']))
+                                                @if (!in_array($calendar->status, ['ApprovedCancelled', 'PendingCancelled']))
                                                     @php $hasActiveAppointment = true; @endphp
                                                     <a href="{{ route('admin.viewDetails', $calendar->id) }}">
                                                         <div class="appointment bg-gray-200 p-2 mt-1 rounded text-center w-full box-border">
                                                             <div>{{ $calendar->user->name }}</div>
-                                                            <div class="appointment-buttons mt-2 flex justify-between">
-                                                                @if ($calendar->approved === 'Pending')
+                                                            <div class="appointment-buttons mt-2">
+                                                                @if ($calendar->status === 'Pending')
                                                                     <div class="flex justify-center items-center space-x-2">
                                                                         <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'approve']) }}">
                                                                             @csrf
@@ -139,27 +150,19 @@
                                                                             <button type="submit" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
                                                                         </form>
                                                                     </div>
-                                                                @elseif ($calendar->approved === 'Approved')
-                                                                    <div class="flex">
-                                                                        <div class="mb-2">
-                                                                            <span class="py-1 px-2 rounded text-green-500 text-sm">Approved</span>
-                                                                        </div>
-                                                                        <div>
-                                                                            <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'complete']) }}">
-                                                                                @csrf
-                                                                                <button type="submit" class="mb-2 py-1 px-2 rounded bg-green-500 text-white text-sm">Complete</button>
-                                                                            </form>
-                                                                            <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'approvecancel']) }}">
-                                                                                @csrf
-                                                                                <button type="submit" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                @elseif ($calendar->approved === 'Completed')
+                                                                @elseif ($calendar->status === 'Approved')
                                                                     <div class="flex justify-center items-center space-x-2">
-                                                                        <span class="py-1 px-2 rounded text-green-500 text-sm">Approved</span>
-                                                                        <span class="py-1 px-2 rounded text-green-500 text-sm">Completed</span>
+                                                                        <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'complete']) }}">
+                                                                            @csrf
+                                                                            <button type="submit" class="py-1 px-2 rounded bg-blue-500 text-white text-sm">Complete</button>
+                                                                        </form>
+                                                                        <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'approvecancel']) }}">
+                                                                            @csrf
+                                                                            <button type="submit" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
+                                                                        </form>
                                                                     </div>
+                                                                @elseif ($calendar->status === 'Completed')
+                                                                    <p>Status: <span class="text-blue-700 text-sm">Completed</span></p>
                                                                 @endif
                                                             </div>
                                                         </div>
