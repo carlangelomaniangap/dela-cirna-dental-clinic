@@ -67,16 +67,14 @@
                 <!-- Notifications Dropdown -->
                 <x-dropdown align="right" width="56">
                     <x-slot name="trigger">
-                        <button class="shadow inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-900 focus:outline-none transition ease-in-out duration-150 mr-4">
+                        <button class="shadow inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-900 focus:outline-none transition ease-in-out duration-150 mr-4 relative">
                             <!-- Notifications Button -->
-                            <div>
-                                <i class="fas fa-bell"></i>
-                                @if($unreadCount > 0)
-                                    <span class="mr-2 bg-red-500 text-white rounded-full px-2 py-1 text-xs absolute top-0 right-0 translate-x-1/2 translate-y-1/2">
-                                        {{ $unreadCount }}
-                                    </span>
-                                @endif
-                            </div>
+                            <i class="fas fa-bell"></i>
+                            @if($unreadCount > 0)
+                                <span class="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs transform translate-x-1/2 -translate-y-2">
+                                    {{ $unreadCount }}
+                                </span>
+                            @endif
                         </button>
                     </x-slot>
 
@@ -157,16 +155,14 @@
                 <!-- Notifications Dropdown -->
                 <x-dropdown align="right" width="56">
                     <x-slot name="trigger">
-                        <button class="shadow inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-900 focus:outline-none transition ease-in-out duration-150 mr-4">
+                        <button class="shadow inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-900 focus:outline-none transition ease-in-out duration-150 mr-4 relative">
                             <!-- Notifications Button -->
-                            <div>
-                                <i class="fas fa-bell"></i>
-                                @if($unreadCount > 0)
-                                    <span class="mr-2 bg-red-500 text-white rounded-full px-2 py-1 text-xs absolute top-0 right-0 translate-x-1/2 translate-y-1/2">
-                                        {{ $unreadCount }}
-                                    </span>
-                                @endif
-                            </div>
+                            <i class="fas fa-bell"></i>
+                            @if($unreadCount > 0)
+                                <span class="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs transform translate-x-1/2 -translate-y-2">
+                                    {{ $unreadCount }}
+                                </span>
+                            @endif
                         </button>
                     </x-slot>
 

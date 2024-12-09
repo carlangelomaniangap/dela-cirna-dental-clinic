@@ -15,8 +15,8 @@
 
     <div class="p-6">
         <!-- Upcoming and past appointments -->
-        <div class="bg-white p-5 max-h-56 rounded-lg shadow-md p-6">
-            <h1 class="text-3xl font-bold pb-4 text-center">Appointments</h1>
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h1 class="text-2xl font-bold pb-2 text-center">Appointments</h1>
             
             <!-- Form to toggle between upcoming and past appointments -->
             <form method="GET" action="{{ route('patient.dashboard') }}">
@@ -31,7 +31,7 @@
                 </div>
             </form>
 
-            <div class="space-y-2 mt-5 max-h-46 overflow-y-auto p-2 bg-gray-200 rounded-lg">
+            <div class="space-y-2 mt-2 max-h-46 overflow-y-auto p-2 bg-gray-200 rounded-lg">
                 @if($calendars->isEmpty())
                     <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
                         <p class="text-gray-800">No appointments found.</p>
