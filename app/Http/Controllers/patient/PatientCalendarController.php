@@ -101,8 +101,8 @@ class PatientCalendarController extends Controller
         $appointmentTime = Carbon::parse($calendar->appointmenttime)->format('h:i A');
         $message = "{$calendar->name} has scheduled a new appointment for {$appointmentDate} at {$appointmentTime}.";
 
-        $admin = User::where('usertype', 'admin')->first();
-        if ($admin) {
+        $admins = User::where('usertype', 'admin')->get();
+        foreach ($admins as $admin) {
             $admin->notify(new AppointmentNotifications($calendar, $message));
         }
 

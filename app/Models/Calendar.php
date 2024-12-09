@@ -29,8 +29,6 @@ class Calendar extends Model
         'approved',
     ];
 
-    public static $approvedStatuses = ['Pending', 'Completed', 'Cancelled'];
-
     public function user(){
         return $this->belongsTo(User::class);
     }

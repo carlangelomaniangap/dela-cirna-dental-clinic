@@ -110,7 +110,7 @@ class AdminCalendarController extends Controller
         $calendar->save();
 
         // Send notification to the patient
-        $patient = User::where('usertype', 'patient')->first();  // Assuming you have a 'patient' relationship on the Calendar model
+        $patient = $calendar->user;  // Assuming you have a 'patient' relationship on the Calendar model
         $patient->notify(new StatusAppointmentNotifications($calendar, $message));
 
         return redirect()->back()->with('success', $message);
