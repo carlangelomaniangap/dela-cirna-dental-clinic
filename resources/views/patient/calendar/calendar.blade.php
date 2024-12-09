@@ -143,6 +143,10 @@
                                                         @elseif ($calendar->status === 'Completed')
                                                             <p>Status: <span class="text-blue-700 text-sm">Completed</span></p>
                                                         @endif
+                                                        <a href="{{ route('patient.viewDetails', $calendar->id) }}" class="inline-flex items-center justify-center py-1 px-2 mt-2 rounded bg-gray-500 text-white text-sm hover:bg-gray-600">
+                                                            <i class="fa-solid fa-eye mr-2"></i>
+                                                            View Details
+                                                        </a>
                                                     </div>
                                                 </div>
                                                 @php $hasActiveAppointment = true; @endphp

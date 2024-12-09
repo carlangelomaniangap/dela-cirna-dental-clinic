@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 <body class="min-h-screen">
     
@@ -135,13 +134,12 @@
                                         @foreach ($calendars as $calendar)
                                             @if ($calendar->appointmentdate == $day->format('Y-m-d') && date('G', strtotime($calendar->appointmenttime)) == $hour)
                                                 @if (!in_array($calendar->status, ['ApprovedCancelled', 'PendingCancelled']))
-                                                    @php $hasActiveAppointment = true; @endphp
                                                     <div class="appointment bg-gray-200 p-2 mt-1 rounded text-center w-full box-border">
                                                         <div>{{ $calendar->user->name }}</div>
                                                         <div class="appointment-buttons mt-2">
                                                             @if ($calendar->status === 'Pending')
                                                                 <div class="flex justify-center items-center space-x-2">
-                                                                    <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'approve']) }}">
+                                                                    <form method="post" action="{{ route('admin.approveCalendar', ['calendarId' => $calendar->id, 'status' => 'approve']) }}">
                                                                         @csrf
                                                                         <button type="submit" class="py-1 px-2 rounded bg-yellow-500 text-white text-sm">Pending</button>
                                                                     </form>
@@ -149,7 +147,7 @@
                                                                 </div>
                                                             @elseif ($calendar->status === 'Approved')
                                                                 <div class="flex justify-center items-center space-x-2">
-                                                                    <form method="post" action="{{ route('admin.approveCalendar', ['appointmentId' => $calendar->id, 'status' => 'complete']) }}">
+                                                                    <form method="post" action="{{ route('admin.approveCalendar', ['calendarId' => $calendar->id, 'status' => 'complete']) }}">
                                                                         @csrf
                                                                         <button type="submit" class="py-1 px-2 rounded bg-blue-500 text-white text-sm">Complete</button>
                                                                     </form>
@@ -159,11 +157,12 @@
                                                                 <p>Status: <span class="text-blue-700 text-sm">Completed</span></p>
                                                             @endif
                                                             <a href="{{ route('admin.viewDetails', $calendar->id) }}" class="inline-flex items-center justify-center py-1 px-2 mt-2 rounded bg-gray-500 text-white text-sm hover:bg-gray-600">
-                                                            <i class="fa-solid fa-eye mr-2"></i>
+                                                                <i class="fa-solid fa-eye mr-2"></i>
                                                                 View Details
                                                             </a>
                                                         </div>
                                                     </div>
+                                                    @php $hasActiveAppointment = true; @endphp
                                                 @endif
                                             @endif
                                         @endforeach
@@ -197,25 +196,27 @@
             </div>
         @endfor
     </div>
+
     <script>
-            function toggleAppointments(element) {
-                const appointmentsDiv = element.querySelector('.hourly-appointments');
-                appointmentsDiv.classList.toggle('hidden');
-            }
+        function toggleAppointments(element) {
+            const appointmentsDiv = element.querySelector('.hourly-appointments');
+            appointmentsDiv.classList.toggle('hidden');
+        }
 
-            function openCancelModal(appointmentId, status) {
-                const modal = document.getElementById('cancelModal');
-                const form = document.getElementById('cancelForm');
-                form.action = `{{ route('admin.approveCalendar', ['appointmentId' => ':appointmentId', 'status' => ':status']) }}`
-                    .replace(':appointmentId', appointmentId)
-                    .replace(':status', status);
-                modal.classList.remove('hidden');
-            }
+        function openCancelModal(calendarId, status) {
+            const modal = document.getElementById('cancelModal');
+            const form = document.getElementById('cancelForm');
+            form.action = `{{ route('admin.approveCalendar', ['calendarId' => ':calendarId', 'status' => ':status']) }}`
+                .replace(':calendarId', calendarId)
+                .replace(':status', status);
+            modal.classList.remove('hidden');
+        }
 
-            function closeCancelModal() {
-                document.getElementById('cancelModal').classList.add('hidden');
-            }
+        function closeCancelModal() {
+            document.getElementById('cancelModal').classList.add('hidden');
+        }
     </script>
+
     <script>
         function toggleAppointments(dayElement) {
             // Close other open appointments
