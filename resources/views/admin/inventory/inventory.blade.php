@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 </head>
 <body class="min-h-screen">
 
@@ -115,75 +116,69 @@
 
             <!-- Inventory List -->
             <div  class="p-6">
-                <table id="inventory-content" class="min-w-full bg-white border border-gray-300">
+                <table id="inventory-content" class="hover min-w-full bg-white border border-gray-300">
                     <thead>
                         <tr>
-                            <th class="px-4 py-2 border">Item Name</th>
-                            <th class="px-4 py-2 border">Item Type</th>
-                            <th class="px-4 py-2 border">Total Quantity</th>
-                            <th class="px-4 py-2 border">Available Quantity</th>
-                            <th class="px-4 py-2 border">Expiration Date</th>
-                            <th class="px-4 py-2 border">Quantity Used</th>
-                            <th class="px-4 py-2 border">Last Updated</th>
-                            <th class="action px-4 py-2 border">Actions</th>
+                            <th class="border">Item Name</th>
+                            <th class="border">Item Type</th>
+                            <th class="border">Total Quantity</th>
+                            <th class="border">Available Quantity</th>
+                            <th class="border">Expiration Date</th>
+                            <th class="border">Quantity Used</th>
+                            <th class="border">Last Updated</th>
+                            <th class="action border">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
-                        @if($items->isEmpty())
+                        @foreach ($items as $item)
                             <tr>
-                                <td colspan="8" class="px-4 py-2 border text-gray-600 text-center">No items found.</td>
+                                <td class="border">{{ $item->item_name }}</td>
+                                <td class="border">{{ $item->item_type }}</td>
+                                <td class="border">{{ number_format($item->total_quantity) }}</td>
+                                <td class="border">{{ number_format($item->available_quantity) }}</td>
+                                <td class="border">{{ $item->expiration_date ? date('F j, Y', strtotime($item->expiration_date)) : 'N/A' }}</td>
+                                <td class="border">{{ number_format($item->quantity_used) }}</td>
+                                <td class="border">{{ $item->updated_at ? date('F j, Y', strtotime($item->updated_at)) : 'N/A' }}</td>
+                                <td class="action border">
+                                    <button type="button" data-item-id="{{ $item->id }}" data-item-type="{{ $item->item_type }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-2 py-1 rounded">Update Item</button>
+                                </td>
                             </tr>
-                        @else
-                            @foreach ($items as $item)
-                                <tr>
-                                    <td class="px-4 py-2 border">{{ $item->item_name }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->item_type }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->total_quantity }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->available_quantity }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->expiration_date ? date('F j, Y', strtotime($item->expiration_date)) : 'N/A' }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->quantity_used }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->updated_at ? date('F j, Y', strtotime($item->updated_at)) : 'N/A' }}</td>
-                                    <td class="action px-4 py-2 border">
-                                        <button type="button" data-item-id="{{ $item->id }}" data-item-type="{{ $item->item_type }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-3 py-2 rounded">Update Item</button>
-                                    </td>
-                                </tr>
 
-                                <!-- Modal for Updating New Item -->
-                                <div id="UpdateItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+                             <!-- Modal for Updating New Item -->
+                            <div id="UpdateItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
                                 
-                                    <div class="bg-white p-4 rounded-lg shadow-md z-10">
-                                        <div style="background-color: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
-                                            <h4 class="text-lg font-bold">Update Item</h4>
-                                        </div>
-                                        <form id="UpdateItemForm" action="{{ route('admin.inventory.update', $item->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-
-                                            <!-- Item Type Selection -->
-                                            <div class="mb-4 hidden" id="action_container">
-                                                <label for="action" class="block text-sm font-medium text-gray-900 dark:text-white">Action</label>
-                                                <select name="action" id="action" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
-                                                    <option value="" selected disabled>Select Action</option>
-                                                    <option value="add">Add</option>
-                                                    <option value="used">Used</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- Quantity (Initially hidden) -->
-                                            <div class="mb-4" id="quantity_container">
-                                                <label for="quantity" class="block text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
-                                                <input type="number" name="quantity" id="quantity" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
-                                            </div>
-
-                                            <div class="mt-4 text-right">
-                                                <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300" id="modalSubmitBtn">Add</button>
-                                                <button type="button" id="UpdateCloseModalBtn" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
-                                            </div>
-                                        </form>
+                                <div class="bg-white p-4 rounded-lg shadow-md z-10">
+                                    <div style="background-color: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="rounded-lg py-4 px-6 flex justify-between items-center text-white text-2xl font-semibold mb-5">
+                                        <h4 class="text-lg font-bold">Update Item</h4>
                                     </div>
+                                    <form id="UpdateItemForm" action="{{ route('admin.inventory.update', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <!-- Item Type Selection -->
+                                        <div class="mb-4 hidden" id="action_container">
+                                            <label for="action" class="block text-sm font-medium text-gray-900 dark:text-white">Action</label>
+                                            <select name="action" id="action" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
+                                                <option value="" selected disabled>Select Action</option>
+                                                <option value="add">Add</option>
+                                                <option value="used">Used</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Quantity (Initially hidden) -->
+                                        <div class="mb-4" id="quantity_container">
+                                            <label for="quantity" class="block text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
+                                            <input type="number" name="quantity" id="quantity" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
+                                        </div>
+
+                                        <div class="mt-4 text-right">
+                                            <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300" id="modalSubmitBtn">Add</button>
+                                            <button type="button" id="UpdateCloseModalBtn" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
+                                        </div>
+                                    </form>
                                 </div>
-                            @endforeach
-                        @endif
+                            </div>
+                        @endforeach
                     </tbody>
                 </table>
                 <div class="flex justify-end mt-6">
@@ -192,6 +187,41 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('total_quantity').addEventListener('keydown', function(event) {
+            // Prevent entering minus '-' sign and period '.' (decimal point)
+            if (event.key === '-' || event.key === '.' || event.key === 'e') {
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('quantity').addEventListener('keydown', function(event) {
+            // Prevent entering minus '-' sign and period '.' (decimal point)
+            if (event.key === '-' || event.key === '.' || event.key === 'e') {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize the DataTable
+            new DataTable('#inventory-content', {
+                "language": {
+                    "emptyTable": "No items found.",  // When table is empty
+                    "zeroRecords": "No matching items found.",  // When search yields no results
+                }
+            });
+
+            $('#inventory-content_length select').addClass('w-20');
+            $('.dataTables_length').addClass('mb-4');  // Bottom margin for entries per page dropdown
+            $('.dataTables_filter').addClass('mb-4'); 
+        });
+    </script>
 
     <script>
         // ADD ITEM
