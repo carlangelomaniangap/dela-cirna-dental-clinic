@@ -13,12 +13,11 @@ class Inventory extends Model
 
     protected $fillable = [
         'item_name',
-        'item_type',
-        'total_quantity',
-        'available_quantity',
+        'type',
+        'stocks',
+        'disposed',
+        'remaining_stocks',
         'expiration_date',
-        'quantity_used',
-        'last_updated',
     ];
 }
 

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AdminInventoryController extends Controller
@@ -19,21 +18,20 @@ class AdminInventoryController extends Controller
 
         $request->validate([
             'item_name' => 'required|string|max:255',
-            'item_type' => 'required|in:Equipment,Consumable',
-            'total_quantity' => 'required|integer',
-            'expiration_date' => $request->item_type == 'Consumable' ? 'required|date' : 'nullable',
+            'type' => 'required|in:Equipment,Consumable',
+            'stocks' => 'required|integer',
+            'expiration_date' => $request->type == 'Consumable' ? 'required|date' : 'nullable',
         ]);
 
-        // Set available_quantity equal to total_quantity by default
-        $available_quantity = $request->total_quantity;
+        // Set remaining_stocks equal to stocks by default
+        $remaining_stocks = $request->stocks;
 
         Inventory::create([
             'item_name' => $request->item_name,
-            'item_type' => $request->item_type,
-            'total_quantity' => $request->total_quantity,
-            'available_quantity' => $available_quantity,
-            'expiration_date' => $request->item_type == 'Consumable' ? $request->expiration_date : null,
-            'last_updated' => Carbon::now(),
+            'type' => $request->type,
+            'stocks' => $request->stocks,
+            'remaining_stocks' => $remaining_stocks,
+            'expiration_date' => $request->type == 'Consumable' ? $request->expiration_date : null,
         ]);
 
         return redirect()->back()->with('success', 'Item added!');
@@ -44,23 +42,23 @@ class AdminInventoryController extends Controller
         $item = Inventory::findOrFail($id);
 
         // Check if the item is of type "equipment"
-        if ($item->item_type == 'Equipment') {
+        if ($item->type == 'Equipment') {
             // If it's equipment, we directly add to both total and available quantities
-            $item->total_quantity += $request->quantity;
-            $item->available_quantity += $request->quantity;
+            $item->stocks += $request->quantity;
+            $item->remaining_stocks += $request->quantity;
         } 
-        // If it's consumable, we handle it based on the action (add or used)
-        elseif ($item->item_type == 'Consumable') {
+        // If it's consumable, we handle it based on the action (add_stocks or dispose)
+        elseif ($item->type == 'Consumable') {
             // Add to total and available quantities
-            if ($request->action == 'add') {
+            if ($request->action == 'add_stocks') {
                 // Add quantity to available stock
-                $item->total_quantity += $request->quantity;
-                $item->available_quantity += $request->quantity;
-            } elseif ($request->action == 'used') {
-                if ($item->available_quantity >= $request->quantity) {
+                $item->stocks += $request->quantity;
+                $item->remaining_stocks += $request->quantity;
+            } elseif ($request->action == 'dispose') {
+                if ($item->remaining_stocks >= $request->quantity) {
                     // Reduce available quantity and increase quantity used
-                    $item->available_quantity -= $request->quantity;
-                    $item->quantity_used += $request->quantity;
+                    $item->remaining_stocks -= $request->quantity;
+                    $item->disposed += $request->quantity;
                 } else {
                     // If available quantity is less than the quantity to be used, prevent the update
                     return redirect()->back()->with('error', 'Insufficient available quantity to use.');

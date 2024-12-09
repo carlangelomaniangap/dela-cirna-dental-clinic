@@ -86,8 +86,8 @@
 
                         <!-- Item Type Selection -->
                         <div class="mb-4">
-                            <label for="item_type" class="block text-sm font-medium text-gray-900 dark:text-white">Item Type</label>
-                            <select name="item_type" id="item_type" class="mt-2 block w-full px-4 py-2 border rounded-md" required onchange="toggleFields()">
+                            <label for="type" class="block text-sm font-medium text-gray-900 dark:text-white">Item Type</label>
+                            <select name="type" id="type" class="mt-2 block w-full px-4 py-2 border rounded-md" required onchange="toggleFields()">
                                 <option value="" selected disabled>Select Item Type</option>
                                 <option value="Equipment">Equipment</option>
                                 <option value="Consumable">Consumable</option>
@@ -95,9 +95,9 @@
                         </div>
 
                         <!-- Total Quantity (Initially hidden) -->
-                        <div class="mb-4 hidden" id="total_quantity_container">
-                            <label for="total_quantity" class="block text-sm font-medium text-gray-900 dark:text-white">Total Quantity</label>
-                            <input type="number" name="total_quantity" id="total_quantity" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
+                        <div class="mb-4 hidden" id="stocks_container">
+                            <label for="stocks" class="block text-sm font-medium text-gray-900 dark:text-white">Total Quantity</label>
+                            <input type="number" name="stocks" id="stocks" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
                         </div>
 
                         <!-- Expiration Date (Initially hidden) -->
@@ -120,27 +120,25 @@
                     <thead>
                         <tr>
                             <th class="border">Item Name</th>
-                            <th class="border">Item Type</th>
-                            <th class="border">Total Quantity</th>
-                            <th class="border">Available Quantity</th>
+                            <th class="border">Type</th>
+                            <th class="border">Stocks</th>
+                            <th class="border">Disposed</th>
+                            <th class="border">Remaining Stocks</th>
                             <th class="border">Expiration Date</th>
-                            <th class="border">Quantity Used</th>
-                            <th class="border">Last Updated</th>
-                            <th class="action border">Actions</th>
+                            <th class="action border">Action</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
                         @foreach ($items as $item)
                             <tr>
                                 <td class="border">{{ $item->item_name }}</td>
-                                <td class="border">{{ $item->item_type }}</td>
-                                <td class="border">{{ number_format($item->total_quantity) }}</td>
-                                <td class="border">{{ number_format($item->available_quantity) }}</td>
+                                <td class="border">{{ $item->type }}</td>
+                                <td class="border">{{ number_format($item->stocks) }}</td>
+                                <td class="border">{{ number_format($item->disposed) }}</td>
+                                <td class="border">{{ number_format($item->remaining_stocks) }}</td>
                                 <td class="border">{{ $item->expiration_date ? date('F j, Y', strtotime($item->expiration_date)) : 'N/A' }}</td>
-                                <td class="border">{{ number_format($item->quantity_used) }}</td>
-                                <td class="border">{{ $item->updated_at ? date('F j, Y', strtotime($item->updated_at)) : 'N/A' }}</td>
                                 <td class="action border">
-                                    <button type="button" data-item-id="{{ $item->id }}" data-item-type="{{ $item->item_type }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-2 py-1 rounded">Update Item</button>
+                                    <button type="button" data-item-id="{{ $item->id }}" data-item-type="{{ $item->type }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-2 py-1 rounded">Update Item</button>
                                 </td>
                             </tr>
 
@@ -160,8 +158,8 @@
                                             <label for="action" class="block text-sm font-medium text-gray-900 dark:text-white">Action</label>
                                             <select name="action" id="action" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
                                                 <option value="" selected disabled>Select Action</option>
-                                                <option value="add">Add</option>
-                                                <option value="used">Used</option>
+                                                <option value="add_stocks">Add Stocks</option>
+                                                <option value="dispose">Dispose</option>
                                             </select>
                                         </div>
 
@@ -171,8 +169,14 @@
                                             <input type="number" name="quantity" id="quantity" class="mt-2 block w-full px-4 py-2 border rounded-md" required>
                                         </div>
 
-                                        <div class="mt-4 text-right">
-                                            <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300" id="modalSubmitBtn">Add</button>
+                                        <div class="mt-4 flex justify-end space-x-2">
+                                            <div id="add_stocks" class="hidden">
+                                                <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300" id="modalSubmitBtn">Add</button>
+                                            </div>
+
+                                            <div id="dispose" class="hidden">
+                                                <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300" id="modalSubmitBtn">Dispose</button>
+                                            </div>
                                             <button type="button" id="UpdateCloseModalBtn" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300">Cancel</button>
                                         </div>
                                     </form>
@@ -189,7 +193,7 @@
     </div>
 
     <script>
-        document.getElementById('total_quantity').addEventListener('keydown', function(event) {
+        document.getElementById('stocks').addEventListener('keydown', function(event) {
             // Prevent entering minus '-' sign and period '.' (decimal point)
             if (event.key === '-' || event.key === '.' || event.key === 'e') {
                 event.preventDefault();
@@ -238,8 +242,8 @@
 
         // Toggle fields based on item type selection
         function toggleFields() {
-            const itemType = document.getElementById("item_type").value;
-            const totalQuantityContainer = document.getElementById("total_quantity_container");
+            const itemType = document.getElementById("type").value;
+            const totalQuantityContainer = document.getElementById("stocks_container");
             const expirationDateContainer = document.getElementById("expiration_date_container");
             const expirationDateInput = document.getElementById("expiration_date");
 
@@ -279,12 +283,49 @@
                 const actioncontainer = document.getElementById("action_container");
                 const actionInput = document.getElementById("action");
 
+                const buttonAddStocks = document.getElementById("add_stocks");
+                const buttonDispose = document.getElementById("dispose");
+
+                function resetButtons() {
+                    buttonAddStocks.classList.add("hidden");
+                    buttonDispose.classList.add("hidden");
+                }
+
                 if (itemType === "Equipment") {
                     actioncontainer.classList.add("hidden");
                     actionInput.removeAttribute("required");
+
+                    buttonAddStocks.classList.remove("hidden");
+                    buttonDispose.classList.add("hidden");
                 } else if (itemType === "Consumable") {
                     actioncontainer.classList.remove("hidden");
                     actionInput.setAttribute("required", "true");
+
+                    actionInput.addEventListener("change", function () {
+                        updateActionButtons(actionInput.value);  // Update buttons visibility
+                    });
+
+                    // Initially hide both buttons when the page loads
+                    resetButtons();
+                    
+                    // Handle the initial visibility based on the selected action
+                    updateActionButtons(actionInput.value);
+
+                    function updateActionButtons(action) {
+                        if (action === "add_stocks") {
+                            // Show Add Stocks button and hide Dispose button
+                            buttonAddStocks.classList.remove("hidden");
+                            buttonDispose.classList.add("hidden");
+                        } else if (action === "dispose") {
+                            // Show Dispose button and hide Add Stocks button
+                            buttonAddStocks.classList.add("hidden");
+                            buttonDispose.classList.remove("hidden");
+                        } else {
+                            // If no action is selected or value is empty, hide both buttons
+                            buttonAddStocks.classList.add("hidden");
+                            buttonDispose.classList.add("hidden");
+                        }
+                    }
                 }
             });
         });
@@ -297,7 +338,7 @@
     </script>
 
     <script>
-        // Function to open the print-friendly view in a new tab
+        // Function to open the print view in a new tab
         function openPrintView() {
             var printWindow = window.open('', '_blank'); // Open a new tab
             printWindow.document.write('<html><head><title>Dela Cirna Dental Clinic</title>');
