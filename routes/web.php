@@ -11,18 +11,17 @@ use App\Http\Controllers\admin\AdminRecordController;
 use App\Http\Controllers\admin\AdminMessagesController;
 use App\Http\Controllers\admin\AdminPaymentInfoController;
 use App\Http\Controllers\admin\AdminCalendarController;
-use App\Http\Controllers\admin\AdminNotificationController;
 // patient
 use App\Http\Controllers\patient\PatientDashboardController;
 use App\Http\Controllers\patient\PatientAppointmentController;
 use App\Http\Controllers\patient\PatientMessagesController;
 use App\Http\Controllers\patient\PatientPaymentInfoController;
 use App\Http\Controllers\patient\PatientCalendarController;
-use App\Http\Controllers\patient\PatientNotificationController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,14 +89,10 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     
     // calendar
     Route::get('/admin/calendar',[AdminCalendarController::class,'index'])->name('admin.calendar');
-    Route::post('/admin/calendar/approve/{appointmentId}/{status}', [AdminCalendarController::class, 'approve'])->name('admin.approveCalendar');
-    Route::get('/admin/calendar/appointment/{appointmentId}/update', [AdminCalendarController::class, 'updateCalendar'])->name('admin.updateCalendar');
-    Route::put('/admin/calendar/appointment/{appointmentId}/updated', [AdminCalendarController::class, 'updatedCalendar'])->name('admin.updatedCalendar');
-    Route::get('/admin/calendar/appointment/{appointmentId}/details', [AdminCalendarController::class, 'viewDetails'])->name('admin.viewDetails');
-    
-    // notification
-    Route::get('admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
-    Route::get('admin/notifications/{notification}', [AdminNotificationController::class, 'markAsRead'])->name('admin.markAsRead');
+    Route::post('/admin/calendar/approve/{calendarId}/{status}', [AdminCalendarController::class, 'approve'])->name('admin.approveCalendar');
+    Route::get('/admin/calendar/appointment/{calendarId}/update', [AdminCalendarController::class, 'updateCalendar'])->name('admin.updateCalendar');
+    Route::put('/admin/calendar/appointment/{calendarId}/updated', [AdminCalendarController::class, 'updatedCalendar'])->name('admin.updatedCalendar');
+    Route::get('/admin/calendar/appointment/{calendarId}/details', [AdminCalendarController::class, 'viewDetails'])->name('admin.viewDetails');
 });
 
 Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
@@ -124,15 +119,12 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
     
     // calendar
     Route::get('/patient/calendar',[PatientCalendarController::class,'index'])->name('patient.calendar');
-    Route::get('/patient/calendar/appointment/{appointmentId}/details', [PatientCalendarController::class, 'viewDetails'])->name('patient.viewDetails');
-
-    // notification
-    Route::get('patient/notifications', [PatientNotificationController::class, 'index'])->name('patient.notifications');
-    Route::get('patient/notifications/{notification}', [PatientNotificationController::class, 'markAsRead'])->name('patient.markAsRead');
+    Route::get('/patient/calendar/appointment/{calendarId}/details', [PatientCalendarController::class, 'viewDetails'])->name('patient.viewDetails');
 });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+Route::get('/notifications/{notification}', [NotificationController::class, 'markAsRead'])->name('markAsRead');
 
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 

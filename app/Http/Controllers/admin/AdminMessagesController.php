@@ -14,36 +14,36 @@ class AdminMessagesController extends Controller
     
     public function index(){
 
-    $users = User::where('id', '!=', auth()->id())->get();
+        $users = User::where('id', '!=', auth()->id())->get();
 
-    // Get users with their last messages and timestamps
-    $usersWithLastMessage = $users->map(function ($user) {
-        $lastMessage = Message::where(function ($query) use ($user) {
-            $query->where('sender_id', auth()->id())
-                ->where('recipient_id', $user->id);
-        })->orWhere(function ($query) use ($user) {
-            $query->where('sender_id', $user->id)
-                ->where('recipient_id', auth()->id());
-        })->latest()->first();
+        // Get users with their last messages and timestamps
+        $usersWithLastMessage = $users->map(function ($user) {
+            $lastMessage = Message::where(function ($query) use ($user) {
+                $query->where('sender_id', auth()->id())
+                    ->where('recipient_id', $user->id);
+            })->orWhere(function ($query) use ($user) {
+                $query->where('sender_id', $user->id)
+                    ->where('recipient_id', auth()->id());
+            })->latest()->first();
 
-        $user->last_message = $lastMessage
-            ? ($lastMessage->sender_id == auth()->id() ? 'You: ' : $user->name . ': ') . $lastMessage->message
-            : 'No messages yet';
-        $user->last_message_time = $lastMessage ? $lastMessage->created_at : null;
+            $user->last_message = $lastMessage
+                ? ($lastMessage->sender_id == auth()->id() ? 'You: ' : $user->name . ': ') . $lastMessage->message
+                : 'No messages yet';
+            $user->last_message_time = $lastMessage ? $lastMessage->created_at : null;
 
-        return $user;
-    });
+            return $user;
+        });
 
-    // Sort users by the last message timestamp in descending order
-    $usersWithLastMessage = $usersWithLastMessage->sortByDesc('last_message_time');
+        // Sort users by the last message timestamp in descending order
+        $usersWithLastMessage = $usersWithLastMessage->sortByDesc('last_message_time');
 
-    $messages = Message::all();
+        $messages = Message::all();
 
-    return view('admin.messages.messages', compact('users', 'messages', 'usersWithLastMessage'));
+        return view('admin.messages.messages', compact('users', 'messages', 'usersWithLastMessage'));
     }
 
-    public function storeMessage(Request $request)
-    {
+    public function storeMessage(Request $request){
+
         $request->validate([
             'recipient_id' => 'required|exists:users,id', // Ensure recipient exists in users table
             'message' => 'required|string',
@@ -88,13 +88,5 @@ class AdminMessagesController extends Controller
         $messages = Message::whereIn('sender_id', $userIds)->orWhereIn('recipient_id', $userIds)->get();
 
         return view('admin.messages.messages', compact('users', 'messages'));
-    }
-
-    public function markNotificationAsRead($id)
-    {
-        $notification = auth()->user()->notifications()->findOrFail($id);
-        $notification->markAsRead();
-
-        return redirect()->back()->with('success', 'Notification marked as read.');
     }
 }

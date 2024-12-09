@@ -41,9 +41,6 @@
                             <x-nav-link :href="route('admin.calendar')" :active="request()->routeIs('admin.calendar')">
                                 {{ __('Calendar') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('admin.notifications')" :active="request()->routeIs('admin.notifications')">
-                                {{ __('Notifications') }}
-                            </x-nav-link>
                         @elseif(Auth::user()->usertype == 'patient')
                             <x-nav-link :href="route('patient.dashboard')" :active="request()->routeIs('patient.dashboard')">
                                 {{ __('Dashboard') }}
@@ -59,9 +56,6 @@
                             </x-nav-link>
                             <x-nav-link :href="route('patient.calendar')" :active="request()->routeIs('patient.calendar')">
                                 {{ __('Calendar') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('patient.notifications')" :active="request()->routeIs('patient.notifications')">
-                                {{ __('Notifications') }}
                             </x-nav-link>
                         @endif
                     @endif
@@ -114,7 +108,7 @@
                                 @else
                                     @foreach ($notifications as $notification)
                                         <div class="shadow border rounded-lg p-4 hover:bg-gray-50 text-justify mt-2 {{ $notification->read_at ? 'bg-white' : 'bg-gray-200' }}">
-                                            <a href="{{ route('admin.markAsRead', $notification->id) }}" class="flex-1 text-gray-800 hover:text-blue-600">
+                                            <a href="{{ route('markAsRead', $notification->id) }}" class="flex-1 text-gray-800 hover:text-blue-600">
                                                 <span class="text-xs">{{ $notification->data['message'] }}</span>
                                                 <span class="text-xs text-gray-500 block mt-1">{{ $notification->created_at->diffForHumans() }}</span>
                                             </a>
@@ -204,7 +198,7 @@
                                 @else
                                     @foreach ($notifications as $notification)
                                         <div class="shadow border rounded-lg p-4 hover:bg-gray-50 text-justify mt-2 {{ $notification->read_at ? 'bg-white' : 'bg-gray-200' }}">
-                                            <a href="{{ route('admin.markAsRead', $notification->id) }}" class="flex-1 text-gray-800 hover:text-blue-600">
+                                            <a href="{{ route('markAsRead', $notification->id) }}" class="flex-1 text-gray-800 hover:text-blue-600">
                                                 <span class="text-xs">{{ $notification->data['message'] }}</span>
                                                 <span class="text-xs text-gray-500 block mt-1">{{ $notification->created_at->diffForHumans() }}</span>
                                             </a>
@@ -249,9 +243,6 @@
                     <x-responsive-nav-link :href="route('admin.calendar')" :active="request()->routeIs('admin.calendar')">
                         {{ __('Calendar') }}
                     </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.notifications')" :active="request()->routeIs('admin.notifications')">
-                        {{ __('Notifications') }}
-                    </x-responsive-nav-link>
                 @elseif(Auth::user()->usertype == 'patient')
                     <x-responsive-nav-link :href="route('patient.dashboard')" :active="request()->routeIs('patient.dashboard')">
                         {{ __('Dashboard') }}
@@ -267,9 +258,6 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('patient.calendar')" :active="request()->routeIs('patient.calendar')">
                         {{ __('Calendar') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('patient.notifications')" :active="request()->routeIs('patient.notifications')">
-                        {{ __('Notifications') }}
                     </x-responsive-nav-link>
                 @endif
             @endif

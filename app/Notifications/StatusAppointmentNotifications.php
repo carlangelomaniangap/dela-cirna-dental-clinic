@@ -11,6 +11,7 @@ class StatusAppointmentNotifications extends Notification
 
     protected $calendar;
     protected $message;
+    protected $cancelReason;
 
     // Pass the appointment object and the message to the notification
     public function __construct($calendar, $message, $cancelReason = null)

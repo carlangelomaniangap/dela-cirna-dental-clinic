@@ -39,8 +39,8 @@ class PatientMessagesController extends Controller
         return view('patient.messages.messages', compact('users', 'messages', 'usersWithLastMessage'));
     }
 
-    public function storeMessage(Request $request)
-    {
+    public function storeMessage(Request $request){
+        
         $request->validate([
             'recipient_id' => 'required|exists:users,id', // Ensure recipient exists in users table
             'message' => 'required|string',
