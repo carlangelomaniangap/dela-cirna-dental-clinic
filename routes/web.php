@@ -42,6 +42,8 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::get('/admin/inventory', [AdminInventoryController::class, 'index'])->name('admin.inventory');
     Route::post('/admin/inventory', [AdminInventoryController::class, 'store'])->name('admin.inventory.store');
     Route::put('/admin/inventory/{id}/update', [AdminInventoryController::class, 'update'])->name('admin.inventory.update');
+    Route::put('/admin/inventory/{id}/add-stock', [AdminInventoryController::class, 'AddStock'])->name('admin.inventory.AddStock');
+
     Route::get('/admin/inventory/print', [AdminInventoryController::class, 'print'])->name('admin.inventory.print');
 
     // paitent list

@@ -15,7 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('item_name');
             $table->enum('type', ['Equipment', 'Consumable']);
+            $table->enum('unit', [
+                'Each', 'Box', 'Pack', 'Roll', 'Vial', 'Tube', 'Bottle', 
+                'Carton', 'Packet', 'Strip', 'Tray', 'Ampoule', 'Case', 
+                'Set', 'Module'
+            ]);
             $table->integer('stocks');
+            $table->integer('issuance')->default(0);
             $table->integer('disposed')->default(0);
             $table->integer('remaining_stocks');
             $table->date('expiration_date')->nullable();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory;
+use App\Models\AddStock;
 use Illuminate\Http\Request;
 
 class AdminInventoryController extends Controller
@@ -19,8 +20,9 @@ class AdminInventoryController extends Controller
         $request->validate([
             'item_name' => 'required|string|max:255',
             'type' => 'required|in:Equipment,Consumable',
+            'unit' => 'required|in:Each,Box,Pack,Roll,Vial,Tube,Bottle,Carton,Packet,Strip,Tray,Ampoule,Case,Set,Module',
             'stocks' => 'required|integer',
-            'expiration_date' => $request->type == 'Consumable' ? 'required|date' : 'nullable',
+            'expiration_date' => 'date|nullable',
         ]);
 
         // Set remaining_stocks equal to stocks by default
@@ -29,50 +31,65 @@ class AdminInventoryController extends Controller
         Inventory::create([
             'item_name' => $request->item_name,
             'type' => $request->type,
+            'unit' => $request->unit,
             'stocks' => $request->stocks,
             'remaining_stocks' => $remaining_stocks,
-            'expiration_date' => $request->type == 'Consumable' ? $request->expiration_date : null,
+            'expiration_date' => $request->expiration_date,
         ]);
 
         return redirect()->back()->with('success', 'Item added!');
     }
 
     public function update(Request $request, $id){
-
+        
         $item = Inventory::findOrFail($id);
 
-        // Check if the item is of type "equipment"
-        if ($item->type == 'Equipment') {
-            // If it's equipment, we directly add to both total and available quantities
-            $item->stocks += $request->quantity;
-            $item->remaining_stocks += $request->quantity;
-        } 
-        // If it's consumable, we handle it based on the action (add_stocks or dispose)
-        elseif ($item->type == 'Consumable') {
-            // Add to total and available quantities
-            if ($request->action == 'add_stocks') {
-                // Add quantity to available stock
-                $item->stocks += $request->quantity;
-                $item->remaining_stocks += $request->quantity;
-            } elseif ($request->action == 'dispose') {
-                if ($item->remaining_stocks >= $request->quantity) {
-                    // Reduce available quantity and increase quantity used
-                    $item->remaining_stocks -= $request->quantity;
-                    $item->disposed += $request->quantity;
-                } else {
-                    // If available quantity is less than the quantity to be used, prevent the update
-                    return redirect()->back()->with('error', 'Insufficient available quantity to use.');
-                }
-            }
-        }
+        $request->validate([
+            'item_name' => 'required|string|max:255',
+            'unit' => 'required|in:Each,Box,Pack,Roll,Vial,Tube,Bottle,Carton,Packet,Strip,Tray,Ampoule,Case,Set,Module',
+        ]);
 
-        $item->save();
+         // Update the item
+        $item->update([
+            'item_name' => $request->input('item_name'),
+            'unit' => $request->input('unit'),
+        ]);
 
-        return redirect()->back()->with('success', 'Item quantity updated!');
+        return redirect()->back()->with('success', 'Item updated successfully!');
     }
 
-    public function print()
-    {
+    public function AddStock(Request $request, $id){
+
+        // Validate the request data
+        $request->validate([
+            'receiver_name' => 'required|string|max:255',
+            'expiration_date' => 'nullable|date',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        // Find the inventory
+        $inventory = Inventory::findOrFail($id);
+
+        // Create a new AddStock record
+        $addStock = new AddStock([
+            'inventory_id' => $inventory->id,  // Make sure this is correctly passed
+            'receiver_name' => $request->receiver_name,
+            'expiration_date' => $request->expiration_date,
+            'quantity' => $request->quantity,
+        ]);
+
+        // Save the AddStock record
+        $addStock->save();
+
+        // Update the inventory's stocks and remaining_stocks
+        $inventory->stocks += $request->quantity;  // Add to stocks
+        $inventory->remaining_stocks += $request->quantity;  // Add to remaining stocks
+        $inventory->save();  // Save the updated inventory
+
+        return redirect()->back()->with('success', 'Stock added successfully!');
+    }
+    
+    public function print(){
         // Get all inventory data or filter as needed
         $items = Inventory::all();
 

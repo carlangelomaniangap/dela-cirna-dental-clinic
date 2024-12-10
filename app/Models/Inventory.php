@@ -14,10 +14,16 @@ class Inventory extends Model
     protected $fillable = [
         'item_name',
         'type',
+        'unit',
         'stocks',
+        'issuance',
         'disposed',
         'remaining_stocks',
-        'expiration_date',
+        'expiration_date'
     ];
+
+    public function addStocks(){
+        return $this->hasMany(AddStock::class);
+    }
 }
 
