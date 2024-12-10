@@ -270,15 +270,15 @@
                 <h3 class="text-base lg:text-base">John Aldrin Portugal</h3>
                 <p class="text-gray-300">
                     <i class="fas fa-envelope mr-2"></i>
-                    <a class="hover:underline" href="mailto:johnaldrinportugal@example.com">johnaldrinportugal@example.com</a>
+                    <a class="hover:underline" href="mailto:portugaljohnaldrin30@gmail.com">portugaljohnaldrin30@gmail.com</a>
                 </p>
                 <p class="text-gray-300">
                     <i class="fab fa-facebook-square mr-2"></i>
-                    <a href="https://facebook.com/" class="hover:text-gray-400">Facebook</a>
+                    <a href="https://facebook.com/johnaldrin.portugal.5" class="hover:text-gray-400">Facebook</a>
                 </p>
                 <p class="text-gray-300">
                     <i class="fab fa-github-square mr-2"></i>
-                    <a href="https://github.com/" class="hover:text-gray-400">GitHub</a>
+                    <a href="https://github.com/jaldrinportugal" class="hover:text-gray-400">GitHub</a>
                 </p>
             </div>
                 
