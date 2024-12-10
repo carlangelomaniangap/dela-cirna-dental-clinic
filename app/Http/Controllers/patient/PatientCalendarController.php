@@ -16,9 +16,6 @@ class PatientCalendarController extends Controller
         $bookedTimes = Calendar::where('appointmentdate', $date)
             ->whereNotIn('status', ['ApprovedCancelled', 'PendingCancelled'])
             ->pluck('appointmenttime')
-            ->map(function ($time) {
-                return Carbon::parse($time)->format('H:i:s');
-            })
             ->toArray();
 
         return response()->json($bookedTimes);
@@ -38,7 +35,7 @@ class PatientCalendarController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'appointmentdate' => 'required|date',
-            'appointmenttime' => 'required',
+            'appointmenttime' => 'required|in:8:00 AM - 9:00 AM,9:00 AM - 10:00 AM,10:00 AM - 11:00 AM,11:00 AM - 12:00 PM,3:00 PM - 4:00 PM,4:00 PM - 5:00 PM,5:00 PM - 6:00 PM,6:00 PM - 7:00 PM,7:00 PM - 8:00 PM',
             'concern' => 'required|string|max:255',
             'name' => 'required|string|max:255',
             'gender' => 'required|string|max:255',
@@ -98,7 +95,7 @@ class PatientCalendarController extends Controller
         ]);
 
         $appointmentDate = Carbon::parse($calendar->appointmentdate)->format('F j, Y');
-        $appointmentTime = Carbon::parse($calendar->appointmenttime)->format('h:i A');
+        $appointmentTime = $calendar->appointmenttime;
         $message = "{$calendar->name} has scheduled a new appointment for {$appointmentDate} at {$appointmentTime}.";
 
         $admins = User::where('usertype', 'admin')->get();

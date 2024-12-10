@@ -83,15 +83,15 @@
                     <label for="appointmenttime" class="text-sm lg:text-base font-semibold">Appointment Time</label>
                     <select id="appointmenttime" name="appointmenttime" class="rounded-lg focus:ring-2 shadow-sm w-full" required>
                         <option value="" disabled selected>Select your Time</option>
-                        <option value="08:00:00" {{ old('appointmenttime') == '08:00:00' ? 'selected' : '' }}>8:00 AM - 9:00 AM</option>
-                        <option value="09:00:00" {{ old('appointmenttime') == '09:00:00' ? 'selected' : '' }}>9:00 AM - 10:00 AM</option>
-                        <option value="10:00:00" {{ old('appointmenttime') == '10:00:00' ? 'selected' : '' }}>10:00 AM - 11:00 AM</option>
-                        <option value="11:00:00" {{ old('appointmenttime') == '11:00:00' ? 'selected' : '' }}>11:00 AM - 12:00 PM</option>
-                        <option value="15:00:00" {{ old('appointmenttime') == '15:00:00' ? 'selected' : '' }}>3:00 PM - 4:00 PM</option>
-                        <option value="16:00:00" {{ old('appointmenttime') == '16:00:00' ? 'selected' : '' }}>4:00 PM - 5:00 PM</option>
-                        <option value="17:00:00" {{ old('appointmenttime') == '17:00:00' ? 'selected' : '' }}>5:00 PM - 6:00 PM</option>
-                        <option value="18:00:00" {{ old('appointmenttime') == '18:00:00' ? 'selected' : '' }}>6:00 PM - 7:00 PM</option>
-                        <option value="19:00:00" {{ old('appointmenttime') == '19:00:00' ? 'selected' : '' }}>7:00 PM - 8:00 PM</option>
+                        <option value="8:00 AM - 9:00 AM" {{ old('appointmenttime') == '8:00 AM - 9:00 AM' ? 'selected' : '' }}>8:00 AM - 9:00 AM</option>
+                        <option value="9:00 AM - 10:00 AM" {{ old('appointmenttime') == '9:00 AM - 10:00 AM' ? 'selected' : '' }}>9:00 AM - 10:00 AM</option>
+                        <option value="10:00 AM - 11:00 AM" {{ old('appointmenttime') == '10:00 AM - 11:00 AM' ? 'selected' : '' }}>10:00 AM - 11:00 AM</option>
+                        <option value="11:00 AM - 12:00 PM" {{ old('appointmenttime') == '11:00 AM - 12:00 PM' ? 'selected' : '' }}>11:00 AM - 12:00 PM</option>
+                        <option value="3:00 PM - 4:00 PM" {{ old('appointmenttime') == '3:00 PM - 4:00 PM' ? 'selected' : '' }}>3:00 PM - 4:00 PM</option>
+                        <option value="4:00 PM - 5:00 PM" {{ old('appointmenttime') == '4:00 PM - 5:00 PM' ? 'selected' : '' }}>4:00 PM - 5:00 PM</option>
+                        <option value="5:00 PM - 6:00 PM" {{ old('appointmenttime') == '5:00 PM - 6:00 PM' ? 'selected' : '' }}>5:00 PM - 6:00 PM</option>
+                        <option value="6:00 PM - 7:00 PM" {{ old('appointmenttime') == '6:00 PM - 7:00 PM' ? 'selected' : '' }}>6:00 PM - 7:00 PM</option>
+                        <option value="7:00 PM - 8:00 PM" {{ old('appointmenttime') == '7:00 PM - 8:00 PM' ? 'selected' : '' }}>7:00 PM - 8:00 PM</option>
                     </select>
                 </div>
 

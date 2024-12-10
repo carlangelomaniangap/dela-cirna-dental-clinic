@@ -92,7 +92,7 @@
                             <div class="border border-gray-200 rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start bg-gray-50 hover:bg-gray-100 transition duration-200">
                                 <div class="flex-grow mb-2 sm:mb-0">
                                     <p class="text-base lg:text-lg font-semibold text-gray-800">
-                                        <strong>{{ \Carbon\Carbon::parse($calendar->appointmenttime)->format('g:i A') }}</strong> - 
+                                        <strong>{{($calendar->appointmenttime)}}</strong> - 
                                         <span class="text-gray-600">{{ $calendar->user->name }}</span>
                                     </p>
                                     <p class="text-sm sm:text-base lg:text-lg text-gray-500">

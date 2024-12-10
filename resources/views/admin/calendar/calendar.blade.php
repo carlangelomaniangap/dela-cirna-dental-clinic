@@ -118,59 +118,49 @@
                     <div class="bg-white shadow-lg rounded-lg h-64 w-64 overflow-y-auto p-6">
                         <div class="flex flex-col">
                             <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="text-lg font-semibold text-center rounded-lg mb-4 py-2 px-2">{{ $day->format('F j, Y') }}</div>
-                            @foreach (range(8, 19) as $hour)
-                                @if (($hour >= 8 && $hour < 12) || ($hour >= 15 && $hour < 20))
-                                    @php
-                                        $startHour = $hour;
-                                        $endHour = $hour + 1;
-                                        $startPeriod = $startHour >= 12 ? 'PM' : 'AM';
-                                        $endPeriod = $endHour >= 12 ? 'PM' : 'AM';
-                                        $startHour12 = $startHour > 12 ? $startHour - 12 : $startHour;
-                                        $endHour12 = $endHour > 12 ? $endHour - 12 : $endHour;
-                                    @endphp
-                                    <div class="hourly-slot mb-1 p-1 text-center border-2 border-gray-200 rounded shadow-md">
-                                        <strong>{{ $startHour12 }}:00{{ $startPeriod }} - {{ $endHour12 }}:00{{ $endPeriod }}</strong>
-                                        @php $hasActiveAppointment = false; @endphp
-                                        @foreach ($calendars as $calendar)
-                                            @if ($calendar->appointmentdate == $day->format('Y-m-d') && date('G', strtotime($calendar->appointmenttime)) == $hour)
-                                                @if (!in_array($calendar->status, ['ApprovedCancelled', 'PendingCancelled']))
-                                                    <div class="appointment bg-gray-200 p-2 mt-1 rounded text-center w-full box-border">
-                                                        <div>{{ $calendar->user->name }}</div>
-                                                        <div class="appointment-buttons mt-2">
-                                                            @if ($calendar->status === 'Pending')
-                                                                <div class="flex justify-center items-center space-x-2">
-                                                                    <form method="post" action="{{ route('admin.approveCalendar', ['calendarId' => $calendar->id, 'status' => 'approve']) }}">
-                                                                        @csrf
-                                                                        <button type="submit" class="py-1 px-2 rounded bg-yellow-500 text-white text-sm">Pending</button>
-                                                                    </form>
-                                                                    <button onclick="openCancelModal({{ $calendar->id }}, 'pendingcancel')" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
-                                                                </div>
-                                                            @elseif ($calendar->status === 'Approved')
-                                                                <div class="flex justify-center items-center space-x-2">
-                                                                    <form method="post" action="{{ route('admin.approveCalendar', ['calendarId' => $calendar->id, 'status' => 'complete']) }}">
-                                                                        @csrf
-                                                                        <button type="submit" class="py-1 px-2 rounded bg-blue-500 text-white text-sm">Complete</button>
-                                                                    </form>
-                                                                    <button onclick="openCancelModal({{ $calendar->id }}, 'approvecancel')" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
-                                                                </div>
-                                                            @elseif ($calendar->status === 'Completed')
-                                                                <p>Status: <span class="text-blue-700 text-sm">Completed</span></p>
-                                                            @endif
-                                                            <a href="{{ route('admin.viewDetails', $calendar->id) }}" class="inline-flex items-center justify-center py-1 px-2 mt-2 rounded bg-gray-500 text-white text-sm hover:bg-gray-600">
-                                                                <i class="fa-solid fa-eye mr-2"></i>
-                                                                View Details
-                                                            </a>
-                                                        </div>
+                            @foreach (['8:00 AM - 9:00 AM', '9:00 AM - 10:00 AM', '10:00 AM - 11:00 AM', '11:00 AM - 12:00 PM', '3:00 PM - 4:00 PM', '4:00 PM - 5:00 PM', '5:00 PM - 6:00 PM', '6:00 PM - 7:00 PM', '7:00 PM - 8:00 PM'] as $timeSlot)
+                                <div class="hourly-slot mb-1 p-1 text-center border-2 border-gray-200 rounded shadow-md">
+                                    <strong>{{ $timeSlot }}</strong>
+                                    @php $hasActiveAppointment = false; @endphp
+                                    @foreach ($calendars as $calendar)
+                                        @if ($calendar->appointmentdate == $day->format('Y-m-d') && $calendar->appointmenttime == $timeSlot && !in_array($calendar->status, ['ApprovedCancelled', 'PendingCancelled']))
+                                            @if (!in_array($calendar->status, ['ApprovedCancelled', 'PendingCancelled']))
+                                                <div class="appointment bg-gray-200 p-2 mt-1 rounded text-center w-full box-border">
+                                                    <div>{{ $calendar->user->name }}</div>
+                                                    <div class="appointment-buttons mt-2">
+                                                        @if ($calendar->status === 'Pending')
+                                                            <div class="flex justify-center items-center space-x-2">
+                                                                <form method="post" action="{{ route('admin.approveCalendar', ['calendarId' => $calendar->id, 'status' => 'approve']) }}">
+                                                                    @csrf
+                                                                    <button type="submit" class="py-1 px-2 rounded bg-yellow-500 text-white text-sm">Pending</button>
+                                                                </form>
+                                                                <button onclick="openCancelModal({{ $calendar->id }}, 'pendingcancel')" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
+                                                            </div>
+                                                        @elseif ($calendar->status === 'Approved')
+                                                            <div class="flex justify-center items-center space-x-2">
+                                                                <form method="post" action="{{ route('admin.approveCalendar', ['calendarId' => $calendar->id, 'status' => 'complete']) }}">
+                                                                    @csrf
+                                                                    <button type="submit" class="py-1 px-2 rounded bg-blue-500 text-white text-sm">Complete</button>
+                                                                </form>
+                                                                <button onclick="openCancelModal({{ $calendar->id }}, 'approvecancel')" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
+                                                            </div>
+                                                        @elseif ($calendar->status === 'Completed')
+                                                            <p>Status: <span class="text-blue-700 text-sm">Completed</span></p>
+                                                        @endif
+                                                        <a href="{{ route('admin.viewDetails', $calendar->id) }}" class="inline-flex items-center justify-center py-1 px-2 mt-2 rounded bg-gray-500 text-white text-sm hover:bg-gray-600">
+                                                            <i class="fa-solid fa-eye mr-2"></i>
+                                                            View Details
+                                                        </a>
                                                     </div>
-                                                    @php $hasActiveAppointment = true; @endphp
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                        @if (!$hasActiveAppointment)
-                                            <div class="text-gray-400 text-xs">No Appointments</div>
+                                                </div>
+                                                @php $hasActiveAppointment = true; @endphp
+                                             @endif
                                         @endif
-                                    </div>
-                                @endif
+                                    @endforeach
+                                    @if (!$hasActiveAppointment)
+                                        <div class="text-gray-400 text-xs">No Appointments</div>
+                                    @endif
+                                </div>
                             @endforeach
                         </div>
                     </div>

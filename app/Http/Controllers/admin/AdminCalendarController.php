@@ -34,7 +34,7 @@ class AdminCalendarController extends Controller
         $request->validate([
             'user_id' => 'nullable|exists:users,id',
             'appointmentdate' => 'required|date',
-            'appointmenttime' => 'required',
+            'appointmenttime' => 'required|in:8:00 AM - 9:00 AM,9:00 AM - 10:00 AM,10:00 AM - 11:00 AM,11:00 AM - 12:00 PM,3:00 PM - 4:00 PM,4:00 PM - 5:00 PM,5:00 PM - 6:00 PM,6:00 PM - 7:00 PM,7:00 PM - 8:00 PM',
             'concern' => 'nullable|string|max:255',
             'name' => 'nullable|string|max:255',
             'gender' => 'nullable|string|max:255',
@@ -87,7 +87,7 @@ class AdminCalendarController extends Controller
 
         // Ensure that the date and time are Carbon instances
         $appointmentDate = Carbon::parse($calendar->appointmentdate)->format('F j, Y');  // e.g., 'December 3, 2024'
-        $appointmentTime = Carbon::parse($calendar->appointmenttime)->format('h:i A');  // e.g., '02:30 PM'
+        $appointmentTime = $calendar->appointmenttime;
 
         $PatientName = $calendar->user->name;
 

@@ -67,7 +67,7 @@
                     <p><strong>Appointment Date:</strong> {{ date('F j, Y', strtotime($calendar->appointmentdate)) }}</p>
                 </div>
                 <div class="p-4 border rounded-md">
-                    <p><strong>Appointment Time:</strong> {{ (new DateTime($calendar->appointmenttime))->format('g:i A') }}</p>
+                    <p><strong>Appointment Time:</strong> {{ $calendar->appointmenttime }}</p>
                 </div>
                 <div class="p-4 border rounded-md">
                     <p><strong>Concern:</strong> {{ $calendar->concern }}</p>
