@@ -50,6 +50,10 @@ class User extends Authenticatable
         return $this->hasMany(Message::class, 'recipient_id');
     }
 
+    public function issuance(){
+        return $this->hasMany(Issuance::class, 'users_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

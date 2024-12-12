@@ -23,7 +23,15 @@ class Inventory extends Model
     ];
 
     public function addStocks(){
-        return $this->hasMany(AddStock::class);
+        return $this->hasMany(AddStock::class, 'inventory_id');
+    }
+
+    public function issuance(){
+        return $this->hasMany(Issuance::class, 'inventory_id');
+    }
+
+    public function dispose(){
+        return $this->hasMany(Dispose::class, 'inventory_id');
     }
 }
 

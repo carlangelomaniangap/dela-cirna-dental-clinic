@@ -1,22 +1,21 @@
 <x-app-layout>
 
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+</head>
+<body class="min-h-screen">
 
-    <body class="min-h-screen">
-
-        <!-- <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
+    <!-- <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
         <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold">{{ __('Inventory') }}</h4>
     </div> -->
 
-        @if(session('success') || $errors->any() || session('error'))
+    @if(session('success') || $errors->any() || session('error'))
         <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div class="relative p-4 w-full max-w-md">
                 <div class="relative p-5 text-center bg-white rounded-lg shadow">
@@ -57,395 +56,585 @@
                 </div>
             </div>
         </div>
-        @endif
+    @endif
 
-        <div class="p-6">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+    <div class="p-6">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
 
-                <!-- Button to Open Add New Item Modal -->
-                <div class="p-6 print:hidden">
-                    <div class="flex flex-col sm:flex-row items-center justify-between mb-4">
-                        <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold">Inventory</h1>
-                        <button type="button" id="AddOpenModalBtn" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-4 py-2 rounded font-semibold">Add Item</button>
-                    </div>
+            <!-- Button to Open Add New Item Modal -->
+            <div class="p-6 pb-0 print:hidden">
+                <div class="flex flex-col sm:flex-row items-center justify-between">
+                    <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold">Inventory</h1>
+                    <button type="button" id="AddOpenModalBtn" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-4 py-2 rounded font-semibold">Add Item</button>
                 </div>
+            </div>
 
-                <!-- Modal for Adding New Item -->
-                <div id="AddItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-                    <div class="bg-white p-6 rounded-lg shadow-lg w-50 relative">
-                        <button type="button" id="AddCloseModalBtn" class="mr-2 absolute top-0 right-0 text-lg text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <!-- Modal for Adding New Item -->
+            <div id="AddItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+                <div class="bg-white p-6 rounded-lg shadow-lg w-50 relative">
+                    <button type="button" id="AddCloseModalBtn" class="mr-2 absolute top-0 right-0 text-lg text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
                         
-                        <div class="mb-4">
-                            <h1 class="text-lg font-bold">ADD ITEM</h1>
+                    <div class="mb-4">
+                        <h1 class="text-lg font-bold">ADD ITEM</h1>
+                    </div>
+                        
+                    <form id="AddItemForm" action="{{ route('admin.inventory.store') }}" method="POST">
+                        @csrf
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                            <div>
+                                <label for="item_name" class="block text-sm font-semibold text-gray-700">Item Name</label>
+                                <input type="text" name="item_name" id="item_name" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                            </div>
+
+                            <div>
+                                <label for="type" class="block text-sm font-semibold text-gray-700">Type</label>
+                                <select name="type" id="type" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required onchange="toggleFields()">
+                                    <option value="" selected disabled>Select Type</option>
+                                    <option value="Equipment">Equipment</option>
+                                    <option value="Consumable">Consumable</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="unit" class="block text-sm font-semibold text-gray-700">Unit</label>
+                                <select name="unit" id="unit" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                                    <option value="" selected disabled>Select Unit</option>
+                                    <option value="Each">Each</option>
+                                    <option value="Box">Box</option>
+                                    <option value="Pack">Pack</option>
+                                    <option value="Tube">Tube</option>
+                                    <option value="Bottle">Bottle</option>
+                                    <option value="Bag">Carton</option>
+                                    <option value="Kit">Packet</option>
+                                    <option value="Set">Set</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="stocks" class="block text-sm font-semibold text-gray-700">Stocks Quantity</label>
+                                <input type="number" name="stocks" id="stocks" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                            </div>
+
+                            <div class="flex items-center">
+                                <input type="checkbox" id="has_expiration_date" class="mr-2" onchange="toggleExpirationDate()">
+                                <label for="has_expiration_date" class="text-sm font-semibold text-gray-700">Has Expiration Date</label>
+                            </div>
+
+                            <div class="hidden" id="expiration_date_container">
+                                <label for="expiration_date" class="block text-sm font-semibold text-gray-700">Expiration Date</label>
+                                <input type="date" name="expiration_date" id="expiration_date" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+
                         </div>
-                        
-                        <form id="AddItemForm" action="{{ route('admin.inventory.store') }}" method="POST">
-                            @csrf
 
-                            <!-- Form Fields in 2 Columns -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                                <div>
-                                    <label for="item_name" class="block text-sm font-semibold text-gray-700">Item Name</label>
-                                    <input type="text" name="item_name" id="item_name" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
-                                </div>
-
-                                <div>
-                                    <label for="type" class="block text-sm font-semibold text-gray-700">Type</label>
-                                    <select name="type" id="type" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required onchange="toggleFields()">
-                                        <option value="" selected disabled>Select Type</option>
-                                        <option value="Equipment">Equipment</option>
-                                        <option value="Consumable">Consumable</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label for="unit" class="block text-sm font-semibold text-gray-700">Unit</label>
-                                    <select name="unit" id="unit" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
-                                        <option value="" selected disabled>Select Unit</option>
-                                        <option value="Each">Each</option>
-                                        <option value="Box">Box</option>
-                                        <option value="Pack">Pack</option>
-                                        <option value="Roll">Roll</option>
-                                        <option value="Vial">Vial</option>
-                                        <option value="Tube">Tube</option>
-                                        <option value="Bottle">Bottle</option>
-                                        <option value="Carton">Carton</option>
-                                        <option value="Packet">Packet</option>
-                                        <option value="Strip">Strip</option>
-                                        <option value="Tray">Tray</option>
-                                        <option value="Ampoule">Ampoule</option>
-                                        <option value="Case">Case</option>
-                                        <option value="Set">Set</option>
-                                        <option value="Module">Module</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label for="stocks" class="block text-sm font-semibold text-gray-700">Stocks Quantity</label>
-                                    <input type="number" name="stocks" id="stocks" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
-                                </div>
-
-                                <!-- Expiration Date Checkbox -->
-                                <div class="flex items-center">
-                                    <input type="checkbox" id="has_expiration_date" class="mr-2" onchange="toggleExpirationDate()">
-                                    <label for="has_expiration_date" class="text-sm font-semibold text-gray-700">Has Expiration Date</label>
-                                </div>
-
-                                <!-- Expiration Date (Initially hidden) -->
-                                <div class="hidden" id="expiration_date_container">
-                                    <label for="expiration_date" class="block text-sm font-semibold text-gray-700">Expiration Date</label>
-                                    <input type="date" name="expiration_date" id="expiration_date" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                </div>
-
-                            </div>
-
-                            <!-- Action Buttons -->
-                            <div class="mt-6 text-right">
-                                <button type="submit" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300" id="modalSubmitBtn">Add</button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="mt-6 text-right">
+                            <button type="submit" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300" id="modalSubmitBtn">Add</button>
+                        </div>
+                    </form>
                 </div>
+            </div>
 
-                <!-- Inventory List -->
-                <div class="p-6">
-                    <table id="inventory-content" class="hover min-w-full bg-white border border-gray-300">
-                        <thead>
+            <!-- Inventory List -->
+            <div class="p-6">
+                <table id="inventory-content" class="hover min-w-full bg-white border border-gray-300">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Type</th>
+                            <th>Unit</th>
+                            <th>Stocks</th>
+                            <th>Issuance</th>
+                            <th>Disposed</th>
+                            <th>Remaining Stocks</th>
+                            <th class="action">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        @foreach ($items as $item)
                             <tr>
-                                <th>Item Name</th>
-                                <th>Type</th>
-                                <th>Unit</th>
-                                <th>Stocks</th>
-                                <th>Issuance</th>
-                                <th>Disposed</th>
-                                <th>Remaining Stocks</th>
-                                <th class="action">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm">
-                            @foreach ($items as $item)
-                                <tr>
-                                    <td>{{ $item->item_name }}</td>
-                                    <td>{{ $item->type }}</td>
-                                    <td>{{ $item->unit }}</td>
-                                    <td>{{ number_format($item->stocks) }}</td>
-                                    <td>{{ number_format($item->issuance) }}</td>
-                                    <td>{{ number_format($item->disposed) }}</td>
-                                    <td>{{ number_format($item->remaining_stocks) }}</td>
-                                    <td class="action">
-                                        <button type="button" data-item-id="{{ $item->id }}" data-item-name="{{ $item->item_name }}" data-item-unit="{{ $item->unit }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-2 py-1 rounded"><i class="fa-solid fa-pen-to-square"></i></button>
-                                        <button type="button" data-item-id="{{ $item->id }}" class="AddStockOpenModalBtn px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300"><i class="fa-solid fa-circle-plus"></i></button>
-                                    </td>
-                                </tr>
+                                <td>{{ $item->item_name }}</td>
+                                <td>{{ $item->type }}</td>
+                                <td>{{ $item->unit }}</td>
+                                <td>
+                                    <a href="{{ route('admin.addstock_history', $item->id) }}" class="hover:text-gray-400">{{ number_format($item->stocks) }}</a>
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.issuance_history', $item->id) }}" class="hover:text-gray-400">{{ number_format($item->issuance) }}</a>
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.dispose_history', $item->id) }}" class="hover:text-gray-400">{{ number_format($item->disposed) }}</a>
+                                </td>
+                                <td>{{ number_format($item->remaining_stocks) }}</td>
+                                <td class="action">
+                                    <button type="button" data-item-id="{{ $item->id }}" data-item-name="{{ $item->item_name }}" data-item-unit="{{ $item->unit }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-2 py-1 rounded"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button type="button" data-item-id="{{ $item->id }}" class="AddStockOpenModalBtn px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300"><i class="fa-solid fa-circle-plus"></i></button>
+                                    <button type="button" data-item-id="{{ $item->id }}" data-item-remainingstocks="{{ $item->remaining_stocks }}" class="IssuanceOpenModalBtn px-2 py-1 bg-yellow-500 text-white rounded hover:bg-green-600 transition duration-300"><i class="fa-solid fa-user-pen"></i></button>
+                                    <button type="button" data-item-id="{{ $item->id }}" class="DisposeOpenModalBtn px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                             </tr>
 
-                                <!-- Modal for Update Item -->
-                                <div id="UpdateItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-                                    <div class="bg-white p-6 rounded-lg shadow-lg w-50 relative">
-                                        <button type="button" id="UpdateCloseModalBtn" class="mr-2 absolute top-0 right-0 text-lg text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+                             <!-- Modal for Update Item -->
+                            <div id="UpdateItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+                                <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+                                    <button type="button" id="UpdateCloseModalBtn" class="mr-2 absolute top-0 right-0 text-lg text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
                                         
+                                    <div class="mb-4">
+                                        <h1 class="text-lg font-bold">UPDATE</h1>
+                                    </div>
+
+                                    <form id="UpdateItemForm" action="{{ route('admin.inventory.update', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+
                                         <div class="mb-4">
-                                            <h1 class="text-lg font-bold">UPDATE</h1>
+                                            <label for="item_name" class="block text-sm font-semibold text-gray-700">Item Name</label>
+                                            <input type="text" name="item_name" id="item_name" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ $item->item_name }}" required>
                                         </div>
 
-                                        <form id="UpdateItemForm" action="{{ route('admin.inventory.update', $item->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT') <!-- This is necessary to simulate a PUT request -->
-
-                                            <!-- Item Name -->
-                                            <div class="mb-4">
-                                                <label for="item_name" class="block text-sm font-semibold text-gray-700">Item Name</label>
-                                                <input type="text" name="item_name" id="item_name" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ $item->item_name }}" required>
-                                            </div>
-
-                                            <!-- Unit -->
-                                            <div class="mb-4">
-                                                <label for="unit" class="block text-sm font-semibold text-gray-700">Unit</label>
-                                                <select name="unit" id="unit" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
-                                                    <option value="Each" {{ $item->unit == 'Each' ? 'selected' : '' }}>Each</option>
-                                                    <option value="Box" {{ $item->unit == 'Box' ? 'selected' : '' }}>Box</option>
-                                                    <option value="Pack" {{ $item->unit == 'Pack' ? 'selected' : '' }}>Pack</option>
-                                                    <option value="Roll" {{ $item->unit == 'Roll' ? 'selected' : '' }}>Roll</option>
-                                                    <option value="Vial" {{ $item->unit == 'Vial' ? 'selected' : '' }}>Vial</option>
-                                                    <option value="Tube" {{ $item->unit == 'Tube' ? 'selected' : '' }}>Tube</option>
-                                                    <option value="Bottle" {{ $item->unit == 'Bottle' ? 'selected' : '' }}>Bottle</option>
-                                                    <option value="Carton" {{ $item->unit == 'Carton' ? 'selected' : '' }}>Carton</option>
-                                                    <option value="Packet" {{ $item->unit == 'Packet' ? 'selected' : '' }}>Packet</option>
-                                                    <option value="Strip" {{ $item->unit == 'Strip' ? 'selected' : '' }}>Strip</option>
-                                                    <option value="Tray" {{ $item->unit == 'Tray' ? 'selected' : '' }}>Tray</option>
-                                                    <option value="Ampoule" {{ $item->unit == 'Ampoule' ? 'selected' : '' }}>Ampoule</option>
-                                                    <option value="Case" {{ $item->unit == 'Case' ? 'selected' : '' }}>Case</option>
-                                                    <option value="Set" {{ $item->unit == 'Set' ? 'selected' : '' }}>Set</option>
-                                                    <option value="Module" {{ $item->unit == 'Module' ? 'selected' : '' }}>Module</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- Update Button -->
-                                            <div class="mt-4 text-right">
-                                                <button type="submit" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Update</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                <!-- Modal for Add Stocks -->
-                                <div id="AddStockModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-                                    <div class="bg-white p-6 rounded-lg shadow-lg w-50 relative">
-                                        <button type="button" id="AddStockCloseModalBtn" class="mr-2 absolute top-0 right-0 text-lg text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
-                                        
                                         <div class="mb-4">
-                                            <h1 class="text-lg font-bold">ADD STOCKS</h1>
+                                            <label for="unit" class="block text-sm font-semibold text-gray-700">Unit</label>
+                                            <select name="unit" id="unit" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                                                <option value="Each" {{ $item->unit == 'Each' ? 'selected' : '' }}>Each</option>
+                                                <option value="Box" {{ $item->unit == 'Box' ? 'selected' : '' }}>Box</option>
+                                                <option value="Pack" {{ $item->unit == 'Pack' ? 'selected' : '' }}>Pack</option>
+                                                <option value="Tube" {{ $item->unit == 'Tube' ? 'selected' : '' }}>Tube</option>
+                                                <option value="Bottle" {{ $item->unit == 'Bottle' ? 'selected' : '' }}>Bottle</option>
+                                                <option value="Bag" {{ $item->unit == 'Bag' ? 'selected' : '' }}>Bag</option>
+                                                <option value="Kit" {{ $item->unit == 'Kit' ? 'selected' : '' }}>Kit</option>
+                                                <option value="Set" {{ $item->unit == 'Set' ? 'selected' : '' }}>Set</option>
+                                            </select>
                                         </div>
 
-                                        <form id="addStockForm" action="{{ route('admin.inventory.AddStock', $item->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-
-                                            <!-- Receiver Name -->
-                                            <div class="mb-4">
-                                                <label for="receiver_name" class="block text-sm font-semibold text-gray-700">Receiver Name</label>
-                                                <input type="text" name="receiver_name" id="receiver_name" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
-                                            </div>
-
-                                            <!-- Expiration Date -->
-                                            <div class="mb-4">
-                                                <label for="expiration_date" class="block text-sm font-semibold text-gray-700">Expiration Date</label>
-                                                <input type="date" name="expiration_date" id="expiration_date" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                            </div>
-
-                                            <!-- Quantity -->
-                                            <div class="mb-4">
-                                                <label for="quantity" class="block text-sm font-semibold text-gray-700">Quantity</label>
-                                                <input type="number" name="quantity" id="quantity" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
-                                            </div>
-
-                                            <!-- Update Button -->
-                                            <div class="mt-4 text-right">
-                                                <button type="submit" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Add Stock</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                        <div class="mt-4 text-right">
+                                            <button type="submit" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Update</button>
+                                        </div>
+                                    </form>
                                 </div>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </div>
 
-                    <div class="flex justify-end mt-6">
-                        <button onclick="openPrintView();" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-2 py-1.5 rounded transition duration-300">Print a copy</button>
-                    </div>
+                            <!-- Modal for Add Stock -->
+                            <div id="AddStockModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+                                <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+                                    <button type="button" id="AddStockCloseModalBtn" class="mr-2 absolute top-0 right-0 text-lg text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+                                        
+                                    <div class="mb-4">
+                                        <h1 class="text-lg font-bold">ADD STOCKS</h1>
+                                    </div>
+
+                                    <form id="addStockForm" action="{{ route('admin.inventory.AddStock', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <div class="mb-4">
+                                            <label for="receiver_name" class="block text-sm font-semibold text-gray-700">Receiver Name</label>
+                                            <input type="text" name="receiver_name" id="receiver_name" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="expiration_date" class="block text-sm font-semibold text-gray-700">Expiration Date</label>
+                                            <input type="date" name="expiration_date" id="expiration_date" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="quantity" class="block text-sm font-semibold text-gray-700">Quantity</label>
+                                            <input type="number" name="quantity" id="quantity" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                                        </div>
+
+                                        <button type="submit" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Add new stock</button>
+
+                                        <div class="mt-4 text-right">
+                                            <button type="submit" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Restock</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Modal for Issuance -->
+                            <div id="IssuanceModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+                                <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+                                    <button type="button" id="IssuanceCloseModalBtn" class="mr-2 absolute top-0 right-0 text-lg text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+                                        
+                                    <div class="mb-4">
+                                        <h1 class="text-lg font-bold">Assign</h1>
+                                    </div>
+
+                                    <form id="IssuanceForm" action="{{ route('admin.inventory.issuance', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <div class="mb-4">
+                                            <label for="total_quantity" class="block text-sm font-semibold text-gray-700">Total Stocks</label>
+                                            <input type="number" name="total_quantity" id="total_quantity" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100" value="{{ $addstocks->first()->quantity }}" readonly>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="remaining_stocks" class="block text-sm font-semibold text-gray-700">Remaining Stocks</label>
+                                            <input type="number" name="remaining_stocks" id="remaining_stocks" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100" readonly>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="users_id" class="block text-sm font-semibold text-gray-700">Distribute to</label>
+                                            <select class="block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" id="users_id" name="users_id" required>
+                                                <option value="" disabled selected>Distribute</option>
+                                                @foreach($patients  as $patient )
+                                                    <option value="{{ $patient->id }}">{{ $patient->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="issuance" class="block text-sm font-semibold text-gray-700">Issuance</label>
+                                            <input type="number" name="issuance" id="issuance" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500" required>
+                                            <div id="issuanceError" class="text-sm text-red-500 mt-1 hidden">
+                                                Issuance exceeds the available stock!
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="stocks" class="block text-sm font-semibold text-gray-700">Stocks</label>
+                                            <div id="stocks" name="stocks">
+                                                @if($addstocks->isNotEmpty())
+                                                    <div value="{{ $addstocks->first()->id }}">
+                                                        <p>Quantity: {{ $addstocks->first()->quantity }}</p>
+                                                        <p>Expires: {{ $addstocks->first()->expiration_date ? date('F j, Y', strtotime($addstocks->first()->expiration_date)) : 'N/A' }}</p>
+                                                    </div>
+                                                @else
+                                                    <div>No stock available</div>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4 text-right">
+                                            <button type="submit" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Assign</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Modal for Dispose -->
+                            <div id="DisposeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+                                <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+                                    <button type="button" id="DisposeCloseModalBtn" class="mr-2 absolute top-0 right-0 text-lg text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+                                        
+                                    <div class="mb-4">
+                                        <h1 class="text-lg font-bold">Dispose</h1>
+                                    </div>
+
+                                    <form id="DisposeForm" action="{{ route('admin.inventory.dispose', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <div class="mb-4">
+                                            <label for="reason" class="block text-sm font-semibold text-gray-700">Reason</label>
+                                            <select class="block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" id="reason" name="reason" required>
+                                                <option value="" disabled selected>Reason List</option>
+                                                <option value="Expired">Expired</option>
+                                                <option value="Damaged">Damaged</option>
+                                                <option value="Single-Use">Single-Use</option>
+                                                <option value="Used">Used</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="stocks" class="block text-sm font-semibold text-gray-700">Stocks</label>
+                                            <select class="block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" id="stocks" name="stocks" required>
+                                                <option value="" disabled selected>Stocks</option>
+                                                @foreach($addstocks as $stocks)
+                                                    <option value="{{ $stocks->id }}">{{ $stocks->expiration_date ? date('F j, Y', strtotime($stocks->expiration_date)) : 'N/A' }} ({{ number_format($stocks->quantity) }})</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="disposequantity" class="block text-sm font-semibold text-gray-700">Quantity</label>
+                                            <input type="number" name="disposequantity" id="disposequantity" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                                            <div id="quantityError" class="text-sm text-red-500 mt-1 hidden">
+                                                Quantity exceeds the available stock!
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4 text-right">
+                                            <button type="submit" class="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white transition duration-300">Dispose</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <div class="flex justify-end mt-6">
+                    <button onclick="openPrintView();" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-2 py-1.5 rounded transition duration-300">Print a copy</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 
-        <!-- TABLE -->
-        <script>
-            $(document).ready(function() {
-                // Initialize the DataTable
-                new DataTable('#inventory-content', {
-                    "language": {
-                        "emptyTable": "No items found.", // When table is empty
-                        "zeroRecords": "No matching items found.", // When search yields no results
-                    }
-                });
-
-                $('#inventory-content_length select').addClass('w-20');
-                $('.dataTables_length').addClass('mb-4'); // Bottom margin for entries per page dropdown
-                $('.dataTables_filter').addClass('mb-4');
-            });
-        </script>
-
-        <!-- STOCKS AND QUANTITY PREVENT INPUT - and . -->
-        <script>
-            document.getElementById('stocks').addEventListener('keydown', function(event) {
-                // Prevent entering minus '-' sign and period '.' (decimal point)
-                if (event.key === '-' || event.key === '.' || event.key === 'e') {
-                    event.preventDefault();
+    <!-- TABLE -->
+    <script>
+        $(document).ready(function() {
+            new DataTable('#inventory-content', {
+                "language": {
+                    "emptyTable": "No items found.",
+                    "zeroRecords": "No matching items found.",
                 }
             });
 
-            document.getElementById('quantity').addEventListener('keydown', function(event) {
-                // Prevent entering minus '-' sign and period '.' (decimal point)
-                if (event.key === '-' || event.key === '.' || event.key === 'e') {
-                    event.preventDefault();
-                }
-            });
-        </script>
+            $('#inventory-content_length select').addClass('w-20');
+            $('.dataTables_length').addClass('mb-4');
+            $('.dataTables_filter').addClass('mb-4');
+        });
+    </script>
 
-        <!-- ADD ITEM -->
-        <script>
-            // Show the modal when the button is clicked
-            document.getElementById("AddOpenModalBtn").addEventListener("click", function() {
-                const modal = document.getElementById("AddItemModal");
+    <!-- STOCKS AND QUANTITY AND ISSUANCE PREVENT INPUT - and . -->
+    <script>
+        document.getElementById('stocks').addEventListener('keydown', function(event) {
+            // Prevent entering minus '-' sign and period '.' (decimal point)
+            if (event.key === '-' || event.key === '.' || event.key === 'e') {
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('quantity').addEventListener('keydown', function(event) {
+            // Prevent entering minus '-' sign and period '.' (decimal point)
+            if (event.key === '-' || event.key === '.' || event.key === 'e') {
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('issuance').addEventListener('keydown', function(event) {
+            // Prevent entering minus '-' sign and period '.' (decimal point)
+            if (event.key === '-' || event.key === '.' || event.key === 'e') {
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('disposequantity').addEventListener('keydown', function(event) {
+            // Prevent entering minus '-' sign and period '.' (decimal point)
+            if (event.key === '-' || event.key === '.' || event.key === 'e') {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+    <!-- ADD ITEM -->
+    <script>
+        // Show the modal when the button is clicked
+        document.getElementById("AddOpenModalBtn").addEventListener("click", function() {
+            const modal = document.getElementById("AddItemModal");
+            modal.classList.remove("hidden");
+        });
+
+        // Close modal
+        document.getElementById("AddCloseModalBtn").addEventListener("click", function() {
+            document.getElementById("AddItemModal").classList.add("hidden");
+        });
+
+        // Toggle Expiration Date visibility based on checkbox
+        function toggleExpirationDate() {
+            const expirationDateField = document.getElementById('expiration_date_container');
+            const hasExpirationDate = document.getElementById('has_expiration_date').checked;
+
+            // Show expiration date if checkbox is checked, else hide it
+            if (hasExpirationDate) {
+                expirationDateField.classList.remove('hidden');
+            } else {
+                expirationDateField.classList.add('hidden');
+            }
+        }
+    </script>
+
+    <!-- UPDATE ITEM -->
+    <script>
+        // Open the modal when the button is clicked
+        document.querySelectorAll('[data-item-id]').forEach(function(button) {
+            button.addEventListener("click", function() {
+                    
+                const itemId = this.getAttribute('data-item-id');
+                const itemName = this.getAttribute('data-item-name');
+                const itemUnit = this.getAttribute('data-item-unit');
+
+                const modal = document.getElementById("UpdateItemModal");
+
+                modal.querySelector("#item_name").value = itemName;
+                modal.querySelector("#unit").value = itemUnit;
+                    
+                const form = document.getElementById("UpdateItemForm");
+                form.action = `/admin/inventory/${itemId}/update`;
+                    
                 modal.classList.remove("hidden");
             });
+        });
 
-            // Close modal
-            document.getElementById("AddCloseModalBtn").addEventListener("click", function() {
-                document.getElementById("AddItemModal").classList.add("hidden");
+        // Close the modal when the close button is clicked
+        document.getElementById("UpdateCloseModalBtn").addEventListener("click", function() {
+            const modal = document.getElementById("UpdateItemModal");
+            modal.classList.add("hidden");
+        });
+    </script>
+
+    <!-- ADD STOCK -->
+    <script>
+        // Open the "Add Stock" Modal
+        document.querySelectorAll('.AddStockOpenModalBtn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                    
+                const itemId = this.getAttribute('data-item-id');
+
+                document.getElementById('UpdateItemModal').classList.add('hidden');
+
+                const form = document.getElementById('addStockForm');
+                form.action = `/admin/inventory/${itemId}/add-stock`;
+                // Show the Add Stock modal
+                document.getElementById('AddStockModal').classList.remove('hidden');
             });
+        });
 
-            // Toggle Expiration Date visibility based on checkbox
-            function toggleExpirationDate() {
-                const expirationDateField = document.getElementById('expiration_date_container');
-                const hasExpirationDate = document.getElementById('has_expiration_date').checked;
+        // Close the "Add Stock" Modal
+        document.getElementById('AddStockCloseModalBtn').addEventListener('click', function() {
+            document.getElementById('AddStockModal').classList.add('hidden');
+        });
+    </script>
 
-                // Show expiration date if checkbox is checked, else hide it
-                if (hasExpirationDate) {
-                    expirationDateField.classList.remove('hidden');
+    <!-- ISSUANCE -->
+    <script>
+        document.querySelectorAll('.IssuanceOpenModalBtn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                
+                const itemId = this.getAttribute('data-item-id');
+                const itemRemainingStocks = this.getAttribute('data-item-remainingstocks');
+
+                const form = document.getElementById('IssuanceForm');
+                form.action = `/admin/inventory/${itemId}/issuance`;
+
+                document.getElementById('UpdateItemModal')?.classList.add('hidden');
+
+                document.getElementById('IssuanceModal').classList.remove('hidden');
+            });
+        });
+
+        document.getElementById('IssuanceCloseModalBtn').addEventListener('click', function() {
+            document.getElementById('IssuanceModal').classList.add('hidden');
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const issuanceInput = document.getElementById('issuance');
+            const totalQuantityInput = document.getElementById('total_quantity');
+            const remainingInput = document.getElementById('remaining_stocks');
+            const issuanceError = document.getElementById('issuanceError');
+
+            const totalQuantityValue = parseFloat(totalQuantityInput.value) || 0;
+
+            issuanceInput.addEventListener('input', function () {
+                const issuanceValue = parseFloat(issuanceInput.value) || 0;
+
+                // Calculate the remaining stocks
+                const totalQuantity = parseFloat(totalQuantityInput.value) || 0;
+                const remainingStocks = totalQuantity - issuanceValue;
+
+                // Set the remaining value dynamically
+                remainingInput.value = remainingStocks >= 0 ? remainingStocks : 0; // Ensure remaining stock can't be negative
+
+                // Check if issuance exceeds total stocks
+                if (issuanceValue > totalQuantity) {
+                    // Show the error message
+                    issuanceError.classList.remove('hidden'); // Show the error message
+                    issuanceInput.classList.add('text-red-500', 'focus:ring-red-500');
                 } else {
-                    expirationDateField.classList.add('hidden');
+                    // Hide the error message
+                    issuanceError.classList.add('hidden'); // Hide the error message
+                    issuanceInput.classList.remove('text-red-500', 'focus:ring-red-500');
                 }
-            }
-        </script>
 
-        <!-- UPDATE ITEM -->
-        <script>
-            // Open the modal when the button is clicked
-            document.querySelectorAll('[data-item-id]').forEach(function(button) {
-                button.addEventListener("click", function() {
-                    
-                    // Get data attributes from the clicked button
-                    const itemId = this.getAttribute('data-item-id');
-                    const itemName = this.getAttribute('data-item-name');
-                    const itemUnit = this.getAttribute('data-item-unit');
-
-                    const modal = document.getElementById("UpdateItemModal");
-
-                    // Assuming the modal has input fields for the item details
-                    modal.querySelector("#item_name").value = itemName;
-                    modal.querySelector("#unit").value = itemUnit;
-                    
-                    // Update the form action to the correct item ID
-                    const form = document.getElementById("UpdateItemForm");
-                    form.action = `/admin/inventory/${itemId}/update`;
-                    
-                    modal.classList.remove("hidden");
-                });
+                // If the issuance input is empty (value removed), reset the remaining input to total stocks value
+                if (issuanceValue === 0) {
+                    remainingInput.value = '';
+                    issuanceError.classList.add('hidden');
+                    issuanceInput.classList.remove('border-red-500', 'focus:ring-red-500');
+                }
             });
+        });
+    </script>
 
-            // Close the modal when the close button is clicked
-            document.getElementById("UpdateCloseModalBtn").addEventListener("click", function() {
-                const modal = document.getElementById("UpdateItemModal");
-                modal.classList.add("hidden"); // Hide the modal
+    <!-- DISPOSE -->
+    <script>
+        document.querySelectorAll('.DisposeOpenModalBtn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                
+                const itemId = this.getAttribute('data-item-id');
+
+                const form = document.getElementById('DisposeForm');
+                form.action = `/admin/inventory/${itemId}/dispose`;
+
+                document.getElementById('DisposeModal').classList.remove('hidden');
+                
+                document.getElementById('UpdateItemModal')?.classList.add('hidden');
+                document.getElementById('AddStockModal')?.classList.add('hidden');
+                document.getElementById('IssuanceModal')?.classList.add('hidden');
             });
-        </script>
+        });
 
-        <!-- ADD STOCK -->
-        <script>
-            // Open the "Add Stock" Modal
-            document.querySelectorAll('.AddStockOpenModalBtn').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    
-                    const itemId = this.getAttribute('data-item-id');
+        document.getElementById('DisposeCloseModalBtn').addEventListener('click', function() {
+            document.getElementById('DisposeModal').classList.add('hidden');
+        });
+    </script>
 
-                    // Hide the Update Item modal if it's open
-                    document.getElementById('UpdateItemModal').classList.add('hidden');
+    <!-- PRINT -->
+    <script>
+        // Function to open the print view in a new tab
+        function openPrintView() {
+            var printWindow = window.open('', '_blank'); // Open a new tab
+            printWindow.document.write('<html><head><title>Dela Cirna Dental Clinic</title>');
 
-                    // Set the form action for Add Stock
-                    const form = document.getElementById('addStockForm');
-                    form.action = `/admin/inventory/${itemId}/add-stock`;
+            // Add some basic styles for printing
+            printWindow.document.write('<style>body { font-family: Arial, sans-serif; padding: 20px; }');
+            printWindow.document.write('.print-content { width: 100%; border-collapse: collapse; margin-top: 20px; }');
+            printWindow.document.write('.print-content th, .print-content td { border: 1px solid #ccc; padding: 10px; font-size: 14px; }');
+            printWindow.document.write('.print-content th { background-color: #f4f4f4; }');
+            printWindow.document.write('.no-print { display: block; }'); // Show the Print button
+            printWindow.document.write('  .action { display: none !important; }'); // Hide update button column during print
+            printWindow.document.write('{ pointer-events: none; opacity: 0.5; }'); // Disable content initially
+            printWindow.document.write('@media print { .no-print { display: none; } }'); // Hide print button on print
+            printWindow.document.write('</style>');
 
-                    // Show the Add Stock modal
-                    document.getElementById('AddStockModal').classList.remove('hidden');
-                });
-            });
+            // Add the content from the inventory page to the new tab
+            var content = document.getElementById('inventory-content').innerHTML;
 
-            // Close the "Add Stock" Modal
-            document.getElementById('AddStockCloseModalBtn').addEventListener('click', function() {
-                document.getElementById('AddStockModal').classList.add('hidden');
-            });
-        </script>
+            // Replace anchor tags with normal text
+            content = content.replace(/<a[^>]*href="[^"]*"[^>]*>/g, '<span>');  // Remove <a> tag opening
+            content = content.replace(/<\/a>/g, '</span>'); // Remove <a> tag closing
 
-        <!-- PRINT -->
-        <script>
-            // Function to open the print view in a new tab
-            function openPrintView() {
-                var printWindow = window.open('', '_blank'); // Open a new tab
-                printWindow.document.write('<html><head><title>Dela Cirna Dental Clinic</title>');
+            printWindow.document.write('<body>');
+            printWindow.document.write('<h2>Inventory</h2>');
+            printWindow.document.write('<table class="print-content inactive">' + content + '</table>'); // Disable content initially
+            printWindow.document.write('<div class="no-print" style="margin-top: 20px;">');
+            printWindow.document.write('<button onclick="enableContentAndPrint();" style="background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; border: none;;">Print</button>');
+            printWindow.document.write('</div>'); // Print button
+            printWindow.document.write('</body></html>');
 
-                // Add some basic styles for printing
-                printWindow.document.write('<style>body { font-family: Arial, sans-serif; padding: 20px; }');
-                printWindow.document.write('.print-content { width: 100%; border-collapse: collapse; margin-top: 20px; }');
-                printWindow.document.write('.print-content th, .print-content td { border: 1px solid #ccc; padding: 10px; font-size: 14px; }');
-                printWindow.document.write('.print-content th { background-color: #f4f4f4; }');
-                printWindow.document.write('.no-print { display: block; }'); // Show the Print button
-                printWindow.document.write('  .action { display: none !important; }'); // Hide update button column during print
-                printWindow.document.write('{ pointer-events: none; opacity: 0.5; }'); // Disable content initially
-                printWindow.document.write('@media print { .no-print { display: none; } }'); // Hide print button on print
-                printWindow.document.write('</style>');
+            // Function to enable content and open print dialog
+            printWindow.document.write('<script>');
+            printWindow.document.write('function enableContentAndPrint() {');
+            printWindow.document.write('    var content = document.querySelector(".print-content");');
+            printWindow.document.write('    content.classList.remove("inactive");'); // Enable content
+            printWindow.document.write('    window.print();'); // Open the print dialog
+            printWindow.document.write('}');
+            printWindow.document.write('</' + 'script>');
 
-                // Add the content from the inventory page to the new tab
-                var content = document.getElementById('inventory-content').innerHTML;
-                printWindow.document.write('<body>');
-                printWindow.document.write('<h2>Inventory</h2>');
-                printWindow.document.write('<table class="print-content inactive">' + content + '</table>'); // Disable content initially
-                printWindow.document.write('<div class="no-print" style="margin-top: 20px;">');
-                printWindow.document.write('<button onclick="enableContentAndPrint();" style="background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; border: none;;">Print</button>');
-                printWindow.document.write('</div>'); // Print button
-                printWindow.document.write('</body></html>');
+            printWindow.document.close();
+        }
+    </script>
 
-                // Function to enable content and open print dialog
-                printWindow.document.write('<script>');
-                printWindow.document.write('function enableContentAndPrint() {');
-                printWindow.document.write('    var content = document.querySelector(".print-content");');
-                printWindow.document.write('    content.classList.remove("inactive");'); // Enable content
-                printWindow.document.write('    window.print();'); // Open the print dialog
-                printWindow.document.write('}');
-                printWindow.document.write('</' + 'script>');
+</body>
+</html>
 
-                printWindow.document.close();
-            }
-        </script>
-
-    </body>
-
-    </html>
-
-    @section('title')
+@section('title')
     Inventory
-    @endsection
+@endsection
 
 </x-app-layout>
