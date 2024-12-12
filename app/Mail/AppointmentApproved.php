@@ -31,7 +31,7 @@ class AppointmentApproved extends Mailable
         $this->patientName = $patientName;
         $this->appointment = $appointment;
         $this->appointmentDate = Carbon::parse($appointment->appointmentdate)->format('F j, Y'); // Example format
-        $this->appointmentTime = Carbon::parse($appointment->appointmenttime)->format('g:i A'); // Example format
+        $this->appointmentTime = $appointment->appointmentTime;
         $this->adminEmail = $adminEmail;
     }
 

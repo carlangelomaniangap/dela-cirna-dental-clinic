@@ -65,12 +65,12 @@
 
     <div class="grid grid-cols-7 p-6">
 
-        <div class="bg-white p-6 shadow-lg mb-4 flex justify-end" style="grid-column: 1 / -1;">
-            <p>
-                <strong class="text-gray-600">Colors Indicator:</strong> 
-                <span class="bg-yellow-500 text-white p-2 rounded">Pending</span>
-                <span class="bg-green-500 text-white p-2 rounded">Approved</span>
-                <span class="bg-blue-500 text-white p-2 rounded">Completed</span>
+        <div class="bg-white p-3 shadow-lg mb-4 flex justify-end" style="grid-column: 1 / -1;">
+            <p class="flex items-center text-xs sm:text-sm text-right">
+                <strong class="text-gray-600 mr-2 text-xs sm:text-sm">Colors Indicator:</strong>
+                <span class="bg-yellow-500 text-white px-2 py-1 rounded mr-2 text-xs sm:text-sm">Pending</span>
+                <span class="bg-green-500 text-white px-2 py-1 rounded mr-2 text-xs sm:text-sm">Approved</span>
+                <span class="bg-blue-500 text-white px-2 py-1 rounded mr-2 text-xs sm:text-sm">Completed</span>
             </p>
         </div>
 

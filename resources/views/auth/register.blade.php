@@ -82,8 +82,8 @@
                     <x-input-error :messages="$errors->get('phone')" class="mt-2" />
                 </div>
 
-                <div class="mt-4">
-                    <x-primary-button class="ms-4 w-full justify-center">
+                <div class="mt-4 flex justify-center">
+                    <x-primary-button class="w-full justify-center">
                         {{ __('Register') }}
                     </x-primary-button>
                 </div>

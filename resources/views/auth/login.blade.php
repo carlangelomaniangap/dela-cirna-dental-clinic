@@ -50,8 +50,8 @@
                     
                 </div>
 
-                <div class="mt-4">
-                    <x-primary-button class="ms-3 w-full justify-center">
+                <div class="mt-4 flex justify-center">
+                    <x-primary-button class="w-full justify-center">
                         {{ __('Log in') }}
                     </x-primary-button>
                 </div>
