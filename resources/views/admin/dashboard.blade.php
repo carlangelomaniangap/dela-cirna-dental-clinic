@@ -5,7 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="min-h-screen">
 
@@ -123,8 +125,7 @@
 
             </div>
         </div>
-    </div>
-    
+   
     @if ($showUserWelcome)
         <div class="fixed inset-0 flex items-center justify-center z-50" id="customPopup" style="display: flex;">
             <div class="absolute inset-0 bg-black opacity-50"></div> <!-- Dimmed background -->
@@ -147,7 +148,131 @@
             });
         </script>
     @endif
+
+
+<div class="dashboard-container">
+    <div class="stats-container">
+        <div class="chart-card">
+            <div class="dashboard-header">
+                <form method="GET" action="{{ route('admin.dashboard') }}" class="view-selector">
+                    <label for="viewChoice">View Appointments</label>
+                    <select name="view" id="viewChoice" onchange="this.form.submit()">
+                        <option value="week" {{ $viewChoice == 'week' ? 'selected' : '' }}>This Week</option>
+                        <option value="month" {{ $viewChoice == 'month' ? 'selected' : '' }}>This Month</option>
+                        <option value="year" {{ $viewChoice == 'year' ? 'selected' : '' }}>This Year</option>
+                    </select>
+                </form>
+            </div>
+
+            <h3 class="card-title">
+                Appointments Statistics 
+                @if ($viewChoice == 'week')
+                    (This Week)
+                @elseif ($viewChoice == 'month')
+                    (This Month)
+                @elseif ($viewChoice == 'year')
+                    (This Year)
+                @endif
+            </h3>
+            <div style="position: relative; height: 400px;">
+                <canvas id="appointmentPieChart"></canvas>
+            </div>
+        </div>
+
+        <div class="counts-card">
+            <h3 class="card-title">Appointment Counts</h3>
+            <div class="counts-grid">
+                <div class="count-card approved">
+                    <h5>Approved</h5>
+                    <p>{{ $approvedAppointments }}</p>
+                </div>
+                <div class="count-card pending">
+                    <h5>Pending</h5>
+                    <p>{{ $pendingAppointments }}</p>
+                </div>
+                <div class="count-card completed">
+                    <h5>Completed</h5>
+                    <p>{{ $completedAppointments }}</p>
+                </div>
+                <div class="count-card cancelled">
+                    <h5>Cancelled</h5>
+                    <p>{{ $cancelledPendingAppointments + $cancelledApprovedAppointments }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('appointmentPieChart').getContext('2d');
     
+    const data = {
+        labels: ['Approved', 'Pending', 'Completed', 'Cancelled'],
+        datasets: [{
+            data: [
+                {{ $approvedAppointments }},
+                {{ $pendingAppointments }},
+                {{ $completedAppointments }},
+                {{ $cancelledPendingAppointments + $cancelledApprovedAppointments }}
+            ],
+            backgroundColor: [
+                'rgba(46, 204, 113, 0.8)',   // green
+                'rgba(241, 196, 15, 0.8)',   // yellow
+                'rgba(52, 152, 219, 0.8)',   // blue
+                'rgba(231, 76, 60, 0.8)'     // red
+            ],
+            borderColor: [
+                'rgba(46, 204, 113, 1)',
+                'rgba(241, 196, 15, 1)',
+                'rgba(52, 152, 219, 1)',
+                'rgba(231, 76, 60, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    const config = {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed !== null) {
+                                label += context.parsed + ' (' + context.dataset.data[context.dataIndex] + ')';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    new Chart(ctx, config);
+});
+</script>
+
+
+
 </body>
 </html>
 
