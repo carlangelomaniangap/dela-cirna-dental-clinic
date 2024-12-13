@@ -66,7 +66,12 @@
             <div class="p-6 pb-0 print:hidden">
                 <div class="flex flex-col sm:flex-row items-center justify-between">
                     <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold">Inventory</h1>
-                    <button type="button" id="AddOpenModalBtn" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-4 py-2 rounded font-semibold">Add Item</button>
+                    <div class="ml-auto flex space-x-2"> <!-- Added ml-auto and flex for button grouping -->
+                        <button type="button" id="AddOpenModalBtn" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-4 py-2 rounded font-semibold">Add Item</button>
+                        <button type="button" data-modal-target="expired-modal" data-modal-toggle="expired-modal" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 transition duration-300 rounded font-semibold">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -363,6 +368,39 @@
                                             <button type="submit" id="dispose-submit" class="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white transition duration-300">Dispose</button>
                                         </div>
                                     </form>
+                                </div>
+                            </div>
+
+                            <div id="expired-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+                                <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+                                    <button type="button" data-modal-hide="expired-modal" class="mr-2 absolute top-0 right-0 text-lg text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+                                        
+                                    <div class="mb-4">
+                                        <h1 class="text-lg font-bold">Items About to Expire in a Month</h1>
+                                    </div>
+
+                                    <ul class="overflow-y-auto max-h-32 space-y-4">
+                                        @foreach($expiringItems as $items)
+                                            <li class="p-4 border-2 border-red-500 rounded-md shadow-md hover:bg-red-50 transition duration-200 ease-in-out">
+                                                
+                                                <div class="font-semibold text-lg">{{ $items->item_name }}</div>
+                                                
+                                                @if($items->stocks->isNotEmpty())
+                                                    <ul>
+                                                        @foreach($items->stocks as $stock)
+                                                            <li class="p-2">
+                                                                <div class="text-sm text-gray-600">Stocks: {{ number_format($stock->quantity) }}</div>
+                                                                <div class="text-sm text-gray-600">Expiration Date: {{ $stock->expiration_date ? date('F j, Y', strtotime($stock->expiration_date)) : '' }}</div>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                @else
+                                                    <div class="text-sm text-gray-500">No stocks nearing expiration.</div>
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ul>
+
                                 </div>
                             </div>
                         @endforeach

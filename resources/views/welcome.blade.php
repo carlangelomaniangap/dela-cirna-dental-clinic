@@ -69,7 +69,7 @@
         
         <h1 class="text-center font-bold text-xl lg:text-3xl py-12" data-aos="fade-up" data-aos-duration="1000">Treatment Services</h1>
         
-        <!-- <div class="overflow-x-auto flex gap-6 p-6"> -->
+        <div class="overflow-x-auto flex gap-6 p-6">
 
             <div class="flex justify-center gap-6 p-2" data-aos="fade-up" data-aos-duration="1000">
                 <!-- First Div with 3 cards -->
@@ -152,7 +152,7 @@
                 </div>
             </div>
 
-        <!-- </div> -->
+        </div>
         
     </section>
     

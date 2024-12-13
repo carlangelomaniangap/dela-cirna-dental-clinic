@@ -18,8 +18,20 @@ class AdminInventoryController extends Controller
         $patients  = User::where('usertype', 'patient')->get();
 
         $stocks = AddStock::all();
+        
+        // Get Inventory items that are about to expire in 1 month or less
+        $expiringItems = Inventory::where('expiration_date', '>=', now())
+            ->where('expiration_date', '<=', now()->addMonth())
+            ->get();
 
-        return view('admin.inventory.inventory', compact('items', 'patients', 'stocks'));
+        // Get stocks for each Inventory item that are about to expire in 1 month or less
+        foreach ($expiringItems as $item) {
+            $item->stocks = $item->addStocks()->where('expiration_date', '>=', now())
+                ->where('expiration_date', '<=', now()->addMonth())
+                ->get();
+        }
+
+        return view('admin.inventory.inventory', compact('items', 'patients', 'stocks', 'expiringItems'));
     }
     
     public function store(Request $request){
