@@ -119,23 +119,54 @@ class AdminInventoryController extends Controller
             'users_id' => 'required|exists:users,id',
         ]);
 
+        // Retrieve the inventory
         $inventory = Inventory::findOrFail($id);
 
+        // Check if there are enough remaining stocks for issuance
         if ($inventory->remaining_stocks < $request->issuance) {
             return redirect()->back()->withErrors(['issuance' => 'Issuance exceeds the available stock!']);
         }
-        
+
+        // Update the remaining and issued stock in the inventory
         $inventory->remaining_stocks -= $request->issuance;
         $inventory->issuance += $request->issuance;
         $inventory->save();
 
-        $stock = AddStock::where('inventory_id', $inventory->id)->orderBy('expiration_date', 'asc')->first(); 
-        $stock->quantity -= $request->issuance;
-        if ($stock->quantity == 0) {
-            $stock->delete();
-        }
-        $stock->save();
+        // Get the stocks sorted by created_at (oldest first)
+        $stocks = AddStock::where('inventory_id', $inventory->id)
+            ->orderBy('created_at', 'asc') // Ensure this is in ascending order by creation time
+            ->get();
 
+        // Track the remaining issuance to be processed
+        $total_issuance = $request->issuance;
+
+        // Process the stocks sequentially, starting with the first stock
+        foreach ($stocks as $stock) {
+            if ($total_issuance <= 0) {
+                break; // Stop if all the issuance has been processed
+            }
+
+            if ($stock->quantity > 0) {
+                // Determine how much we can issue from this stock
+                $issuance_from_this_stock = min($stock->quantity, $total_issuance);
+                $stock->quantity -= $issuance_from_this_stock; // Reduce the stock quantity
+                $total_issuance -= $issuance_from_this_stock; // Decrease the remaining issuance
+
+                // If stock quantity reaches zero, delete it
+                if ($stock->quantity == 0) {
+                    $stock->delete();
+                } else {
+                    $stock->save(); // Save the updated stock
+                }
+            }
+        }
+
+        // If there's still remaining issuance, it means there's not enough stock
+        if ($total_issuance > 0) {
+            return redirect()->back()->withErrors(['issuance' => 'Not enough stock available for issuance!']);
+        }
+
+        // Create an issuance record
         $user = User::where('id', $request->users_id)->where('usertype', 'patient')->first();
 
         Issuance::create([
@@ -160,26 +191,26 @@ class AdminInventoryController extends Controller
     public function dispose(Request $request, $id){
         
         $request->validate([
+            'stock_id' => 'required|exists:add_stocks,id',
             'reason' => 'required|in:Expired,Damaged,Single-Use,Used',
             'disposequantity' => 'required|integer|min:1',
         ]);
     
         $inventory = Inventory::findOrFail($id);
+        $stock = AddStock::findOrFail($request->stock_id);
 
         $inventory->remaining_stocks -= $request->disposequantity;
         $inventory->disposed += $request->disposequantity;
         $inventory->save();
-
-        $stock = AddStock::findOrFail($id);
         
         $stock->quantity -= $request->disposequantity;
 
         if ($stock->quantity == 0) {
             $stock->delete();
+        } else {
+            $stock->save();
         }
 
-        $stock->save();
-    
         Dispose::create([
             'inventory_id' => $inventory->id,
             'addstock_id' => $stock->id,

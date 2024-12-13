@@ -107,8 +107,8 @@
                                     <option value="Pack">Pack</option>
                                     <option value="Tube">Tube</option>
                                     <option value="Bottle">Bottle</option>
-                                    <option value="Bag">Carton</option>
-                                    <option value="Kit">Packet</option>
+                                    <option value="Bag">Bag</option>
+                                    <option value="Kit">Kit</option>
                                     <option value="Set">Set</option>
                                 </select>
                             </div>
@@ -171,7 +171,9 @@
                                 <td class="action">
                                     <button type="button" data-item-id="{{ $item->id }}" data-item-name="{{ $item->item_name }}" data-item-unit="{{ $item->unit }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-2 py-1 rounded"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <button type="button" data-item-id="{{ $item->id }}" class="AddStockOpenModalBtn px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300"><i class="fa-solid fa-circle-plus"></i></button>
+                                    
                                     <button type="button" data-item-id="{{ $item->id }}" class="IssuanceOpenModalBtn px-2 py-1 bg-yellow-500 text-white rounded hover:bg-green-600 transition duration-300"><i class="fa-solid fa-user-pen"></i></button>
+                                    
                                     <button type="button" value="{{ $item->id }}" data-item-type="{{ $item->type }}" data-modal-target="dispose-modal" data-modal-toggle="dispose-modal"
                                     data-stocks-details="{{ $stocks->map(fn($stock) => 
                                     [ 'id' => $stock->id, 
@@ -273,7 +275,7 @@
 
                                         <div class="mb-4">
                                             <label for="total_quantity" class="block text-sm font-semibold text-gray-700">Total Stocks</label>
-                                            <input type="number" name="total_quantity" id="total_quantity" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100" value="{{ $stocks->first()->quantity }}" readonly>
+                                            <input type="number" name="total_quantity" id="total_quantity" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100" value="{{ $stocks->first()->quantity ?? 0 }}" readonly>
                                         </div>
 
                                         <div class="mb-4">
@@ -294,15 +296,12 @@
                                         <div class="mb-4">
                                             <label for="issuance" class="block text-sm font-semibold text-gray-700">Issuance</label>
                                             <input type="number" name="issuance" id="issuance" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500" required>
-                                            <div id="issuanceError" class="text-sm text-red-500 mt-1 hidden">
-                                                Issuance exceeds the available stock!
-                                            </div>
                                         </div>
 
                                         <div class="mb-4">
                                             <label for="stocks" class="block text-sm font-semibold text-gray-700">Stocks</label>
                                             <div id="stocks" name="stocks">
-                                                @if($stocks->isNotEmpty())
+                                                @if($stocks->isNotEmpty() && $stocks->first()->quantity > 0)
                                                     <div value="{{ $stocks->first()->id }}">
                                                         <p>Quantity: {{ $stocks->first()->quantity }}</p>
                                                         <p>Expires: {{ $stocks->first()->expiration_date ? date('F j, Y', strtotime($stocks->first()->expiration_date)) : 'N/A' }}</p>
@@ -512,7 +511,6 @@
             button.addEventListener('click', function() {
                 
                 const itemId = this.getAttribute('data-item-id');
-                const itemRemainingStocks = this.getAttribute('data-item-remainingstocks');
 
                 const form = document.getElementById('IssuanceForm');
                 form.action = `/admin/inventory/${itemId}/issuance`;
@@ -531,7 +529,6 @@
             const issuanceInput = document.getElementById('issuance');
             const totalQuantityInput = document.getElementById('total_quantity');
             const remainingInput = document.getElementById('remaining_stocks');
-            const issuanceError = document.getElementById('issuanceError');
 
             const totalQuantityValue = parseFloat(totalQuantityInput.value) || 0;
 
@@ -545,22 +542,9 @@
                 // Set the remaining value dynamically
                 remainingInput.value = remainingStocks >= 0 ? remainingStocks : 0; // Ensure remaining stock can't be negative
 
-                // Check if issuance exceeds total stocks
-                if (issuanceValue > totalQuantity) {
-                    // Show the error message
-                    issuanceError.classList.remove('hidden'); // Show the error message
-                    issuanceInput.classList.add('text-red-500', 'focus:ring-red-500');
-                } else {
-                    // Hide the error message
-                    issuanceError.classList.add('hidden'); // Hide the error message
-                    issuanceInput.classList.remove('text-red-500', 'focus:ring-red-500');
-                }
-
                 // If the issuance input is empty (value removed), reset the remaining input to total stocks value
                 if (issuanceValue === 0) {
                     remainingInput.value = '';
-                    issuanceError.classList.add('hidden');
-                    issuanceInput.classList.remove('border-red-500', 'focus:ring-red-500');
                 }
             });
         });
