@@ -1,0 +1,178 @@
+:root { 
+    --primary-color: #3498db; 
+    --secondary-color: #2ecc71; 
+    --warning-color: #f39c12; 
+    --danger-color: #e74c3c; 
+    --background-light: #f7f9fc; 
+    --text-dark: #2c3e50; 
+    --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); 
+} 
+
+.stats-container { 
+    display: grid; 
+    grid-template-columns: 2fr 1fr; 
+    gap: 30px; 
+} 
+
+.chart-card, .counts-card { 
+    background: white; 
+    border-radius: 16px; 
+    box-shadow: var(--card-shadow); 
+    padding: 25px; 
+} 
+
+.card-title { 
+    text-align: center; 
+    font-size: 1.3rem; 
+    font-weight: 700; 
+    color: var(--primary-color); 
+    margin-bottom: 20px; 
+    position: relative; 
+} 
+
+.card-title::after { 
+    content: ''; 
+    position: absolute; 
+    bottom: -10px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 50px; 
+    height: 3px; 
+    background: var(--primary-color); 
+} 
+
+.counts-grid { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 15px; 
+} 
+
+.count-card { 
+    background: var(--background-light); 
+    border-radius: 12px; 
+    padding: 20px; 
+    text-align: center; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+} 
+
+.count-card h5 { 
+    font-size: 1rem; 
+    margin-bottom: 10px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+} 
+
+.count-card p { 
+    font-size: 1.8rem; 
+    font-weight: 700; 
+} 
+
+.view-selector { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    margin-bottom: 20px; 
+} 
+
+.view-selector label { 
+    margin-right: 15px; 
+    font-weight: 600; 
+    color: var(--text-dark); 
+    font-size: 1rem; 
+} 
+
+.view-selector select { 
+    appearance: none; 
+    -webkit-appearance: none; 
+    -moz-appearance: none; 
+    background-color: var(--background-light); 
+    border: 2px solid var(--primary-color); 
+    color: var(--primary-color); 
+    padding: 8px 15px; 
+    border-radius: 8px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    background-position: right 10px center; 
+    min-width: 150px; 
+} 
+
+.view-selector select:hover { 
+    background-color: #f0f4f8; 
+    border-color: #2980b9; 
+} 
+
+.view-selector select:focus { 
+    outline: none; 
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); 
+} 
+
+.approved { 
+    color: var(--secondary-color); 
+} 
+
+.pending { 
+    color: var(--warning-color); 
+} 
+
+.completed { 
+    color: var(--primary-color); 
+} 
+
+.cancelled { 
+    color: var(--danger-color); 
+} 
+
+@media (max-width: 768px) { 
+    .stats-container { 
+        display: grid; 
+        grid-template-columns: 1fr; /* Single column for smaller screens */ 
+        gap: 15px; /* Adjust gap for smaller screens */ 
+    } 
+
+    .chart-card, .counts-card { 
+        width: 100%; /* Ensure cards take up full width in their container */ 
+        padding: 15px; /* Adjust padding for better spacing on smaller screens */ 
+        box-sizing: border-box; /* Include padding and border in width calculation */ 
+        margin: 0 auto; /* Center align the cards */ 
+    } 
+
+    .counts-grid { 
+        grid-template-columns: 1fr; /* Display counts in a single column for phone view */ 
+        gap: 10px; /* Reduce gap between count cards */ 
+    } 
+
+    .count-card { 
+        padding: 15px; /* Adjust padding for smaller screens */ 
+        width: 100%; /* Ensure cards take full width in their container */ 
+    } 
+
+    .view-selector { 
+        flex-direction: column; /* Stack label and select vertically */ 
+        align-items: stretch; /* Stretch elements to fit the container */ 
+        margin-bottom: 15px; /* Adjust spacing for mobile */ 
+    } 
+
+    .view-selector label { 
+        margin-bottom: 10px; /* Add spacing between label and select */ 
+        font-size: 0.9rem; /* Slightly smaller font size for phones */ 
+    } 
+
+    .view-selector select { 
+        width: 100%; /* Take up the full width of the container */ 
+        padding: 10px; /* Adjust padding for better touch support */ 
+        box-sizing: border-box; /* Include padding and border in width calculation */ 
+    } 
+
+    .card-title { 
+        font-size: 1.2rem; /* Slightly smaller font size for mobile */ 
+        margin-bottom: 15px; /* Reduce margin for better spacing */ 
+    } 
+
+    .card-title::after { 
+        width: 40px; /* Adjust width for the decorative line */ 
+        height: 2px; 
+    } 
+}
