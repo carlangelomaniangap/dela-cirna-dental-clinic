@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css"  rel="stylesheet" />
 </head>
 <body class="min-h-screen">
 
@@ -170,8 +171,14 @@
                                 <td class="action">
                                     <button type="button" data-item-id="{{ $item->id }}" data-item-name="{{ $item->item_name }}" data-item-unit="{{ $item->unit }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-2 py-1 rounded"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <button type="button" data-item-id="{{ $item->id }}" class="AddStockOpenModalBtn px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300"><i class="fa-solid fa-circle-plus"></i></button>
-                                    <button type="button" data-item-id="{{ $item->id }}" data-item-remainingstocks="{{ $item->remaining_stocks }}" class="IssuanceOpenModalBtn px-2 py-1 bg-yellow-500 text-white rounded hover:bg-green-600 transition duration-300"><i class="fa-solid fa-user-pen"></i></button>
-                                    <button type="button" data-item-id="{{ $item->id }}" class="DisposeOpenModalBtn px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300"><i class="fa-solid fa-trash"></i></button>
+                                    <button type="button" data-item-id="{{ $item->id }}" class="IssuanceOpenModalBtn px-2 py-1 bg-yellow-500 text-white rounded hover:bg-green-600 transition duration-300"><i class="fa-solid fa-user-pen"></i></button>
+                                    <button type="button" value="{{ $item->id }}" data-item-type="{{ $item->type }}" data-modal-target="dispose-modal" data-modal-toggle="dispose-modal"
+                                    data-stocks-details="{{ $stocks->map(fn($stock) => 
+                                    [ 'id' => $stock->id, 
+                                    'inve_id' => $stock->inventory_id, 
+                                    'quantity' => $stock->quantity, 
+                                    'expiration_date' => $stock->expiration_date ])->toJson() }}" 
+                                    class="DisposeOpenModalBtn px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300"><i class="fa-solid fa-trash"></i></button>
                                 </td>
                              </tr>
 
@@ -266,7 +273,7 @@
 
                                         <div class="mb-4">
                                             <label for="total_quantity" class="block text-sm font-semibold text-gray-700">Total Stocks</label>
-                                            <input type="number" name="total_quantity" id="total_quantity" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100" value="{{ $addstocks->first()->quantity }}" readonly>
+                                            <input type="number" name="total_quantity" id="total_quantity" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100" value="{{ $stocks->first()->quantity }}" readonly>
                                         </div>
 
                                         <div class="mb-4">
@@ -295,10 +302,10 @@
                                         <div class="mb-4">
                                             <label for="stocks" class="block text-sm font-semibold text-gray-700">Stocks</label>
                                             <div id="stocks" name="stocks">
-                                                @if($addstocks->isNotEmpty())
-                                                    <div value="{{ $addstocks->first()->id }}">
-                                                        <p>Quantity: {{ $addstocks->first()->quantity }}</p>
-                                                        <p>Expires: {{ $addstocks->first()->expiration_date ? date('F j, Y', strtotime($addstocks->first()->expiration_date)) : 'N/A' }}</p>
+                                                @if($stocks->isNotEmpty())
+                                                    <div value="{{ $stocks->first()->id }}">
+                                                        <p>Quantity: {{ $stocks->first()->quantity }}</p>
+                                                        <p>Expires: {{ $stocks->first()->expiration_date ? date('F j, Y', strtotime($stocks->first()->expiration_date)) : 'N/A' }}</p>
                                                     </div>
                                                 @else
                                                     <div>No stock available</div>
@@ -314,15 +321,15 @@
                             </div>
 
                             <!-- Modal for Dispose -->
-                            <div id="DisposeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+                            <div id="dispose-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
                                 <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
-                                    <button type="button" id="DisposeCloseModalBtn" class="mr-2 absolute top-0 right-0 text-lg text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+                                    <button type="button" data-modal-hide="dispose-modal" class="mr-2 absolute top-0 right-0 text-lg text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
                                         
                                     <div class="mb-4">
                                         <h1 class="text-lg font-bold">Dispose</h1>
                                     </div>
 
-                                    <form id="DisposeForm" action="{{ route('admin.inventory.dispose', $item->id) }}" method="POST">
+                                    <form action="{{ route('admin.inventory.dispose', $item->id) }}" method="POST">
                                         @csrf
                                         @method('PUT')
 
@@ -338,12 +345,9 @@
                                         </div>
 
                                         <div class="mb-4">
-                                            <label for="stocks" class="block text-sm font-semibold text-gray-700">Stocks</label>
-                                            <select class="block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" id="stocks" name="stocks" required>
-                                                <option value="" disabled selected>Stocks</option>
-                                                @foreach($addstocks as $stocks)
-                                                    <option value="{{ $stocks->id }}">{{ $stocks->expiration_date ? date('F j, Y', strtotime($stocks->expiration_date)) : 'N/A' }} ({{ number_format($stocks->quantity) }})</option>
-                                                @endforeach
+                                            <label class="block text-sm font-semibold text-gray-700">Stocks</label>
+                                            <select name="stock_id" id="stocks_container" class="block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+
                                             </select>
                                         </div>
 
@@ -356,7 +360,8 @@
                                         </div>
 
                                         <div class="mt-4 text-right">
-                                            <button type="submit" class="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white transition duration-300">Dispose</button>
+                                            <input type="number" hidden id="dispose-item-id" name="item_id">
+                                            <button type="submit" id="dispose-submit" class="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white transition duration-300">Dispose</button>
                                         </div>
                                     </form>
                                 </div>
@@ -562,26 +567,70 @@
     </script>
 
     <!-- DISPOSE -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
     <script>
-        document.querySelectorAll('.DisposeOpenModalBtn').forEach(function(button) {
-            button.addEventListener('click', function() {
+        $(document).on('click', '.DisposeOpenModalBtn', function() {
                 
-                const itemId = this.getAttribute('data-item-id');
+                var item_id = $(this).val();
+                $('#dispose-item-id').val(item_id);
 
-                const form = document.getElementById('DisposeForm');
-                form.action = `/admin/inventory/${itemId}/dispose`;
+                var stockDetails = $(this).data('stocks-details');                
 
-                document.getElementById('DisposeModal').classList.remove('hidden');
+                var stock_container = $('#stocks_container');
+                stock_container.empty();
+                stock_container.append('<option value="" disabled selected>Stocks</option>');
+
+                if (Array.isArray(stockDetails)) {
+                    stockDetails.forEach(function (stock) {
+                        console.log(stock.inve_id);
+                        
+                        if (stock.quantity <= 0) {
+                            return;
+                        }
+                        if (stock.inve_id == item_id) {
+                            stock_container.append(`
+                                <option value="${stock.id}" data-stock-quantity="${stock.quantity}"> 
+                                    ${stock.expiration_date || 'N/A'} (${stock.quantity})
+                                </option>
+                        `);
+                        }
+                        
+                    });
+                } else {
+                    console.error('stockDetails is not an array');
+                }
+
+                // $(document).on('keyup', '#disposequantity', function () {
+                //     var quantity = parseFloat($('#stock_container').find('
+                //     :selected').data('stock-quantity')) || 0;
+                //     var disposequantity = parseFloat($(this).val()) || 0;
+
+                //     if (disposequantity > quantity || quantity === 0) {
+                //         $('#dispose-submit').prop('disabled', true)
+                //         .removeClass('bg-orange-400')
+                //         .addClass('bg-gray-400 cursor-not-allowed');
+                //     } else {
+                //         $('#dispose-submit').prop('disabled', false)
+                //         .removeClass('bg-gray-400 cursor-not-allowed')
+                //         .addClass('bg-orange-400');
+                //     }
+                // });
                 
-                document.getElementById('UpdateItemModal')?.classList.add('hidden');
-                document.getElementById('AddStockModal')?.classList.add('hidden');
-                document.getElementById('IssuanceModal')?.classList.add('hidden');
-            });
+                // const itemId = this.getAttribute('data-item-id');
+
+                // const form = document.getElementById('DisposeForm');
+                // form.action = `/admin/inventory/${itemId}/dispose`;
+
+                // document.getElementById('DisposeModal').classList.remove('hidden');
+                
+                // document.getElementById('UpdateItemModal')?.classList.add('hidden');
+                // document.getElementById('AddStockModal')?.classList.add('hidden');
+                // document.getElementById('IssuanceModal')?.classList.add('hidden');
         });
 
-        document.getElementById('DisposeCloseModalBtn').addEventListener('click', function() {
-            document.getElementById('DisposeModal').classList.add('hidden');
-        });
+        // document.getElementById('DisposeCloseModalBtn').addEventListener('click', function() {
+        //     document.getElementById('DisposeModal').classList.add('hidden');
+        // });
     </script>
 
     <!-- PRINT -->

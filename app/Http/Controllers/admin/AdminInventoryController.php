@@ -17,9 +17,9 @@ class AdminInventoryController extends Controller
 
         $patients  = User::where('usertype', 'patient')->get();
 
-        $addstocks = AddStock::orderBy('expiration_date', 'asc')->get();
+        $stocks = AddStock::all();
 
-        return view('admin.inventory.inventory', compact('items', 'patients', 'addstocks'));
+        return view('admin.inventory.inventory', compact('items', 'patients', 'stocks'));
     }
     
     public function store(Request $request){
@@ -131,6 +131,9 @@ class AdminInventoryController extends Controller
 
         $stock = AddStock::where('inventory_id', $inventory->id)->orderBy('expiration_date', 'asc')->first(); 
         $stock->quantity -= $request->issuance;
+        if ($stock->quantity == 0) {
+            $stock->delete();
+        }
         $stock->save();
 
         $user = User::where('id', $request->users_id)->where('usertype', 'patient')->first();
@@ -167,7 +170,7 @@ class AdminInventoryController extends Controller
         $inventory->disposed += $request->disposequantity;
         $inventory->save();
 
-        $stock = AddStock::findOrFail($request->input('stocks'));
+        $stock = AddStock::findOrFail($id);
         
         $stock->quantity -= $request->disposequantity;
 
