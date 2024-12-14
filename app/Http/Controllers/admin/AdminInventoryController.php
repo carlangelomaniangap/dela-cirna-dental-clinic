@@ -200,32 +200,35 @@ class AdminInventoryController extends Controller
         return view('admin.inventory.issuance_history', compact('issuances', 'item'));
     }
 
-    public function dispose(Request $request, $id){
+    public function dispose(Request $request){
         
         $request->validate([
-            'stock_id' => 'required|exists:add_stocks,id',
             'reason' => 'required|in:Expired,Damaged,Single-Use,Used',
             'disposequantity' => 'required|integer|min:1',
         ]);
     
-        $inventory = Inventory::findOrFail($id);
-        $stock = AddStock::findOrFail($request->stock_id);
+        $inventory = Inventory::find($request->item_id);
+        $stock = AddStock::find($request->stock_id);
 
-        $inventory->remaining_stocks -= $request->disposequantity;
-        $inventory->disposed += $request->disposequantity;
-        $inventory->save();
-        
-        $stock->quantity -= $request->disposequantity;
+        $disposequantity = $request->input('disposequantity');
+        $reason = $request->input('reason');
 
+        $remaining_stocks = $stock->quantity - $disposequantity;
+        $stock->quantity = $remaining_stocks;
         if ($stock->quantity == 0) {
             $stock->delete();
         } else {
             $stock->save();
         }
 
+        $inventory->disposed + $disposequantity;
+        $inventory->save();
+
+        
+
         Dispose::create([
-            'inventory_id' => $inventory->id,
-            'addstock_id' => $stock->id,
+            'inventory_id' => $request->item_id,
+            'addstock_id' => $request->stock_id,
             'reason' => $request->input('reason'),
             'expiration_date' => $stock->expiration_date,
             'disposequantity' => $request->input('disposequantity'),
