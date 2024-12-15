@@ -24,6 +24,7 @@
                             <th>Receiver Name</th>
                             <th>Expiration Date</th>
                             <th>Quantity</th>
+                            <th>Created At</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
@@ -32,6 +33,7 @@
                                 <td>{{ $addstock->receiver_name }}</td>
                                 <td>{{ $addstock->expiration_date ? date('F j, Y', strtotime($addstock->expiration_date)) : 'N/A' }}</td>
                                 <td>{{ $addstock->quantity }}</td>
+                                <td>{{ $addstock->created_at ? date('F j, Y', strtotime($addstock->created_at)) : 'N/A' }}</td>
                             </tr>
                         @endforeach
                     </tbody>

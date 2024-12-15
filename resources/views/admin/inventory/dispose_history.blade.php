@@ -24,6 +24,7 @@
                             <th>Reason</th>
                             <th>Expiration Date</th>
                             <th>Quantity</th>
+                            <th>Created At</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
@@ -32,6 +33,7 @@
                                 <td>{{ $dispose->reason }}</td>
                                 <td>{{ $dispose->expiration_date ? date('F j, Y', strtotime($dispose->expiration_date)) : 'N/A' }}</td>
                                 <td>{{ number_format($dispose->disposequantity) }}</td>
+                                <td>{{ $dispose->created_at ? date('F j, Y', strtotime($dispose->created_at)) : 'N/A' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
