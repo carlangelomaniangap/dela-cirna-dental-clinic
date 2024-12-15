@@ -21,7 +21,14 @@ class CheckUserType
         if (Auth::check()) {
             // Check if the authenticated user's usertype matches the required type
             if (Auth::user()->usertype === $type) {
-                return $next($request); // Allow the request to proceed
+                // If user is a patient, ensure email is verified
+                if ($type === 'patient' && !Auth::user()->hasVerifiedEmail()) {
+                    // Redirect to verification notice if the user is a patient and email is not verified
+                    return redirect()->route('verification.notice');
+                }
+
+                // Allow the request to proceed if the user type and email verification are valid
+                return $next($request);
             }
         }
 

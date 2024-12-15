@@ -14,6 +14,10 @@ class AuthenticatedSessionController extends Controller
 {
     protected function authenticated(Request $request, $user)
     {
+        if ($user->usertype === 'patient' && !$user->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice');
+        }
+
         $request->session()->put('showUserWelcome', true);
 
         if ($user->usertype === 'admin') {
@@ -21,7 +25,7 @@ class AuthenticatedSessionController extends Controller
         } elseif ($user->usertype === 'patient') {
             return redirect()->route('patient.dashboard');
         } else {
-            return redirect()->route('dashboard'); // Default fallback route if usertype is not recognized
+            return redirect()->route('home'); // Default fallback route if usertype is not recognized
         }
     }
     /**

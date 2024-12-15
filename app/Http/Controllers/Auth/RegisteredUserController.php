@@ -80,6 +80,12 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        // Check if the user is verified
+        if (!$user->hasVerifiedEmail()) {
+            // Redirect to the email verification notice page
+            return redirect()->route('verification.notice');
+        }
+
         // Redirect based on usertype
         switch ($user->usertype) {
             case 'patient':

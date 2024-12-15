@@ -22,9 +22,15 @@ class GoogleController extends Controller
         $existingUser = User::where('email', $googleUser->getEmail())->first();
 
         if ($existingUser) {
-            // Log in the user if they already exist
-            Auth::login($existingUser);
-            return redirect()->route('patient.dashboard');
+            // Check if the user is verified
+            if ($existingUser->hasVerifiedEmail()) {
+                // Log in the user if they already exist and are verified
+                Auth::login($existingUser);
+                return redirect()->route('patient.dashboard');
+            } else {
+                // Redirect to a verification notice or another page if the user is not verified
+                return redirect()->route('verification.notice');
+            }
         }
 
         // Store Google user data in session for pre-filling
