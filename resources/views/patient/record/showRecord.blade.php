@@ -49,20 +49,23 @@
         <div class="bg-white shadow-md p-6 rounded-xl">
             
             <div class="flex justify-between">
-                <h1 class="text-lg lg:text-xl font-bold">Notes</h1>
+                <h1 class="text-lg lg:text-xl font-bold">Procedure History</h1>
             </div>
 
             <!-- Display Notes -->
-            <div class="flex flex-col space-y-2 max-h-48 overflow-y-auto mt-5 p-2 border border-gray-300 rounded-lg">
-                @if($notes->isEmpty())
-                    <p class="text-gray-800">No notes found.</p>
-                @else    
-                    @foreach ($notes as $note)
-                        <div class="note-item p-4 bg-gray-50 rounded-md border border-gray-200">
-                            <p class="justify text-gray-800 cursor-pointer">{{ $note->note }}</p>
-                            <p class="hidden full-text text-gray-800 cursor-pointer">{{ $note->note }}</p>
-                        </div>
-                    @endforeach
+            <div class="flex flex-col space-y-2 max-h-64 overflow-y-auto mt-5 p-2 border border-gray-300 rounded-lg">
+                @if($calendars->isEmpty())
+                    <p class="text-gray-800">No procedures found.</p>
+                @else
+                    <ul class="list-disc pl-5 text-sm sm:text-base text-gray-700">
+                        @foreach ($calendars as $calendar)
+                            <li class="mb-3">
+                                <span class="font-semibold">Appointment Date:</span> {{ \Carbon\Carbon::parse($calendar->appointmentdate)->format('F j, Y') }}<br>
+                                <span class="font-semibold">Appointment Time:</span> {{ $calendar->appointmenttime }}<br>
+                                <span class="font-semibold">Procedure:</span> {{ $calendar->procedure }}
+                            </li>
+                        @endforeach
+                    </ul>
                 @endif
             </div>
         </div>
@@ -79,7 +82,7 @@
                 <h1>Total Files: {{ $count }}</h1>
             </div>
             
-            <div class="max-h-48 overflow-y-auto overflow-x-auto p-2 border border-gray-300 rounded-lg">
+            <div class="max-h-64 overflow-y-auto overflow-x-auto p-2 border border-gray-300 rounded-lg">
                 
                 <table class="min-w-full">
                     <tbody>
@@ -117,26 +120,6 @@
                         @endif
                     </tbody>
                 </table>
-            </div>
-
-            <!-- Procedure History -->
-            <div class="mt-6">
-                <h1 class="text-lg lg:text-xl font-bold">Procedure History</h1>
-                <div class="max-h-64 overflow-y-auto p-2 border border-gray-300 rounded-lg mt-4">
-                    @if($calendars->isEmpty())
-                        <p class="text-gray-800">No procedures found.</p>
-                    @else
-                        <ul class="list-disc pl-5 text-sm sm:text-base text-gray-700">
-                            @foreach ($calendars as $calendar)
-                                <li class="mb-3">
-                                    <span class="font-semibold">Appointment Date:</span> {{ \Carbon\Carbon::parse($calendar->appointmentdate)->format('F j, Y') }}<br>
-                                    <span class="font-semibold">Appointment Time:</span> {{ $calendar->appointmenttime }}<br>
-                                    <span class="font-semibold">Procedure:</span> {{ $calendar->procedure }}
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </div>
             </div>
         </div>
 

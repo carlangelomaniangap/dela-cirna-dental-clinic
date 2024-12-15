@@ -80,29 +80,23 @@
         <div class="bg-white shadow-md p-6 rounded-xl">
             
             <div class="flex justify-between">
-                <h1 class="text-lg lg:text-xl font-bold">Notes</h1>
-                <!-- Button to open modal -->
-                <button id="openModalBtn" class="px-4 py-1 text-xs lg:text-base rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Add Notes</button>
+                <h1 class="text-lg lg:text-xl font-bold">Procedure History</h1>
             </div>
 
             <!-- Display Notes -->
-            <div class="flex flex-col space-y-2 max-h-48 overflow-y-auto mt-5 p-2 border border-gray-300 rounded-lg">
-                @if($notes->isEmpty())
-                    <p class="text-gray-800">No notes found.</p>
-                @else    
-                    @foreach ($notes as $note)
-                        <div class="note-item p-4 bg-gray-50 rounded-md border border-gray-200">
-                            <form action="{{ route('admin.note.update', [$patientlist->id, $note->id]) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <p class="justify text-gray-800 cursor-pointer">{{ $note->note }}</p>
-                                <p class="hidden full-text text-gray-800 cursor-pointer">{{ $note->note }}</p>
-                                <textarea class="hidden edit-input w-full text-gray-800" name="note" onblur="this.form.submit()">{{ $note->note }}</textarea>
-                                <button type="button" class="hidden save-btn px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white transition duration-300 rounded text-xs sm:text-sm mt-1" onclick="saveEdit(event)">Save</button>
-                                <button type="button" class="hidden cancel-btn px-2 py-1 bg-gray-300 hover:bg-gray-400 text-gray-800 transition duration-300 rounded text-xs sm:text-sm mt-1" onclick="cancelEdit(event)">Cancel</button>
-                            </form>
-                        </div>
-                    @endforeach
+            <div class="flex flex-col space-y-2 max-h-64 overflow-y-auto mt-5 p-2 border border-gray-300 rounded-lg">
+                @if($calendars->isEmpty())
+                    <p class="text-gray-800">No procedures found.</p>
+                @else
+                    <ul class="list-disc pl-5 text-sm sm:text-base text-gray-700">
+                        @foreach ($calendars as $calendar)
+                            <li class="mb-3">
+                                <span class="font-semibold">Appointment Date:</span> {{ \Carbon\Carbon::parse($calendar->appointmentdate)->format('F j, Y') }}<br>
+                                <span class="font-semibold">Appointment Time:</span> {{ $calendar->appointmenttime }}<br>
+                                <span class="font-semibold">Procedure:</span> {{ $calendar->procedure }}
+                            </li>
+                        @endforeach
+                    </ul>
                 @endif
             </div>
 
@@ -166,7 +160,7 @@
                 <h1>Total Files: {{ $count }}</h1>
             </div>
             
-            <div class="max-h-48 overflow-y-auto overflow-x-auto p-2 border border-gray-300 rounded-lg">
+            <div class="max-h-64 overflow-y-auto overflow-x-auto p-2 border border-gray-300 rounded-lg">
                 
                 <table class="min-w-full">
                     <tbody>
@@ -218,25 +212,6 @@
                     </tbody>
                 </table>
             </div>
-            <div class="mt-6">
-                <h1 class="text-lg lg:text-xl font-bold">Procedure History</h1>
-                <div class="max-h-64 overflow-y-auto p-2 border border-gray-300 rounded-lg mt-4">
-                    @if($calendars->isEmpty())
-                        <p class="text-gray-800">No procedures found.</p>
-                    @else
-                        <ul class="list-disc pl-5 text-sm sm:text-base text-gray-700">
-                            @foreach ($calendars as $calendar)
-                                <li class="mb-3">
-                                    <span class="font-semibold">Appointment Date:</span> {{ \Carbon\Carbon::parse($calendar->appointmentdate)->format('F j, Y') }}<br>
-                                    <span class="font-semibold">Appointment Time:</span> {{ $calendar->appointmenttime }}<br>
-                                    <span class="font-semibold">Procedure:</span> {{ $calendar->procedure }}
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </div>
-            </div>
-
         </div>
 
         <!-- Patient upcoming and past appointment -->
