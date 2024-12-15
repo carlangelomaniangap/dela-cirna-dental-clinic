@@ -45,6 +45,9 @@
                             <x-nav-link :href="route('patient.dashboard')" :active="request()->routeIs('patient.dashboard')">
                                 {{ __('Dashboard') }}
                             </x-nav-link>
+                            <x-nav-link :href="route('patient.showRecord')" :active="request()->routeIs('patient.showRecord')">
+                                {{ __('Patient Record') }}
+                            </x-nav-link>
                             <x-nav-link :href="route('patient.appointment')" :active="request()->routeIs('patient.appointment')">
                                 {{ __('Appointment') }}
                             </x-nav-link>
@@ -242,6 +245,9 @@
                 @elseif(Auth::user()->usertype == 'patient')
                     <x-responsive-nav-link :href="route('patient.dashboard')" :active="request()->routeIs('patient.dashboard')">
                         {{ __('Dashboard') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('patient.showRecord')" :active="request()->routeIs('patient.showRecord')">
+                        {{ __('Patient Record') }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('patient.appointment')" :active="request()->routeIs('patient.appointment')">
                         {{ __('Appointment') }}

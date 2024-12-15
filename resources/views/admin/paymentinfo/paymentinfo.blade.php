@@ -6,26 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 </head>
 <body class="min-h-screen">
         
     <!-- <div style="background: #4b9cd3; box-shadow: 0 2px 4px rgba(0,0,0,0.4);" class="py-4 px-6 text-white">
         <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold"><i class="fa-solid fa-money-bills"></i> Payment Information</h4>
     </div> -->
-
-    <div class="p-6 flex justify-between items-center">
-        <a href="{{ route('admin.payment.create') }}" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 text-xs sm:text-sm lg:text-base font-semibold"><i class="fa-solid fa-cash-register"></i> New</a>
-
-        <form action="{{ route('admin.paymentinfo.search') }}" method="GET">
-            <div class="relative w-full">
-                <input type="text" name="query" placeholder="Search" class="w-full h-10 text-xs sm:text-sm lg:text-base px-3 rounded-full focus:ring-2 border border-gray-100 focus:outline-none focus:border-blue-500 transition-shadow duration-300 shadow-sm hover:shadow-md">
-                <button type="submit" class="absolute top-0 end-0 p-2.5 pr-3 text-sm font-medium h-full text-white bg-blue-700 rounded-e-full border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <span class="sr-only">Search</span>
-                </button>
-            </div>
-        </form>
-    </div>
 
     @if(session('success') || $errors->any())
         <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -73,61 +60,60 @@
         </div>
     @endif
 
-    <div class="p-6 pt-0">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            @if($paymentinfo->isEmpty())
-                <div class="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-200">
-                    <p class="px-4 sm:px-6 py-3 text-gray-600">No payment info found.</p>
+    <div class="p-6">
+        <div class="p-6 bg-white shadow rounded-lg">
+            
+            <div class="mb-6 flex justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold mb-4">Payment Information</h1>
                 </div>
-            @else
-                @foreach ($paymentinfo as $payment)
-                    <div class="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-200">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800">{{ $payment->name }}</p>
-                                <ul class="text-sm sm:text-base text-gray-600 list-disc pl-5">
-                                    <li>
-                                        <span class="font-semibold">Concern:</span> <span>{{ $payment->concern }}</span>
-                                    </li>
-                                    <li>
-                                        <span class="font-semibold">Amount:</span> <span>{{ $payment->amount > 0 ? number_format($payment->amount, 0, ',', ',') : 'N/A' }}</span>
-                                    </li>
-                                    <li>
-                                        <span class="font-semibold">Balance:</span> <span>{{ $payment->balance == 0 ? 'Paid' : number_format($payment->balance, 0, ',', ',') }}</span>
-                                    </li>
-                                    <li>
-                                        <span class="font-semibold">Date:</span> <span>{{ date('F j, Y', strtotime($payment->date)) }}</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="relative inline-block text-left">
-                                <button type="button" class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none dropdown-button" aria-haspopup="true" aria-expanded="false" data-dropdown-id="dropdown-{{ $payment->id }}">
-                                    <span class="text-gray-600"><i class="fa-solid fa-ellipsis"></i></span>
-                                </button>
+                <div>
+                    <a href="{{ route('admin.payment.create') }}" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300 text-xs sm:text-sm lg:text-base font-semibold"><i class="fa-solid fa-cash-register"></i> New</a>
+                </div>
+            </div>
 
-                                <div class="absolute right-0 z-10 mt-2 w-32 lg:w-48 px-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden dropdown-menu" id="dropdown-{{ $payment->id }}" role="menu" aria-orientation="vertical">
-                                    <div class="py-1" role="none">
-                                       <!-- Button to Open Modal -->
-                                        <button data-payment-id="{{ $payment->id }}" class="block w-full text-left px-4 py-2 text-sm sm:text-base text-blue-700 hover:bg-blue-100 hover:rounded-lg"><i class="fa fa-solid fa-plus"></i> Payment</button>
-                                        <a href="{{ route('admin.paymentHistory', $payment->id) }}" class="block px-4 py-2 text-sm sm:text-base text-gray-700 hover:bg-gray-100 hover:rounded-lg"><i class="fas fa-history"></i> History</a>
-                                        <a href="{{ route('admin.updatePayment', $payment->id) }}" class="block px-4 py-2 text-sm sm:text-base text-blue-700 hover:bg-blue-100 hover:rounded-lg">
-                                            <i class="fa-solid fa-pen update"></i> Edit
-                                        </a>
-                                        <div class="h-px bg-gray-300 my-1"></div>
-                                        <form method="post" action="{{ route('admin.deletePayment', $payment->id) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm sm:text-base text-red-700 hover:bg-red-100 hover:rounded-lg" onclick="return confirm('Are you sure you want to delete this payment info?')"><i class="fa-regular fa-trash-can"></i> Delete</button>
-                                        </form>
+            <table id="paymentinformation" class="hover bg-white border border-gray-300">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Concern</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($paymentinfo as $payment)
+                        <tr class="text-sm sm:text-base">
+                            <td>{{ $payment->name }}</td>
+                            <td>{{ $payment->concern }}</td>
+                            <td>{{ $payment->amount > 0 ? number_format($payment->amount, 0, ',', ',') : 'N/A' }}</td>
+                            <td>{{ $payment->balance == 0 ? 'Paid' : number_format($payment->balance, 0, ',', ',') }}</td>
+                            <td>{{ date('F j, Y', strtotime($payment->date)) }}</td>
+                            <td>
+                                <div class="relative inline-block text-left">
+                                    <button type="button" class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none dropdown-button" aria-haspopup="true" aria-expanded="false" data-dropdown-id="dropdown-{{ $payment->id }}">
+                                        <span class="text-gray-600"><i class="fa-solid fa-ellipsis"></i></span>
+                                    </button>
+
+                                    <div class="absolute right-0 z-10 mt-2 w-32 lg:w-48 px-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden dropdown-menu" id="dropdown-{{ $payment->id }}" role="menu" aria-orientation="vertical">
+                                        <div class="py-1" role="none">
+                                        <!-- Button to Open Modal -->
+                                            <button data-payment-id="{{ $payment->id }}" class="block w-full text-left px-4 py-2 text-sm sm:text-base text-blue-700 hover:bg-blue-100 hover:rounded-lg"><i class="fa fa-solid fa-plus"></i> Payment</button>
+                                            <a href="{{ route('admin.paymentHistory', $payment->id) }}" class="block px-4 py-2 text-sm sm:text-base text-gray-700 hover:bg-gray-100 hover:rounded-lg"><i class="fas fa-history"></i> History</a>
+                                            <a href="{{ route('admin.updatePayment', $payment->id) }}" class="block px-4 py-2 text-sm sm:text-base text-blue-700 hover:bg-blue-100 hover:rounded-lg">
+                                                <i class="fa-solid fa-pen update"></i> Edit
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-
         <!-- Modal Background -->
         <div id="paymentModal" class="fixed inset-0 flex items-center justify-center hidden bg-black bg-opacity-50">
             <div class="bg-white rounded-lg p-6 shadow-lg">
@@ -149,12 +135,27 @@
                 </form>
             </div>
         </div>
-
-        <div class="mt-4">
-            {{ $paymentinfo->links() }}
-        </div>
     </div>
     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+    <!-- TABLE -->
+    <script>
+        $(document).ready(function() {
+            new DataTable('#paymentinformation', {
+                "language": {
+                    "emptyTable": "No payment information found.",
+                    "zeroRecords": "No matching payment information found.",
+                }
+            });
+
+            $('#paymentinformation_length select').addClass('w-20');
+            $('.dataTables_length').addClass('mb-4');
+            $('.dataTables_filter').addClass('mb-4');
+        });
+    </script>
+
     <script> // modals
         const closeModal = document.getElementById('closeModal');
         const paymentModal = document.getElementById('paymentModal');
@@ -232,7 +233,7 @@
 </html>
 
 @section('title')
-    Payment Info
+    Payment Information
 @endsection
 
 </x-app-layout>

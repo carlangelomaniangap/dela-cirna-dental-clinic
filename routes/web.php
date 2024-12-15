@@ -11,8 +11,10 @@ use App\Http\Controllers\admin\AdminRecordController;
 use App\Http\Controllers\admin\AdminMessagesController;
 use App\Http\Controllers\admin\AdminPaymentInfoController;
 use App\Http\Controllers\admin\AdminCalendarController;
+
 // patient
 use App\Http\Controllers\patient\PatientDashboardController;
+use App\Http\Controllers\patient\PatientRecordController;
 use App\Http\Controllers\patient\PatientAppointmentController;
 use App\Http\Controllers\patient\PatientMessagesController;
 use App\Http\Controllers\patient\PatientPaymentInfoController;
@@ -104,6 +106,9 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
 Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
     // dashboard
     Route::get('/patient', [PatientDashboardController::class, 'index'])->name('patient.dashboard');
+
+    Route::get('/patient/records', [PatientRecordController::class, 'showRecord'])->name('patient.showRecord');
+    Route::get('/patient/records/{recordId}/download', [PatientRecordController::class, 'downloadRecord'])->name('patient.downloadRecord');
 
     // appointments
     Route::get('/patient/appointment',[PatientAppointmentController::class,'index'])->name('patient.appointment');

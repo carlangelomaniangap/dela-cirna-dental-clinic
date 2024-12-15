@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 </head>
 <body class="min-h-screen">
         
@@ -14,54 +15,63 @@
     </div> -->
 
     <div class="p-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            @if($paymentinfo->isEmpty())
-                <div class="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-200">
-                    <p class="px-4 sm:px-6 py-3 text-gray-600">No payment info found.</p>
-                </div>
-            @else
-                @foreach ($paymentinfo as $payment)
-                    <div class="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-200">
-                        <div class="flex flex-col">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800">{{ $payment->name }}</p>
-                                    <ul class="text-sm sm:text-base text-gray-600 list-disc pl-5">
-                                        <li>
-                                            <span class="font-semibold">Concern:</span> <span>{{ $payment->concern }}</span>
-                                        </li>
-                                        <li>
-                                            <span class="font-semibold">Amount:</span> <span>{{ $payment->amount > 0 ? number_format($payment->amount, 0, ',', ',') : 'N/A' }}</span>
-                                        </li>
-                                        <li>
-                                            <span class="font-semibold">Balance:</span> <span>{{ $payment->balance == 0 ? 'Paid' : number_format($payment->balance, 0, ',', ',') }}</span>
-                                        </li>
-                                        <li>
-                                            <span class="font-semibold">Date:</span> <span>{{ date('F j, Y', strtotime($payment->date)) }}</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="sm:flex sm:items-start hidden">
-                                    <a href="{{ route('patient.paymentHistory', $payment->id) }}" class="px-2 sm:px-4 py-2 text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-800 transition duration-300 rounded"><i class="fas fa-history"></i> History</a>
-                                </div>
-                            </div>
-                            <div class="flex justify-end mt-2 sm:hidden">
+        <div class="p-6 bg-white shadow rounded-lg">
+            <h1 class="text-2xl font-bold mb-4">Payment Information</h1>
+            <table id="paymentinformation" class="hover bg-white border border-gray-300">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Concern</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($paymentinfo as $payment)
+                        <tr class="text-sm sm:text-base">
+                            <td>{{ $payment->name }}</td>
+                            <td>{{ $payment->concern }}</td>
+                            <td>{{ $payment->amount > 0 ? number_format($payment->amount, 0, ',', ',') : 'N/A' }}</td>
+                            <td>{{ $payment->balance == 0 ? 'Paid' : number_format($payment->balance, 0, ',', ',') }}</td>
+                            <td>{{ date('F j, Y', strtotime($payment->date)) }}</td>
+                            <td>
                                 <a href="{{ route('patient.paymentHistory', $payment->id) }}" class="px-2 sm:px-4 py-2 text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-800 transition duration-300 rounded">
                                     <i class="fas fa-history"></i> History
                                 </a>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+    <!-- TABLE -->
+    <script>
+        $(document).ready(function() {
+            new DataTable('#paymentinformation', {
+                "language": {
+                    "emptyTable": "No payment information found.",
+                    "zeroRecords": "No matching payment information found.",
+                }
+            });
+
+            $('#paymentinformation_length select').addClass('w-20');
+            $('.dataTables_length').addClass('mb-4');
+            $('.dataTables_filter').addClass('mb-4');
+        });
+    </script>
     
 </body>
 </html>
 
 @section('title')
-    Payment Info
+    Payment Information
 @endsection
 
 </x-app-layout>
