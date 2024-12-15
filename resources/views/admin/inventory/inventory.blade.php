@@ -16,41 +16,63 @@
         <h4 class="text-lg sm:text-xl lg:text-2xl font-semibold">{{ __('Inventory') }}</h4>
     </div> -->
 
-    @if(session('success') || $errors->any() || session('error'))
+    @if(session('success'))
         <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div class="relative p-4 w-full max-w-md">
                 <div class="relative p-5 text-center bg-white rounded-lg shadow">
+                    <!-- Close Button -->
                     <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center" onclick="this.closest('.fixed').style.display='none'">
                         <i class="fa-solid fa-xmark text-lg"></i>
                         <span class="sr-only">Close modal</span>
                     </button>
 
-                    @if(session('success'))
-                    <!-- Success icon and message -->
+                    <!-- Success Icon and Message -->
                     <div class="w-12 h-12 rounded-full bg-green-100 p-2 flex items-center justify-center mx-auto mb-3.5">
                         <i class="fa-solid fa-check text-green-500 text-2xl"></i>
                         <span class="sr-only">Success</span>
                     </div>
                     <p class="mb-4 text-lg font-semibold text-gray-900">{{ session('success') }}</p>
-                    @elseif(session('error'))
-                    <!-- Error icon and message -->
-                    <div class="w-12 h-12 rounded-full bg-red-100 p-2 flex items-center justify-center mx-auto mb-3.5">
-                        <i class="fa-solid fa-xmark text-red-500 text-2xl"></i>
-                        <span class="sr-only">Error</span>
-                    </div>
-                    <p class="mb-4 text-lg font-semibold text-red-600">{{ session('error') }}</p>
-                    @elseif($errors->any())
-                    <!-- Validation errors -->
-                    <div class="w-12 h-12 rounded-full bg-red-100 p-2 flex items-center justify-center mx-auto mb-3.5">
-                        <i class="fa-solid fa-xmark text-red-500 text-2xl"></i>
-                        <span class="sr-only">Error</span>
-                    </div>
-                    @foreach ($errors->all() as $error)
-                    <p class="mb-4 text-lg font-semibold text-red-600">{{ $error }}</p>
-                    @endforeach
+
+                    <!-- Continue Button -->
+                    <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300" onclick="this.closest('.fixed').style.display='none'">
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if(session('error') || $errors->any())
+        <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="relative p-4 w-full max-w-md">
+                <div class="relative p-5 text-center bg-white rounded-lg shadow">
+                    <!-- Close Button -->
+                    <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center" onclick="this.closest('.fixed').style.display='none'">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+
+                    <!-- Error Icon and Message -->
+                    @if(session('error'))
+                        <div class="w-12 h-12 rounded-full bg-red-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                            <i class="fa-solid fa-xmark text-red-500 text-2xl"></i>
+                            <span class="sr-only">Error</span>
+                        </div>
+                        <p class="mb-4 text-lg font-semibold text-red-600">{{ session('error') }}</p>
                     @endif
 
-                    <!-- Continue button -->
+                    <!-- Validation Errors -->
+                    @if($errors->any())
+                        @foreach ($errors->all() as $error)
+                            <div class="w-12 h-12 rounded-full bg-red-100 p-2 flex items-center justify-center mx-auto mb-3.5">
+                                <i class="fa-solid fa-xmark text-red-500 text-2xl"></i>
+                                <span class="sr-only">Error</span>
+                            </div>
+                            <p class="mb-4 text-lg font-semibold text-red-600">{{ $error }}</p>
+                        @endforeach
+                    @endif
+
+                    <!-- Continue Button -->
                     <button type="button" class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300" onclick="this.closest('.fixed').style.display='none'">
                         Continue
                     </button>
@@ -154,6 +176,7 @@
                             <th>Issuance</th>
                             <th>Disposed</th>
                             <th>Remaining Stocks</th>
+                            <th>Expiration Date</th>
                             <th class="action">Action</th>
                         </tr>
                     </thead>
@@ -173,6 +196,7 @@
                                     <a href="{{ route('admin.dispose_history', $item->id) }}" class="hover:text-gray-400">{{ number_format($item->disposed) }}</a>
                                 </td>
                                 <td>{{ number_format($item->remaining_stocks) }}</td>
+                                <td>{{ $item->expiration_date ? date('F j, Y', strtotime($item->expiration_date)) : 'N/A' }}</td>
                                 <td class="action">
                                     <button type="button" data-item-id="{{ $item->id }}" data-item-name="{{ $item->item_name }}" data-item-unit="{{ $item->unit }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-2 py-1 rounded"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <button type="button" data-item-id="{{ $item->id }}" class="AddStockOpenModalBtn px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300"><i class="fa-solid fa-circle-plus"></i></button>

@@ -221,7 +221,8 @@ class AdminInventoryController extends Controller
             $stock->save();
         }
 
-        $inventory->disposed + $disposequantity;
+        $inventory->remaining_stocks -= $disposequantity;
+        $inventory->disposed += $disposequantity;
         $inventory->save();
 
         
@@ -229,7 +230,7 @@ class AdminInventoryController extends Controller
         Dispose::create([
             'inventory_id' => $request->item_id,
             'addstock_id' => $request->stock_id,
-            'reason' => $request->input('reason'),
+            'reason' => $reason,
             'expiration_date' => $stock->expiration_date,
             'disposequantity' => $request->input('disposequantity'),
         ]);
