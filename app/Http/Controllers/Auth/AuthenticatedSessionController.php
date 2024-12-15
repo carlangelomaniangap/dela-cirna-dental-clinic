@@ -14,10 +14,6 @@ class AuthenticatedSessionController extends Controller
 {
     protected function authenticated(Request $request, $user)
     {
-        if ($user->usertype === 'patient' && !$user->hasVerifiedEmail()) {
-            return redirect()->route('verification.notice');
-        }
-
         $request->session()->put('showUserWelcome', true);
 
         if ($user->usertype === 'admin') {

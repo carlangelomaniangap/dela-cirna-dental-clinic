@@ -29,6 +29,7 @@ class GoogleController extends Controller
                 return redirect()->route('patient.dashboard');
             } else {
                 // Redirect to a verification notice or another page if the user is not verified
+                Auth::login($existingUser);
                 return redirect()->route('verification.notice');
             }
         }
