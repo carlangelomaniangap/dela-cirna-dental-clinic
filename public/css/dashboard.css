@@ -124,6 +124,57 @@
 .cancelled { 
     color: var(--danger-color); 
 } 
+.data-interpretation {
+    background: var(--background-light);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.data-interpretation h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    text-align: center;
+    position: relative;
+}
+
+.data-interpretation h4::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: var(--primary-color);
+}
+
+.data-interpretation p {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.data-interpretation ul {
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+.data-interpretation ul li {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.data-interpretation ul li strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
 
 @media (max-width: 768px) { 
     .stats-container { 

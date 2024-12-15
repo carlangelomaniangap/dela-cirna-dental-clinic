@@ -199,6 +199,18 @@
                     <p>{{ $cancelledPendingAppointments + $cancelledApprovedAppointments }}</p>
                 </div>
             </div>
+
+            <div class="data-interpretation">
+                <h4>Data Interpretation</h4>
+                <p>The statistics above provide a breakdown of the appointment statuses:</p>
+                <ul>
+                    <li><strong>Approved:</strong> {{ $approvedAppointments }} appointments have been confirmed and are awaiting fulfillment.</li>
+                    <li><strong>Pending:</strong> {{ $pendingAppointments }} appointments are awaiting approval or further action.</li>
+                    <li><strong>Completed:</strong> {{ $completedAppointments }} appointments have been successfully completed.</li>
+                    <li><strong>Cancelled:</strong> {{ $cancelledPendingAppointments + $cancelledApprovedAppointments }} appointments were either canceled by users or administrators.</li>
+                </ul>
+                <p>This information helps track the clinic's appointment flow and identify areas needing attention, such as reducing cancellations or expediting pending approvals.</p>
+            </div>
         </div>
     </div>
 </div>
