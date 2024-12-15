@@ -82,7 +82,7 @@
 
     <div class="p-6">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-
+            
             <!-- Button to Open Add New Item Modal -->
             <div class="p-6 pb-0 print:hidden">
                 <div class="flex flex-col sm:flex-row items-center justify-between">
@@ -424,10 +424,6 @@
                         @endforeach
                     </tbody>
                 </table>
-
-                <div class="flex justify-end mt-6">
-                    <button onclick="openPrintView();" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-2 py-1.5 rounded transition duration-300">Print a copy</button>
-                </div>
             </div>
         </div>
     </div>
@@ -437,7 +433,18 @@
 
     <!-- TABLE -->
     <script>
+        function parseDate(dateString) {
+            const date = new Date(dateString);
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Remove time component
+        }
+        
         $(document).ready(function() {
+            // const table = $('#inventory-content').DataTable({
+            //     "language": {
+            //         "emptyTable": "No items found.",
+            //         "zeroRecords": "No matching items found.",
+            //     }
+            // });
             new DataTable('#inventory-content', {
                 "language": {
                     "emptyTable": "No items found.",
@@ -448,6 +455,59 @@
             $('#inventory-content_length select').addClass('w-20');
             $('.dataTables_length').addClass('mb-4');
             $('.dataTables_filter').addClass('mb-4');
+
+            // Filter by type and date range
+            $('#type').on('change', function() {
+                table.column(1).search(this.value).draw(); // Filter by Type (Column 1 is Type)
+            });
+
+             // Custom search filter for date range based on created_at column
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                const startDate = $('#start-date').val();
+                const endDate = $('#end-date').val();
+                const createdAt = data[8]; // "Created At" column (index 8)
+
+                // If no date range is selected, return true to show all rows
+                if (!startDate && !endDate) return true;
+
+                // Convert start and end date values to Date objects for comparison
+                const start = startDate ? parseDate(startDate) : null;
+                const end = endDate ? parseDate(endDate) : null;
+
+                // Parse the created_at value into a Date object
+                const createdDate = parseDate(createdAt); // Remove time component for accurate comparison
+
+                // Filter by start date only
+                if (startDate && !endDate) {
+                    if (createdDate >= start) {
+                        return true; // Include this row if created_at >= start
+                    }
+                }
+
+                // Filter by date range
+                if (startDate && endDate) {
+                    if (createdDate >= start && createdDate <= end) {
+                        return true; // Include this row if created_at is within range
+                    }
+                }
+
+                return false; // Exclude this row if it doesn't match the date range
+            });
+
+            // Trigger redraw when the date range changes
+            $('#start-date, #end-date').on('change', function() {
+                table.draw();
+            });
+
+            // Clear filters
+            $('#clear-filters').on('click', function() {
+                $('#type').val('');
+                $('#start-date').val('');
+                $('#end-date').val('');
+                table.search('').draw(); // Clear text search
+                table.column(1).search('').draw(); // Clear type filter
+                table.draw();
+            });
         });
     </script>
 
@@ -722,52 +782,6 @@
         // document.getElementById('DisposeCloseModalBtn').addEventListener('click', function() {
         //     document.getElementById('DisposeModal').classList.add('hidden');
         // });
-    </script>
-
-    <!-- PRINT -->
-    <script>
-        // Function to open the print view in a new tab
-        function openPrintView() {
-            var printWindow = window.open('', '_blank'); // Open a new tab
-            printWindow.document.write('<html><head><title>Dela Cirna Dental Clinic</title>');
-
-            // Add some basic styles for printing
-            printWindow.document.write('<style>body { font-family: Arial, sans-serif; padding: 20px; }');
-            printWindow.document.write('.print-content { width: 100%; border-collapse: collapse; margin-top: 20px; }');
-            printWindow.document.write('.print-content th, .print-content td { border: 1px solid #ccc; padding: 10px; font-size: 14px; }');
-            printWindow.document.write('.print-content th { background-color: #f4f4f4; }');
-            printWindow.document.write('.no-print { display: block; }'); // Show the Print button
-            printWindow.document.write('  .action { display: none !important; }'); // Hide update button column during print
-            printWindow.document.write('{ pointer-events: none; opacity: 0.5; }'); // Disable content initially
-            printWindow.document.write('@media print { .no-print { display: none; } }'); // Hide print button on print
-            printWindow.document.write('</style>');
-
-            // Add the content from the inventory page to the new tab
-            var content = document.getElementById('inventory-content').innerHTML;
-
-            // Replace anchor tags with normal text
-            content = content.replace(/<a[^>]*href="[^"]*"[^>]*>/g, '<span>');  // Remove <a> tag opening
-            content = content.replace(/<\/a>/g, '</span>'); // Remove <a> tag closing
-
-            printWindow.document.write('<body>');
-            printWindow.document.write('<h2>Inventory</h2>');
-            printWindow.document.write('<table class="print-content inactive">' + content + '</table>'); // Disable content initially
-            printWindow.document.write('<div class="no-print" style="margin-top: 20px;">');
-            printWindow.document.write('<button onclick="enableContentAndPrint();" style="background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; border: none;;">Print</button>');
-            printWindow.document.write('</div>'); // Print button
-            printWindow.document.write('</body></html>');
-
-            // Function to enable content and open print dialog
-            printWindow.document.write('<script>');
-            printWindow.document.write('function enableContentAndPrint() {');
-            printWindow.document.write('    var content = document.querySelector(".print-content");');
-            printWindow.document.write('    content.classList.remove("inactive");'); // Enable content
-            printWindow.document.write('    window.print();'); // Open the print dialog
-            printWindow.document.write('}');
-            printWindow.document.write('</' + 'script>');
-
-            printWindow.document.close();
-        }
     </script>
 
 </body>
