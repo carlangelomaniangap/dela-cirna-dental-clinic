@@ -171,11 +171,11 @@
             <div id="completeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
                 <div class="bg-white shadow-lg rounded-lg p-6 w-96">
                     <h2 class="text-xl font-semibold mb-4">Complete Appointment</h2>
-                    <form id="completeForm" method="post" action="{{ route('admin.completeCalendar', ['calendarId' => ':calendarId']) }}">
+                    <form id="completeForm" method="post" action="{{ route('admin.procedure', ['calendarId' => ':calendarId']) }}">
                         @csrf
                         <div class="mb-4">
-                            <label for="complete_reason" class="block text-sm font-medium text-gray-700">Reason for Completion</label>
-                            <textarea id="complete_reason" name="complete_reason" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required></textarea>
+                            <label for="procedure" class="block text-sm font-medium text-gray-700">Procedure</label>
+                            <textarea id="procedure" name="procedure" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required></textarea>
                         </div>
                         <div class="flex justify-end space-x-2">
                             <button type="button" onclick="closeCompleteModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Close</button>
@@ -209,7 +209,7 @@
     function openCompleteModal(calendarId) {
         const modal = document.getElementById('completeModal');
         const form = document.getElementById('completeForm');
-        form.action = `{{ route('admin.completeCalendar', ['calendarId' => ':calendarId']) }}`
+        form.action = `{{ route('admin.procedure', ['calendarId' => ':calendarId']) }}`
             .replace(':calendarId', calendarId);
         modal.classList.remove('hidden');
     }

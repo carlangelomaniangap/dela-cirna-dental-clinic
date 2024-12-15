@@ -74,10 +74,10 @@ class AdminCalendarController extends Controller
         return redirect()->route('admin.viewDetails', $calendar->id)->with('success', 'Appointment updated successfully!');
     }
 
-    public function completeAppointment(Request $request, $calendarId){
+    public function procedure(Request $request, $calendarId){
         // Validate the reason for completion
         $request->validate([
-            'complete_reason' => 'required|string|max:255',
+            'procedure' => 'required|string|max:255',
         ]);
     
         // Find the calendar entry by ID
@@ -85,18 +85,18 @@ class AdminCalendarController extends Controller
     
         // Update the status to 'Completed' and save the completion reason
         $calendar->status = 'Completed';
-        $calendar->completion_reason = $request->input('complete_reason'); // Ensure the field 'completion_reason' exists in your database
+        $calendar->procedure = $request->input('procedure'); // Ensure the field 'procedure' exists in your database
         $calendar->save();
     
         // Prepare the message for the notification
         $appointmentDate = Carbon::parse($calendar->appointmentdate)->format('F j, Y');  // e.g., 'December 3, 2024'
         $appointmentTime = $calendar->appointmenttime;
         $PatientName = $calendar->user->name;
-        $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been completed! Procedure Status: {$calendar->completion_reason}";
+        $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been completed! Procedure: {$calendar->procedure}";
         
         // Send the notification to the patient
         $patient = $calendar->user; // Assuming you have a 'user' relationship on the Calendar model
-        $patient->notify(new StatusAppointmentNotifications($calendar, $message, null, $calendar->completion_reason));
+        $patient->notify(new StatusAppointmentNotifications($calendar, $message, null, $calendar->procedure));
     
         // Redirect back or to the previous page with a success message
         return redirect()->route('admin.viewDetails', $calendarId)->with('success', 'Appointment marked as completed successfully!');

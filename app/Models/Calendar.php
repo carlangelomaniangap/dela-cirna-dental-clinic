@@ -27,7 +27,7 @@ class Calendar extends Model
         'relationname',
         'relation',
         'status',
-        'complete_reason',
+        'procedure',
     ];
 
     public function user(){

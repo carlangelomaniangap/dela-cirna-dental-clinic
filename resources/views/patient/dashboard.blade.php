@@ -66,15 +66,6 @@
                                         $calendar->status == 'PendingCancelled' || $calendar->status == 'ApprovedCancelled' ? 'Cancelled' : $calendar->status 
                                     }}
                                 </span>
-                                @if ($calendar->status == 'Completed')
-                                    <p class="text-sm lg:text-base text-gray-500 mt-2">
-                                        <strong>Procedure:</strong> {{ $calendar->completion_reason ?? 'No reason provided' }}
-                                    </p>
-                                @else
-                                    <p class="text-sm lg:text-base text-red-600 mt-2">
-                                        This appointment is not complete yet.
-                                    </p>
-                                @endif
                             </div>
                         </div>
                     </a>

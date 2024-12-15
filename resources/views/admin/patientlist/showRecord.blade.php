@@ -166,7 +166,7 @@
                 <h1>Total Files: {{ $count }}</h1>
             </div>
             
-            <div class="max-h-96 overflow-y-auto overflow-x-auto p-2 border border-gray-300 rounded-lg">
+            <div class="max-h-48 overflow-y-auto overflow-x-auto p-2 border border-gray-300 rounded-lg">
                 
                 <table class="min-w-full">
                     <tbody>
@@ -218,6 +218,25 @@
                     </tbody>
                 </table>
             </div>
+            <div class="mt-6">
+                <h1 class="text-lg lg:text-xl font-bold">Procedure History</h1>
+                <div class="max-h-64 overflow-y-auto p-2 border border-gray-300 rounded-lg mt-4">
+                    @if($calendars->isEmpty())
+                        <p class="text-gray-800">No procedures found.</p>
+                    @else
+                        <ul class="list-disc pl-5 text-sm sm:text-base text-gray-700">
+                            @foreach ($calendars as $calendar)
+                                <li class="mb-3">
+                                    <span class="font-semibold">Appointment Date:</span> {{ \Carbon\Carbon::parse($calendar->appointmentdate)->format('F j, Y') }}<br>
+                                    <span class="font-semibold">Appointment Time:</span> {{ $calendar->appointmenttime }}<br>
+                                    <span class="font-semibold">Procedure:</span> {{ $calendar->procedure }}
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
+            </div>
+
         </div>
 
         <!-- Patient upcoming and past appointment -->
@@ -235,7 +254,7 @@
                 </div>
             </form>
 
-            <div class="space-y-2 max-h-32 overflow-y-auto p-2 bg-gray-200 rounded-lg">
+            <div class="space-y-2 max-h-48 overflow-y-auto p-2 bg-gray-200 rounded-lg">
                 @if($calendars->isEmpty())
                     <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
                         <p class="text-gray-800">No appointments found.</p>
@@ -270,15 +289,6 @@
                                         $calendar->status == 'PendingCancelled' || $calendar->status == 'ApprovedCancelled' ? 'Cancelled' : $calendar->status 
                                     }}
                                 </span>
-                                @if ($calendar->status == 'Completed')
-                                    <p class="text-sm lg:text-base text-gray-500 mt-2">
-                                        <strong>Procedure:</strong> {{ $calendar->completion_reason ?? 'No reason provided' }}
-                                    </p>
-                                @else
-                                    <p class="text-sm lg:text-base text-red-600 mt-2">
-                                        This appointment is not complete yet.
-                                    </p>
-                                @endif
                             </div>
                         </div>
                     </a>
