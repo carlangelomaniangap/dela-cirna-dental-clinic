@@ -38,10 +38,6 @@
                         @endforeach
                     </tbody>
                 </table>
-
-                <div class="flex justify-end mt-6">
-                    <button onclick="openPrintView();" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-2 py-1.5 rounded transition duration-300">Print a copy</button>
-                </div>
             </div>
         </div>
     </div>
@@ -64,48 +60,6 @@
             $('.dataTables_length').addClass('mb-4'); // Bottom margin for entries per page dropdown
             $('.dataTables_filter').addClass('mb-4');
         });
-    </script>
-
-    <!-- PRINT -->
-    <script>
-        // Function to open the print view in a new tab
-        function openPrintView() {
-            var printWindow = window.open('', '_blank'); // Open a new tab
-            printWindow.document.write('<html><head><title>Dela Cirna Dental Clinic</title>');
-
-            // Add some basic styles for printing
-            printWindow.document.write('<style>body { font-family: Arial, sans-serif; padding: 20px; }');
-            printWindow.document.write('h2 {text-align: center;}')
-            printWindow.document.write('.print-content { width: 100%; border-collapse: collapse; margin-top: 20px; }');
-            printWindow.document.write('.print-content th, .print-content td { border: 1px solid #ccc; padding: 10px; font-size: 14px; }');
-            printWindow.document.write('.print-content th { background-color: #f4f4f4; }');
-            printWindow.document.write('.no-print { display: block; }'); // Show the Print button
-            printWindow.document.write('  .action { display: none !important; }'); // Hide update button column during print
-            printWindow.document.write('{ pointer-events: none; opacity: 0.5; }'); // Disable content initially
-            printWindow.document.write('@media print { .no-print { display: none; } }'); // Hide print button on print
-            printWindow.document.write('</style>');
-
-            var content = document.getElementById('issuance-content').innerHTML;
-            printWindow.document.write('<body>');
-            printWindow.document.write('<h5>Inventory / Item: {{ $item->item_name }}</h5>');
-            printWindow.document.write('<h2 class="text-center">Issuance History</h2>');
-            printWindow.document.write('<table class="print-content inactive">' + content + '</table>'); // Disable content initially
-            printWindow.document.write('<div class="no-print" style="margin-top: 20px;">');
-            printWindow.document.write('<button onclick="enableContentAndPrint();" style="background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; border: none;;">Print</button>');
-            printWindow.document.write('</div>'); // Print button
-            printWindow.document.write('</body></html>');
-
-            // Function to enable content and open print dialog
-            printWindow.document.write('<script>');
-            printWindow.document.write('function enableContentAndPrint() {');
-            printWindow.document.write('    var content = document.querySelector(".print-content");');
-            printWindow.document.write('    content.classList.remove("inactive");'); // Enable content
-            printWindow.document.write('    window.print();'); // Open the print dialog
-            printWindow.document.write('}');
-            printWindow.document.write('</' + 'script>');
-
-            printWindow.document.close();
-        }
     </script>
 
 </body>

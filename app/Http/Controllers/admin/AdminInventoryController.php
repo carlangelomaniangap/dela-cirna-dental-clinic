@@ -248,12 +248,4 @@ class AdminInventoryController extends Controller
 
         return view('admin.inventory.dispose_history', compact('disposes', 'item'));
     }
-
-    public function print(){
-        // Get all inventory data or filter as needed
-        $items = Inventory::all();
-
-        // Return a view with the data
-        return view('admin.inventory.inventory', compact('items'));
-    }
 }

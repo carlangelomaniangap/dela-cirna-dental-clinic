@@ -11,6 +11,7 @@ use App\Http\Controllers\admin\AdminRecordController;
 use App\Http\Controllers\admin\AdminMessagesController;
 use App\Http\Controllers\admin\AdminPaymentInfoController;
 use App\Http\Controllers\admin\AdminCalendarController;
+use App\Http\Controllers\admin\AdminReportsController;
 
 // patient
 use App\Http\Controllers\patient\PatientDashboardController;
@@ -61,8 +62,6 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::put('/admin/patientlist/{patientlistId}/updated', [AdminPatientListController::class, 'updatedPatient'])->name('admin.updatedPatient');
     Route::delete('/admin/patientlist/{patientlistId}/delete', [AdminPatientListController::class, 'deletePatient'])->name('admin.deletePatient');
     
-    Route::get('/admin/patientlist/search', [AdminPatientlistController::class, 'search'])->name('admin.search');
-    
     // record
     Route::get('/admin/patientlist/{patientlistId}/records', [AdminRecordController::class, 'showRecord'])->name('admin.showRecord');
     Route::get('/admin/patientlist/{patientlistId}/records/add', [AdminRecordController::class, 'createRecord'])->name('admin.record.create');
@@ -91,7 +90,6 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::get('/admin/paymentinfo/update/{paymentId}', [AdminPaymentInfoController::class, 'updatePayment'])->name('admin.updatePayment');
     Route::put('/admin/paymentinfo/updated/{paymentId}', [AdminPaymentInfoController::class, 'updatedPayment'])->name('admin.updatedPayment');
     Route::delete('/admin/paymentinfo/delete/{paymentId}', [AdminPaymentInfoController::class, 'deletePayment'])->name('admin.deletePayment');
-    Route::get('/admin/paymentinfo/search', [AdminPaymentInfoController::class, 'search'])->name('admin.paymentinfo.search');
     Route::post('/admin/paymentinfo/addpayment/{paymentId}', [AdminPaymentInfoController::class, 'addPayment'])->name('admin.addPayment');
     Route::get('/admin/paymentinfo/{paymentId}/history', [AdminPaymentInfoController::class, 'paymentHistory'])->name('admin.paymentHistory');
     
@@ -102,6 +100,10 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::put('/admin/calendar/appointment/{calendarId}/updated', [AdminCalendarController::class, 'updatedCalendar'])->name('admin.updatedCalendar');
     Route::get('/admin/calendar/appointment/{calendarId}/details', [AdminCalendarController::class, 'viewDetails'])->name('admin.viewDetails');
     Route::post('/admin/procedure/{calendarId}', [AdminCalendarController::class, 'procedure'])->name('admin.procedure');
+
+    // reports
+    Route::get('/admin/reports/', [AdminReportsController::class, 'index'])->name('admin.reports');
+    Route::get('/admin/print', [AdminReportsController::class, 'print'])->name('admin.reports');
 });
 
 Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
@@ -126,7 +128,6 @@ Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {
 
     // payment info
     Route::get('/patient/paymentinfo',[PatientPaymentInfoController::class,'index'])->name('patient.paymentinfo');
-    Route::get('/patient/payment/search', [PatientPaymentInfoController::class, 'search'])->name('patient.paymentinfo.search');
     Route::get('/patient/paymentinfo/{paymentId}/history', [PatientPaymentInfoController::class, 'paymentHistory'])->name('patient.paymentHistory');
     
     // calendar
