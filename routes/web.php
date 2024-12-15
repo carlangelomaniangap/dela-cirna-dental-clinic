@@ -101,6 +101,7 @@ Route::group(['middleware' => ['auth', 'checkUserType:admin']], function () {
     Route::get('/admin/calendar/appointment/{calendarId}/update', [AdminCalendarController::class, 'updateCalendar'])->name('admin.updateCalendar');
     Route::put('/admin/calendar/appointment/{calendarId}/updated', [AdminCalendarController::class, 'updatedCalendar'])->name('admin.updatedCalendar');
     Route::get('/admin/calendar/appointment/{calendarId}/details', [AdminCalendarController::class, 'viewDetails'])->name('admin.viewDetails');
+    Route::post('/admin/completeCalendar/{calendarId}', [AdminCalendarController::class, 'completeAppointment'])->name('admin.completeCalendar');
 });
 
 Route::group(['middleware' => ['auth', 'checkUserType:patient']], function () {

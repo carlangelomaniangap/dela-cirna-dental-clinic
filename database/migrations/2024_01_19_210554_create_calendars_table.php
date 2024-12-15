@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('relationname')->nullable();
             $table->string('relation')->nullable();
             $table->enum('status', ['Pending', 'PendingCancelled', 'Approved', 'Completed', 'ApprovedCancelled'])->default('Pending');
+            $table->text('completion_reason')->nullable();
             $table->timestamps();
         });
     }

@@ -140,7 +140,7 @@
                                                             <div class="flex justify-center items-center space-x-2">
                                                                 <form method="post" action="{{ route('admin.approveCalendar', ['calendarId' => $calendar->id, 'status' => 'complete']) }}">
                                                                     @csrf
-                                                                    <button type="submit" class="py-1 px-2 rounded bg-blue-500 text-white text-sm">Complete</button>
+                                                                    <button type="button" onclick="openCompleteModal({{ $calendar->id }})" class="py-1 px-2 rounded bg-blue-500 text-white text-sm">Complete</button>
                                                                 </form>
                                                                 <button onclick="openCancelModal({{ $calendar->id }}, 'approvecancel')" class="py-1 px-2 rounded bg-red-500 text-white text-sm">Cancel</button>
                                                             </div>
@@ -167,6 +167,24 @@
                 </div>
             </div>
 
+            <!-- Completion Reason Modal -->
+            <div id="completeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                <div class="bg-white shadow-lg rounded-lg p-6 w-96">
+                    <h2 class="text-xl font-semibold mb-4">Complete Appointment</h2>
+                    <form id="completeForm" method="post" action="{{ route('admin.completeCalendar', ['calendarId' => ':calendarId']) }}">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="complete_reason" class="block text-sm font-medium text-gray-700">Reason for Completion</label>
+                            <textarea id="complete_reason" name="complete_reason" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required></textarea>
+                        </div>
+                        <div class="flex justify-end space-x-2">
+                            <button type="button" onclick="closeCompleteModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Close</button>
+                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Confirm Completion</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <!-- Cancellation Reason Modal -->
             <div id="cancelModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
                 <div class="bg-white shadow-lg rounded-lg p-6 w-96">
@@ -188,6 +206,18 @@
     </div>
 
     <script>
+    function openCompleteModal(calendarId) {
+        const modal = document.getElementById('completeModal');
+        const form = document.getElementById('completeForm');
+        form.action = `{{ route('admin.completeCalendar', ['calendarId' => ':calendarId']) }}`
+            .replace(':calendarId', calendarId);
+        modal.classList.remove('hidden');
+    }
+
+    function closeCompleteModal() {
+        document.getElementById('completeModal').classList.add('hidden');
+    }
+
         function toggleAppointments(element) {
             const appointmentsDiv = element.querySelector('.hourly-appointments');
             appointmentsDiv.classList.toggle('hidden');

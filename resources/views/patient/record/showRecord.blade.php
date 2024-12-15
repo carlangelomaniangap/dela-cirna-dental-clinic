@@ -143,7 +143,8 @@
                 @else
                     <!-- Appointments Display -->
                     @foreach ($calendars as $calendar)
-                        <div class="rounded-lg p-2 flex flex-col sm:flex-row justify-between items-start bg-white hover:bg-gray-100 transition duration-200">
+                    <a href="{{ route('patient.viewDetails', $calendar->id) }}" class="block rounded-lg p-4 bg-white hover:bg-gray-100 transition duration-200">
+                        <div class="flex flex-col sm:flex-row justify-between items-start">
                             <div class="flex-grow mb-4 sm:mb-0">
                                 <p class="text-base lg:text-lg text-gray-800">
                                     <strong>{{ \Carbon\Carbon::parse($calendar->appointmentdate)->format('F j, Y') }}</strong> at <strong>{{($calendar->appointmenttime)}}</strong>
@@ -169,8 +170,18 @@
                                         $calendar->status == 'PendingCancelled' || $calendar->status == 'ApprovedCancelled' ? 'Cancelled' : $calendar->status 
                                     }}
                                 </span>
-                            </div>
+                                @if ($calendar->status == 'Completed')
+                                    <p class="text-sm lg:text-base text-gray-500 mt-2">
+                                        <strong>Procedure:</strong> {{ $calendar->completion_reason ?? 'No reason provided' }}
+                                    </p>
+                                @else
+                                    <p class="text-sm lg:text-base text-red-600 mt-2">
+                                        This appointment is not complete yet.
+                                    </p>
+                                @endif
+                            </div> 
                         </div>
+                    </a>
                     @endforeach
                 @endif
             </div>

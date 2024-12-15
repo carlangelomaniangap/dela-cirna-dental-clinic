@@ -74,6 +74,34 @@ class AdminCalendarController extends Controller
         return redirect()->route('admin.viewDetails', $calendar->id)->with('success', 'Appointment updated successfully!');
     }
 
+    public function completeAppointment(Request $request, $calendarId){
+        // Validate the reason for completion
+        $request->validate([
+            'complete_reason' => 'required|string|max:255',
+        ]);
+    
+        // Find the calendar entry by ID
+        $calendar = Calendar::findOrFail($calendarId);
+    
+        // Update the status to 'Completed' and save the completion reason
+        $calendar->status = 'Completed';
+        $calendar->completion_reason = $request->input('complete_reason'); // Ensure the field 'completion_reason' exists in your database
+        $calendar->save();
+    
+        // Prepare the message for the notification
+        $appointmentDate = Carbon::parse($calendar->appointmentdate)->format('F j, Y');  // e.g., 'December 3, 2024'
+        $appointmentTime = $calendar->appointmenttime;
+        $PatientName = $calendar->user->name;
+        $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been completed! Procedure Status: {$calendar->completion_reason}";
+        
+        // Send the notification to the patient
+        $patient = $calendar->user; // Assuming you have a 'user' relationship on the Calendar model
+        $patient->notify(new StatusAppointmentNotifications($calendar, $message, null, $calendar->completion_reason));
+    
+        // Redirect back or to the previous page with a success message
+        return redirect()->route('admin.viewDetails', $calendarId)->with('success', 'Appointment marked as completed successfully!');
+    }
+    
     public function viewDetails($Id){
         
         $calendar = Calendar::where('id', $Id)->first();
@@ -92,17 +120,13 @@ class AdminCalendarController extends Controller
         $PatientName = $calendar->user->name;
 
         $cancelReason = $request->input('cancel_reason', 'No reason provided'); // Default to 'No reason provided' if empty
-
+        
         // Check the status and update accordingly
         if ($status == 'approve') {
             $calendar->status = 'Approved'; // Set to Approved
             $this->sendApprovalEmail($calendar);  // Send approval email
             $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been approved and an email has been sent!";
             $AdminMessage = "{$PatientName} appointment for {$appointmentDate} at {$appointmentTime} has been approved and an email has been sent!";
-        } elseif ($status == 'complete') {
-            $calendar->status = 'Completed'; // Set to Completed
-            $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been completed!";
-            $AdminMessage = "{$PatientName} appointment for {$appointmentDate} at {$appointmentTime} has been completed!";
         } elseif ($status == 'approvecancel') {
             $calendar->status = 'ApprovedCancelled'; // Set to Cancelled
             $message = "Your appointment for {$appointmentDate} at {$appointmentTime} has been cancelled! Reason: {$cancelReason}";
