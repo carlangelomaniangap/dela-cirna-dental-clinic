@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css"  rel="stylesheet" />
 </head>
 <body class="min-h-screen">
 
@@ -177,6 +176,7 @@
                             <th>Disposed</th>
                             <th>Remaining Stocks</th>
                             <th>Expiration Date</th>
+                            <th>Created At</th>
                             <th class="action">Action</th>
                         </tr>
                     </thead>
@@ -197,6 +197,7 @@
                                 </td>
                                 <td>{{ number_format($item->remaining_stocks) }}</td>
                                 <td>{{ $item->expiration_date ? date('F j, Y', strtotime($item->expiration_date)) : 'N/A' }}</td>
+                                <td>{{ $item->created_at ? date('F j, Y', strtotime($item->created_at)) : 'N/A' }}</td>
                                 <td class="action">
                                     <button type="button" data-item-id="{{ $item->id }}" data-item-name="{{ $item->item_name }}" data-item-unit="{{ $item->unit }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-2 py-1 rounded"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <button type="button" data-item-id="{{ $item->id }}" class="AddStockOpenModalBtn px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300"><i class="fa-solid fa-circle-plus"></i></button>
@@ -298,7 +299,7 @@
                                         <h1 class="text-lg font-bold">Assign</h1>
                                     </div>
 
-                                    <form id="IssuanceForm" action="{{ route('admin.inventory.issuance', $item->id) }}" method="POST">
+                                    <form id="IssuanceForm" action="{{ route('admin.inventory.issuance', 0) }}" method="POST">
                                         @csrf
                                         @method('PUT')
 
@@ -328,16 +329,9 @@
                                         </div>
 
                                         <div class="mb-4">
-                                            <label for="stocks" class="block text-sm font-semibold text-gray-700">Stocks</label>
-                                            <div id="stocks" name="stocks">
-                                                @if($stocks->isNotEmpty() && $stocks->first()->quantity > 0)
-                                                    <div value="{{ $stocks->first()->id }}">
-                                                        <p>Quantity: {{ $stocks->first()->quantity }}</p>
-                                                        <p>Expires: {{ $stocks->first()->expiration_date ? date('F j, Y', strtotime($stocks->first()->expiration_date)) : 'N/A' }}</p>
-                                                    </div>
-                                                @else
-                                                    <div>No stock available</div>
-                                                @endif
+                                            <label for="AddStocks" class="block text-sm font-semibold text-gray-700">Stocks</label>
+                                            <div id="AddStocks" name="AddStocks">
+                                                
                                             </div>
                                         </div>
 
@@ -569,17 +563,68 @@
 
     <!-- ISSUANCE -->
     <script>
+        const stocksData = @json($stocks);
+
         document.querySelectorAll('.IssuanceOpenModalBtn').forEach(function(button) {
             button.addEventListener('click', function() {
-                
                 const itemId = this.getAttribute('data-item-id');
 
+                // Find the stocks for the clicked item
+                const itemStocks = stocksData.filter(stock => stock.inventory_id == itemId);
+
+                // Sort the stocks by expiration date in ascending order (nearest expiration first)
+                itemStocks.sort((a, b) => {
+                    if (a.expiration_date && b.expiration_date) {
+                        return new Date(a.expiration_date) - new Date(b.expiration_date);
+                    }
+                    // If one of the stocks has no expiration date, put it at the end
+                    return a.expiration_date ? -1 : 1;
+                });
+
+                // Set the form action dynamically based on the clicked item's ID
                 const form = document.getElementById('IssuanceForm');
                 form.action = `/admin/inventory/${itemId}/issuance`;
 
+                // Hide any existing modals
                 document.getElementById('UpdateItemModal')?.classList.add('hidden');
-
+                
+                // Show the issuance modal
                 document.getElementById('IssuanceModal').classList.remove('hidden');
+
+                // Populate the stocks section with the corresponding item stocks
+                const stocksDiv = document.getElementById('stocks');
+                stocksDiv.innerHTML = ''; // Clear previous stock details
+
+                // Clear the AddStocks section
+                const addStocksDiv = document.getElementById('AddStocks');
+                addStocksDiv.innerHTML = '';
+
+                if (itemStocks.length > 0) {
+                    // Only show the first stock in the 'stocks' section (the nearest to expire)
+                    const firstStock = itemStocks[0];
+                    // const stockDiv = document.createElement('div');
+                    // stockDiv.innerHTML = `
+                    //     <p>Quantity: ${firstStock.quantity}</p>
+                    //     <p>Expires: ${firstStock.expiration_date ? new Date(firstStock.expiration_date).toLocaleDateString() : 'N/A'}</p>
+                    // `;
+                    // stocksDiv.appendChild(stockDiv);
+
+                    // Show the first stock details in the AddStocks section
+                    const stockInfo = document.createElement('div');
+                    stockInfo.innerHTML = `
+                        <p>Quantity: ${firstStock.quantity.toLocaleString('en-PH')}</p>
+                        <p>Expiration Date: ${firstStock.expiration_date ? new Date(firstStock.expiration_date).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}</p>
+                    `;
+                    addStocksDiv.appendChild(stockInfo);
+
+                    // Set total quantity to the quantity of the first stock
+                    document.getElementById('total_quantity').value = firstStock.quantity;
+
+                } else {
+                    stocksDiv.innerHTML = '<div>No stock available</div>';
+                    addStocksDiv.innerHTML = '<p>No stock available</p>';
+                    document.getElementById('total_quantity').value = 'No stock available';
+                }
             });
         });
 

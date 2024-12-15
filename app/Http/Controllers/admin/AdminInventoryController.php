@@ -13,7 +13,8 @@ class AdminInventoryController extends Controller
 {
     public function index(Request $request){
         
-        $items = Inventory::all();
+        // $items = Inventory::all();
+        $items = Inventory::orderBy('id', 'desc')->get();
 
         $patients  = User::where('usertype', 'patient')->get();
 
@@ -146,7 +147,7 @@ class AdminInventoryController extends Controller
 
         // Get the stocks sorted by created_at (oldest first)
         $stocks = AddStock::where('inventory_id', $inventory->id)
-            ->orderBy('created_at', 'asc') // Ensure this is in ascending order by creation time
+            ->orderBy('expiration_date', 'asc')
             ->get();
 
         // Track the remaining issuance to be processed
@@ -184,6 +185,7 @@ class AdminInventoryController extends Controller
         Issuance::create([
             'inventory_id' => $inventory->id,
             'users_id' => $request->users_id,
+            'expiration_date' => $stock->expiration_date,
             'distribute_to' => $user->name,
             'issuance' => $request->issuance,
         ]);

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('inventory_id');
             $table->unsignedBigInteger('users_id');
+            $table->date('expiration_date')->nullable();
             $table->string('distribute_to');
             $table->integer('issuance');
             $table->timestamps();

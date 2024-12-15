@@ -9,7 +9,7 @@ class Issuance extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['inventory_id', 'users_id', 'distribute_to', 'issuance'];
+    protected $fillable = ['inventory_id', 'users_id', 'expiration_date', 'distribute_to', 'issuance'];
 
     public function inventory(){
         return $this->belongsTo(Inventory::class, 'inventory_id');

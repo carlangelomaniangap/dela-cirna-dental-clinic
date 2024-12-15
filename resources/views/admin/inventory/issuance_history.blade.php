@@ -22,14 +22,18 @@
                     <thead>
                         <tr>
                             <th>Distribute to</th>
+                            <th>Expiration Date</th>
                             <th>Issuance</th>
+                            <th>Created At</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
                         @foreach ($issuances as $issuance)
                             <tr>
                                 <td>{{ $issuance->distribute_to }}</td>
+                                <td>{{ $issuance->expiration_date ? date('F j, Y', strtotime($issuance->expiration_date)) : 'N/A' }}</td>
                                 <td>{{ number_format($issuance->issuance) }}</td>
+                                <td>{{ $issuance->created_at ? date('F j, Y', strtotime($issuance->created_at)) : 'N/A' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
