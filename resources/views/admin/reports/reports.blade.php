@@ -162,33 +162,73 @@
             const date = new Date(dateString);
             return new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Remove time component
         }
-        
+
         $(document).ready(function() {
             const tables = {
-                "inventory-content": $('#inventory-content').DataTable({ paging: false, lengthChange: false, info: false }),
-                "addstock-content": $('#addstock-content').DataTable({ paging: false, lengthChange: false, info: false }),
-                "issuance-content": $('#issuance-content').DataTable({ paging: false, lengthChange: false, info: false }),
-                "dispose-content": $('#dispose-content').DataTable({ paging: false, lengthChange: false, info: false }),
+                "inventory-content": $('#inventory-content').DataTable({ 
+                    paging: false, 
+                    lengthChange: false, 
+                    info: false,
+                    "columnDefs": [
+                        { "targets": 8, "visible": false }  // Hide the "Created At" column in inventory-content
+                    ]
+                }),
+                "addstock-content": $('#addstock-content').DataTable({ 
+                    paging: false, 
+                    lengthChange: false, 
+                    info: false,
+                    "columnDefs": [
+                        { "targets": 3, "visible": false }  // Hide the "Created At" column in addstock-content
+                    ]
+                }),
+                "issuance-content": $('#issuance-content').DataTable({ 
+                    paging: false, 
+                    lengthChange: false, 
+                    info: false,
+                    "columnDefs": [
+                        { "targets": 3, "visible": false }  // Hide the "Created At" column in issuance-content
+                    ]
+                }),
+                "dispose-content": $('#dispose-content').DataTable({ 
+                    paging: false, 
+                    lengthChange: false, 
+                    info: false,
+                    "columnDefs": [
+                        { "targets": 3, "visible": false }  // Hide the "Created At" column in dispose-content
+                    ]
+                }),
             };
 
+            // Initially hide all dataTable filters
             $('.dataTables_filter').addClass('hidden');
-           
+
+            // Apply filtering based on type
             $('#type').on('change', function () {
                 const selectedTable = $('#table-selector').val();
                 tables[selectedTable].column(1).search(this.value).draw();
             });
 
+            // Date range filter logic
             $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                const selectedTable = $('#table-selector').val();
+                if (!selectedTable) return true;  // Skip if no table is selected
+
                 const startDate = $('#start-date').val();
                 const endDate = $('#end-date').val();
-                const createdAt = data[8];
-
-                if (!startDate && !endDate) return true;
+                
+                if (!startDate && !endDate) return true;  // Allow all data if no dates are set
 
                 const start = startDate ? parseDate(startDate) : null;
                 const end = endDate ? parseDate(endDate) : null;
+                
+                // Get the created date column index for each table (adjust if different)
+                const createdDateIndex = selectedTable === 'inventory-content' ? 8 :
+                                        selectedTable === 'addstock-content' ? 3 :
+                                        selectedTable === 'issuance-content' ? 3 :
+                                        selectedTable === 'dispose-content' ? 3 : -1;
 
-                const createdDate = parseDate(createdAt);
+                // Get the created date from the current row (assuming it's in the right format)
+                const createdDate = parseDate(data[createdDateIndex]);
 
                 if (startDate && !endDate) {
                     if (createdDate >= start) {
@@ -205,19 +245,26 @@
                 return false;
             });
 
+            // Redraw tables whenever the date range changes
             $('#start-date, #end-date').on('change', function() {
                 const selectedTable = $('#table-selector').val();
-                tables[selectedTable].draw();
+                if (selectedTable) {
+                    tables[selectedTable].draw();
+                }
             });
 
+            // Reset all filters when the "Clear Filters" button is clicked
             $('#clear-filters').on('click', function() {
                 $('#type').val('');
                 $('#start-date').val('');
                 $('#end-date').val('');
+                
                 const selectedTable = $('#table-selector').val();
-                tables[selectedTable].search('').draw();
-                tables[selectedTable].column(1).search('').draw();
-                tables[selectedTable].draw();
+                if (selectedTable) {
+                    tables[selectedTable].search('').draw();
+                    tables[selectedTable].column(1).search('').draw();
+                    tables[selectedTable].draw();
+                }
             });
         });
     </script>
@@ -232,6 +279,13 @@
             
             const startDate = $('#start-date').val();
             const endDate = $('#end-date').val();
+
+            const printDate = new Date();
+            const printedDate = printDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
 
             let TableTitle;
             if (selectedTable === "inventory-content") {
@@ -293,6 +347,7 @@
             // Date Range and Title
             printWindow.document.write('<div class="date-range-container">');
             printWindow.document.write('<div class="table-title">' + TableTitle + '</div>');
+            printWindow.document.write('<div class="print-date">' + printedDate + '</div>');
             printWindow.document.write('<div class="date-range">Date Range: ' + startDate + ' - ' + endDate + '</div>');
             printWindow.document.write('</div>'); // End date range container
 
