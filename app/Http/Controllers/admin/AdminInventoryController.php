@@ -97,16 +97,51 @@ class AdminInventoryController extends Controller
         // Find the inventory
         $inventory = Inventory::findOrFail($id);
 
-        // Create a new AddStock record
-        $addStock = new AddStock([
-            'inventory_id' => $inventory->id,  // Make sure this is correctly passed
-            'receiver_name' => $request->receiver_name,
-            'expiration_date' => $request->expiration_date,
-            'quantity' => $request->quantity,
-        ]);
+        // Check if the receiver name is 'N/A' or not
+        if ($request->receiver_name === 'N/A') {
+            // If the receiver name is 'N/A', just add the stock normally
+            $existingStock = AddStock::where('inventory_id', $inventory->id)
+                ->where('receiver_name', 'N/A')
+                ->where('expiration_date', $request->expiration_date)
+                ->first();
 
-        // Save the AddStock record
-        $addStock->save();
+            if ($existingStock) {
+                // Sum the quantities if the same expiration date and 'N/A' receiver name exists
+                $existingStock->quantity += $request->quantity;
+                $existingStock->save();
+            } else {
+                // If no 'N/A' exists for this expiration date, create a new stock entry
+                $addStock = new AddStock([
+                    'inventory_id' => $inventory->id,
+                    'receiver_name' => 'N/A', // Keep receiver_name as 'N/A' for now
+                    'expiration_date' => $request->expiration_date,
+                    'quantity' => $request->quantity,
+                ]);
+                $addStock->save();
+            }
+        } else {
+            // If receiver_name is not 'N/A', we check if there's an existing stock with 'N/A'
+            $existingStock = AddStock::where('inventory_id', $inventory->id)
+                ->where('receiver_name', 'N/A')
+                ->where('expiration_date', $request->expiration_date)
+                ->first();
+
+            if ($existingStock) {
+                // If an 'N/A' stock exists for the same expiration date, replace 'N/A' with the actual receiver name
+                $existingStock->receiver_name = $request->receiver_name;
+                $existingStock->quantity += $request->quantity; // Sum the quantities
+                $existingStock->save();
+            } else {
+                // If no matching stock exists, create a new stock entry
+                $addStock = new AddStock([
+                    'inventory_id' => $inventory->id,
+                    'receiver_name' => $request->receiver_name,
+                    'expiration_date' => $request->expiration_date,
+                    'quantity' => $request->quantity,
+                ]);
+                $addStock->save();
+            }
+        }
 
         // Update the inventory's stocks and remaining_stocks
         $inventory->stocks += $request->quantity;  // Add to stocks

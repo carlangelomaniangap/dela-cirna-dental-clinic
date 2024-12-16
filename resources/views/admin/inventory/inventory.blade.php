@@ -84,7 +84,7 @@
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
             
             <!-- Button to Open Add New Item Modal -->
-            <div class="p-6 pb-0 print:hidden">
+            <div class="p-6 pb-0">
                 <div class="flex flex-col sm:flex-row items-center justify-between">
                     <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold">Inventory</h1>
                     <div class="ml-auto flex space-x-2"> <!-- Added ml-auto and flex for button grouping -->
@@ -177,7 +177,7 @@
                             <th>Remaining Stocks</th>
                             <th>Expiration Date</th>
                             <th>Created At</th>
-                            <th class="action">Action</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
@@ -198,7 +198,7 @@
                                 <td>{{ number_format($item->remaining_stocks) }}</td>
                                 <td>{{ $item->expiration_date ? date('F j, Y', strtotime($item->expiration_date)) : 'N/A' }}</td>
                                 <td>{{ $item->created_at ? date('F j, Y', strtotime($item->created_at)) : 'N/A' }}</td>
-                                <td class="action">
+                                <td>
                                     <button type="button" data-item-id="{{ $item->id }}" data-item-name="{{ $item->item_name }}" data-item-unit="{{ $item->unit }}" class="bg-blue-600 hover:bg-blue-700 text-white transition duration-300 px-2 py-1 rounded"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <button type="button" data-item-id="{{ $item->id }}" class="AddStockOpenModalBtn px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300"><i class="fa-solid fa-circle-plus"></i></button>
                                     
@@ -305,7 +305,7 @@
 
                                         <div class="mb-4">
                                             <label for="total_quantity" class="block text-sm font-semibold text-gray-700">Total Stocks</label>
-                                            <input type="number" name="total_quantity" id="total_quantity" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100" value="{{ $stocks->first()->quantity ?? 0 }}" readonly>
+                                            <input type="number" name="total_quantity" id="total_quantity" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100" readonly>
                                         </div>
 
                                         <div class="mb-4">
@@ -677,8 +677,20 @@
                     `;
                     addStocksDiv.appendChild(stockInfo);
 
-                    // Set total quantity to the quantity of the first stock
-                    document.getElementById('total_quantity').value = firstStock.quantity;
+                    // Calculate the total quantity and remaining stock for the item
+                    let totalQuantity = 0;
+                    let totalIssued = 0;
+
+                    itemStocks.forEach(stock => {
+                        totalQuantity += stock.quantity;  // Add stock quantity to total
+                        totalIssued += stock.issued_quantity || 0;  // Add issued quantity to totalIssued
+                    });
+
+                    // Calculate remaining stock (total quantity - issued quantity)
+                    const remainingStock = totalQuantity - totalIssued;
+
+                    // Display the remaining stock in the 'total_quantity' field
+                    document.getElementById('total_quantity').value = remainingStock >= 0 ? remainingStock : 0;
 
                 } else {
                     stocksDiv.innerHTML = '<div>No stock available</div>';
