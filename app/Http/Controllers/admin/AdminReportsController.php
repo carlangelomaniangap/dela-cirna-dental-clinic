@@ -6,6 +6,7 @@ use App\Models\AddStock;
 use App\Models\Dispose;
 use App\Models\Inventory;
 use App\Models\Issuance;
+use App\Models\Patientlist;
 use Illuminate\Http\Request;
 
 class AdminReportsController extends Controller
@@ -26,6 +27,8 @@ class AdminReportsController extends Controller
 
         $disposes = Dispose::all();
 
-        return view('admin.reports.reports', compact('items', 'addstocks', 'issuances', 'disposes'));
+        $patientlist = Patientlist::all();
+
+        return view('admin.reports.reports', compact('items', 'addstocks', 'issuances', 'disposes', 'patientlist'));
     }
 }
