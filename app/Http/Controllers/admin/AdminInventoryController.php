@@ -36,7 +36,7 @@ class AdminInventoryController extends Controller
     }
     
     public function store(Request $request){
-
+        
         $request->validate([
             'item_name' => 'required|string|max:255',
             'type' => 'required|in:Equipment,Consumable',
@@ -45,26 +45,53 @@ class AdminInventoryController extends Controller
             'expiration_date' => 'date|nullable',
         ]);
 
-        // Set remaining_stocks equal to stocks by default
         $remaining_stocks = $request->stocks;
 
-        $inventory = Inventory::create([
-            'item_name' => $request->item_name,
-            'type' => $request->type,
-            'unit' => $request->unit,
-            'stocks' => $request->stocks,
-            'remaining_stocks' => $remaining_stocks,
-            'expiration_date' => $request->expiration_date,
-        ]);
+        // Step 1: Search for an existing inventory item with the same item_name, type, and unit
+        $existingInventory = Inventory::where('item_name', $request->item_name)
+            ->where('type', $request->type)
+            ->where('unit', $request->unit)
+            ->first();
 
-        AddStock::create([
-            'inventory_id' => $inventory->id,
-            'receiver_name' => $request->receiver_name ?? 'N/A',
-            'expiration_date' => $request->expiration_date,
-            'quantity' => $request->stocks,
-        ]);
+        // Step 2: If an existing item is found
+        if ($existingInventory) {
+            // Sum the stocks and remaining stocks
+            $existingInventory->stocks += $request->stocks;
+            $existingInventory->remaining_stocks += $request->stocks;
 
-        return redirect()->back()->with('success', 'Item added!');
+            // Save the updated inventory record
+            $existingInventory->save();
+
+            // Create a new AddStock entry for the existing item
+            AddStock::create([
+                'inventory_id' => $existingInventory->id,
+                'receiver_name' => $request->receiver_name ?? 'N/A',
+                'expiration_date' => $request->expiration_date, // Store the expiration date in AddStock
+                'quantity' => $request->stocks,
+            ]);
+
+            return redirect()->back()->with('success', 'Stocks updated and added to history!');
+        } else {
+            // Step 3: If no matching inventory item is found, create a new item
+            $inventory = Inventory::create([
+                'item_name' => $request->item_name,
+                'type' => $request->type,
+                'unit' => $request->unit,
+                'stocks' => $request->stocks,
+                'remaining_stocks' => $remaining_stocks,
+                'expiration_date' => $request->expiration_date,
+            ]);
+
+            // Create a new AddStock record for the newly created inventory item
+            AddStock::create([
+                'inventory_id' => $inventory->id,
+                'receiver_name' => $request->receiver_name ?? 'N/A',
+                'expiration_date' => $request->expiration_date,
+                'quantity' => $request->stocks,
+            ]);
+
+            return redirect()->back()->with('success', 'New item added and stock history created!');
+        }
     }
 
     public function update(Request $request, $id){
@@ -142,6 +169,15 @@ class AdminInventoryController extends Controller
                 $addStock->save();
             }
         }
+
+        // $addStock = new AddStock([
+        //     'inventory_id' => $inventory->id,
+        //     'receiver_name' => $request->receiver_name,
+        //     'expiration_date' => $request->expiration_date,
+        //     'quantity' => $request->quantity,
+        // ]);
+
+        // $addStock->save();
 
         // Update the inventory's stocks and remaining_stocks
         $inventory->stocks += $request->quantity;  // Add to stocks
