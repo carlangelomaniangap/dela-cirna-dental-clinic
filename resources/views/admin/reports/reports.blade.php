@@ -512,8 +512,14 @@
 
     <!-- TABLE FOR PATIENTLIST -->
     <script>
+        function parseDate(dateString) {
+            const date = new Date(dateString);
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Remove time component
+        }
+
         $(document).ready(function() {
-            new DataTable('#patientlist', {
+            // Initialize the DataTable and store the reference in `table`
+            const table = new DataTable('#patientlist', {
                 "paging": false,         // Disable pagination
                 "lengthChange": false,   // Disable length change dropdown
                 "info": false,           // Disable table info (e.g., "Showing 1 to 10 of 50 entries")
@@ -524,39 +530,46 @@
 
             $('.dataTables_filter').addClass('hidden');
 
-            // Function to filter rows based on date range
-            function patientlistfilterTableByDateRange() {
+            // Date range and status filter logic
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
                 const patientliststartDate = $('#patientlist-start-date').val();
                 const patientlistendDate = $('#patientlist-end-date').val();
 
-                // Reset DataTable filter
-                table.clear();
+                // Get the created date from the current row (assuming it's in the "Created At" column at index 7)
+                const patientlistcreatedDate = parseDate(data[7]); // Column index for "Created At"
 
-                // Filter rows based on date range
-                $('#patientlist tbody tr').each(function() {
-                    const patientlistcreatedAt = $(this).find('td').eq(7).text(); // "Created At" column index is 7
-                    const patientlistcreatedDate = new Date(patientlistcreatedAt);
-                    const patientliststart = new Date(patientliststartDate);
-                    const patientlistend = new Date(patientlistendDate);
+                // If no date range is selected, show all rows
+                if (!patientliststartDate && !patientlistendDate) {
+                    return true;
+                }
 
-                    if ((patientlistcreatedDate >= start && patientlistcreatedDate <= patientlistend) || (patientliststartDate === '' && patientlistendDate === '')) {
-                        table.row(this).show();
-                    } else {
-                        table.row(this).hide();
-                    }
-                });
-            }
+                // Parse start and end dates for comparison
+                const startDate = patientliststartDate ? parseDate(patientliststartDate) : null;
+                const endDate = patientlistendDate ? parseDate(patientlistendDate) : null;
 
-            // Apply filtering when date range is selected
+                // Filter by start date (if set)
+                if (startDate && patientlistcreatedDate < startDate) {
+                    return false; // Hide row if created date is before the start date
+                }
+
+                // Filter by end date (if set)
+                if (endDate && patientlistcreatedDate > endDate) {
+                    return false; // Hide row if created date is after the end date
+                }
+
+                return true; // Show the row if it's within the selected date range
+            });
+
+            // Redraw table when the date range changes
             $('#patientlist-start-date, #patientlist-end-date').on('change', function() {
-                patientlistfilterTableByDateRange();
+                table.draw();
             });
 
             // Clear Filters functionality
             $('#patientlist-clear-filters').click(function() {
                 $('#patientlist-start-date').val('');
                 $('#patientlist-end-date').val('');
-                patientlistfilterTableByDateRange();  // Reapply filter after clearing
+                table.draw(); // Reapply filters after clearing
             });
         });
     </script>
@@ -730,6 +743,7 @@
         });
     </script>
 
+    <!-- PRINT APPOINTMENT -->
     <script>
         // Function to open the print view in a new tab
         function printAppointment() {
@@ -831,8 +845,6 @@
             printWindow.document.close(); // Close the document to render the content
         }
     </script>
-
-
 
 </body>
 </html>
