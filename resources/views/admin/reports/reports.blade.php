@@ -10,10 +10,12 @@
 <body>
 
     <div class="p-6">
-        <div class="filter-container flex items-start justify-between gap-6 p-6 bg-white shadow-lg rounded-xl flex-wrap">
-            <div class="table-selector-container">
-                <label for="table-selector" class="">Select Report</label>
-                <select id="table-selector" class="">
+        <h1 class="p-2 text-lg font-semibold">Inventory</h1>
+        <div class="filter-container flex items-center justify-between gap-6 p-6 bg-white shadow-lg rounded-xl">
+            <!-- Report Selection -->
+            <div class="table-selector-container w-full">
+                <label for="table-selector" class="block text-sm font-semibold text-gray-700">Select Report</label>
+                <select id="table-selector" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     <option value="" disabled selected>Select report</option>
                     <option value="inventory-content">Inventory report</option>
                     <option value="addstock-content">Add Stock report</option>
@@ -22,32 +24,36 @@
                 </select>
             </div>
 
-            <div class="">
-                <label for="type" class="">Filter by Type</label>
-                <select id="type" class="">
+            <!-- Type Filter -->
+            <div class="w-full">
+                <label for="type" class="block text-sm font-semibold text-gray-700">Filter by Type</label>
+                <select id="type" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     <option value="">All</option>
                     <option value="Equipment">Equipment</option>
                     <option value="Consumable">Consumable</option>
                 </select>
             </div>
 
-            <div class="">
-                <label for="start-date" class="">Start Date</label>
-                <input type="date" id="start-date" class="">
+            <!-- Start Date -->
+            <div class="w-full">
+                <label for="start-date" class="block text-sm font-semibold text-gray-700">Start Date</label>
+                <input type="date" id="start-date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
             </div>
 
-            <div class="">
-                <label for="end-date" class="">End Date</label>
-                <input type="date" id="end-date" class="">
+            <!-- End Date -->
+            <div class="w-full">
+                <label for="end-date" class="block text-sm font-semibold text-gray-700">End Date</label>
+                <input type="date" id="end-date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
             </div>
 
-            <div class="">
-                <button id="clear-filters" class="bg-gray-300 px-2 py-1 rounded">
+            <!-- Buttons -->
+            <div class="flex gap-4 mt-4 w-1/5 justify-start sm:justify-end">
+                <button id="clear-filters" class="bg-gray-300 px-4 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-400 focus:outline-none">
                     Clear Filters
                 </button>
 
-                <button onclick="openPrintView();" class="bg-blue-500 text-white px-2 py-1 rounded">
-                    Print report
+                <button onclick="openPrintView();" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 focus:outline-none">
+                    Print Report
                 </button>
             </div>
         </div>
@@ -224,6 +230,9 @@
             const table = document.getElementById(selectedTable);
             const tableContent = table.querySelector('tbody').innerHTML; // Get the tbody content of the selected table
             
+            const startDate = $('#start-date').val();
+            const endDate = $('#end-date').val();
+
             let TableTitle;
             if (selectedTable === "inventory-content") {
                 TableTitle = "Inventory Report";
@@ -235,28 +244,75 @@
                 TableTitle = "Dispose Report";
             }
 
+            // Capture the admin's username (replace with your dynamic method)
+            var username = '{{ Auth::user()->name }}'; // For Laravel: Authenticated admin username
+
             var printWindow = window.open('', '_blank'); // Open a new tab
             printWindow.document.write('<html><head><title>Dela Cirna Dental Clinic</title>');
             
-            // Add some basic styles for printing
-            printWindow.document.write('<style>body { font-family: Arial, sans-serif; padding: 20px; }');
+            // Add styles for printing
+            printWindow.document.write('<style>');
+            printWindow.document.write('body { font-family: Arial, sans-serif; padding: 20px; margin: 0; }');
             printWindow.document.write('.print-content { width: 100%; border-collapse: collapse; margin-top: 20px; }');
             printWindow.document.write('.print-content th, .print-content td { border: 1px solid #ccc; padding: 10px; font-size: 14px; }');
             printWindow.document.write('.print-content th { background-color: #f4f4f4; }');
             printWindow.document.write('.no-print { display: block; }'); // Show the Print button
             printWindow.document.write('@media print { .no-print { display: none; } }'); // Hide print button on print
+            printWindow.document.write('.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid black; }');
+            printWindow.document.write('.header .logo { width: 80px; height: auto; }');
+            printWindow.document.write('.header .company-info { text-align: left; font-size: 14px; }');
+            printWindow.document.write('.header .clinic-name { font-size: 24px; font-weight: bold; }'); // Larger clinic name
+            printWindow.document.write('.footer { position: fixed; bottom: 20px; width: 100%; text-align: center; }');
+            printWindow.document.write('.footer .signature { margin-top: 50px; font-size: 14px; }');
+            
+            // Date Range and Title Styling
+            printWindow.document.write('.date-range-container { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }');
+            printWindow.document.write('.table-title { font-size: 18px; font-weight: bold; text-align: left; }');
+            printWindow.document.write('.date-range { font-size: 14px; text-align: right; }'); // Date Range Style
+            
+            // Signature Styling
+            printWindow.document.write('.signature-space { margin-top: 50px; text-align: center; font-size: 16px; }');
+            printWindow.document.write('.signature-line { font-weight: lighter; }');
+            printWindow.document.write('.signature-name { font-weight: bold; font-size: 16px; margin-top: 10px; }');
+            
             printWindow.document.write('</style>');
 
             // Write the body content including the table and the print button
             printWindow.document.write('<body>');
-            printWindow.document.write('<h2>' + TableTitle +'</h2>');
+
+            // Header with company info and logo
+            printWindow.document.write('<div class="header">');
+            printWindow.document.write('<div class="company-info">');
+            printWindow.document.write('<div class="clinic-name">Dela Cirna Dental Clinic</div>'); // Clinic name with larger font
+            printWindow.document.write('Old National Road, Mulawin, Orani, Bataan<br>');
+            printWindow.document.write('info@bataandental.com');
+            printWindow.document.write('</div>');
+            printWindow.document.write('<img class="logo" src="{{ asset('images/logo.png') }}" alt="Dela Cirna Dental Clinic Logo">');
+            printWindow.document.write('</div>'); // End header
+
+            // Date Range and Title
+            printWindow.document.write('<div class="date-range-container">');
+            printWindow.document.write('<div class="table-title">' + TableTitle + '</div>');
+            printWindow.document.write('<div class="date-range">Date Range: ' + startDate + ' - ' + endDate + '</div>');
+            printWindow.document.write('</div>'); // End date range container
+
+            // Table content
             printWindow.document.write('<table class="print-content">');
             printWindow.document.write('<thead>' + table.querySelector('thead').innerHTML + '</thead>'); // Copy the thead
             printWindow.document.write('<tbody>' + tableContent + '</tbody>'); // Insert the tbody content
             printWindow.document.write('</table>');
+            
+            // Signature Space
+            printWindow.document.write('<div class="signature-space">');
+            printWindow.document.write('<div class="signature-line">____________________________</div>'); // Signature line
+            printWindow.document.write('<div class="signature-name">' + username + '</div>'); // User's name (admin)
+            printWindow.document.write('</div>'); // End signature space
+            
+            // Print button
             printWindow.document.write('<div class="no-print" style="margin-top: 20px;">');
-            printWindow.document.write('<button onclick="enableContentAndPrint();" style="background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; border: none;;">Print</button>');
+            printWindow.document.write('<button onclick="enableContentAndPrint();" style="background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; border: none;">Print</button>');
             printWindow.document.write('</div>'); // Print button
+
             printWindow.document.write('</body></html>');
 
             // Function to enable content and open print dialog
