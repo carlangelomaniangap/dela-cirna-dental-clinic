@@ -276,8 +276,6 @@
                                             <input type="number" name="quantity" id="quantity" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                                         </div>
 
-                                        <button type="submit" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Add new stock</button>
-
                                         <div class="mt-4 text-right">
                                             <button type="submit" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition duration-300">Restock</button>
                                         </div>
