@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\AddStock;
+use App\Models\Calendar;
 use App\Models\Dispose;
 use App\Models\Inventory;
 use App\Models\Issuance;
@@ -29,6 +30,8 @@ class AdminReportsController extends Controller
 
         $patientlist = Patientlist::all();
 
-        return view('admin.reports.reports', compact('items', 'addstocks', 'issuances', 'disposes', 'patientlist'));
+        $calendars = Calendar::all();
+
+        return view('admin.reports.reports', compact('items', 'addstocks', 'issuances', 'disposes', 'patientlist', 'calendars'));
     }
 }
