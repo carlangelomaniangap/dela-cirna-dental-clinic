@@ -117,7 +117,7 @@
 
                             <div>
                                 <label for="type" class="block text-sm font-semibold text-gray-700">Type</label>
-                                <select name="type" id="type" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required onchange="toggleFields()">
+                                <select name="type" id="type" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required onchange="toggleExpirationDate()">
                                     <option value="" selected disabled>Select Type</option>
                                     <option value="Equipment">Equipment</option>
                                     <option value="Consumable">Consumable</option>
@@ -142,11 +142,6 @@
                             <div>
                                 <label for="stocks" class="block text-sm font-semibold text-gray-700">Stocks Quantity</label>
                                 <input type="number" name="stocks" id="stocks" class="mt-2 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
-                            </div>
-
-                            <div class="flex items-center">
-                                <input type="checkbox" id="has_expiration_date" class="mr-2" onchange="toggleExpirationDate()">
-                                <label for="has_expiration_date" class="text-sm font-semibold text-gray-700">Has Expiration Date</label>
                             </div>
 
                             <div class="hidden" id="expiration_date_container">
@@ -558,13 +553,16 @@
         // Toggle Expiration Date visibility based on checkbox
         function toggleExpirationDate() {
             const expirationDateField = document.getElementById('expiration_date_container');
-            const hasExpirationDate = document.getElementById('has_expiration_date').checked;
+            const expirationDateInput = document.getElementById('expiration_date');
+            const typeValue = document.getElementById('type').value;
 
             // Show expiration date if checkbox is checked, else hide it
-            if (hasExpirationDate) {
+            if (typeValue === "Consumable") {
                 expirationDateField.classList.remove('hidden');
+                expirationDateInput.setAttribute('required', 'true');
             } else {
                 expirationDateField.classList.add('hidden');
+                expirationDateInput.removeAttribute('required');
             }
         }
     </script>
